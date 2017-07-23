@@ -1,4 +1,4 @@
-package com.GrumpyCode.PolizziaHut;
+package com.grumpycode.polizziahut;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -9,7 +9,7 @@ import sx.blah.discord.util.RequestBuffer;
 class BotUtils {
 
     // Constants for use throughout the bot
-    static String BOT_PREFIX = "/";
+    static String BOT_PREFIX = "!";
 
     // Handles the creation and getting of a IDiscordClient object for a token
     static IDiscordClient getBuiltDiscordClient(String token){

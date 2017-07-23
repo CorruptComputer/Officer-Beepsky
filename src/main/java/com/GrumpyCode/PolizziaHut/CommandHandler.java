@@ -1,6 +1,6 @@
-package com.GrumpyCode.PolizziaHut;
+package com.grumpycode.polizziahut;
 
-import com.GrumpyCode.PolizziaHut.lavaplayer.GuildMusicManager;
+import com.grumpycode.polizziahut.lavaplayer.GuildMusicManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -18,6 +18,8 @@ import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
 
 import java.util.*;
+
+import static com.grumpycode.polizziahut.BotUtils.BOT_PREFIX;
 
 public class CommandHandler {
 
@@ -82,40 +84,29 @@ public class CommandHandler {
         // Skips the current song
         commandMap.put("skipsong", (event, args) -> {
 
+
             skipTrack(event.getChannel());
 
         });
 
-        commandMap.put("exampleembed", (event, args) -> {
+        commandMap.put("help", (event, args) -> {
 
             EmbedBuilder builder = new EmbedBuilder();
-
-            builder.appendField("fieldTitleInline", "fieldContentInline", true);
-            builder.appendField("fieldTitleInline2", "fieldContentInline2", true);
-            builder.appendField("fieldTitleNotInline", "fieldContentNotInline", false);
-            builder.appendField(":tada: fieldWithCoolThings :tada:", "[hiddenLink](http://i.imgur.com/Y9utuDe.png)", false);
-
-            builder.withAuthorName("authorName");
-            builder.withAuthorIcon("http://i.imgur.com/PB0Soqj.png");
-            builder.withAuthorUrl("http://i.imgur.com/oPvYFj3.png");
+            builder.withAuthorName("Grumpy Code");
+            builder.withAuthorIcon("http://i.imgur.com/1lWPIgn.png");
+            builder.withAuthorUrl("https://github.com/GrumpyCode");
 
             builder.withColor(255, 0, 0);
-            builder.withDesc("withDesc");
-            builder.withDescription("withDescription");
-            builder.withTitle("withTitle");
-            builder.withTimestamp(100);
-            builder.withUrl("http://i.imgur.com/IrEVKQq.png");
-            builder.withImage("http://i.imgur.com/agsp5Re.png");
+            builder.withTitle("Available Commands:");
 
-            builder.withFooterIcon("http://i.imgur.com/Ch0wy1e.png");
-            builder.withFooterText("footerText");
-            builder.withFooterIcon("http://i.imgur.com/TELh8OT.png");
-            builder.withThumbnail("http://www.gstatic.com/webp/gallery/1.webp");
+            builder.withDescription(
+                    "'"+ BOT_PREFIX + "joinvoice' - Bot will join the voice channel you are in.\n" +
+                    "'"+ BOT_PREFIX + "leavevoice' - Bot will leave its current voice channel.\n" +
+                    "'"+ BOT_PREFIX + "playsong <YouTube URL>' - Bot will play the song at that link.\n" +
+                    "'"+ BOT_PREFIX + "skipsong' - Bot will skip the currently playing song.");
 
-            builder.appendDesc(" + appendDesc");
-            builder.appendDescription(" + appendDescription");
-
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            RequestBuffer.request(() -> event.getAuthor().getOrCreatePMChannel().sendMessage(builder.build()));
+            event.getMessage().delete();
 
         });
 
@@ -199,11 +190,11 @@ public class CommandHandler {
             return;
 
         // Check if the first arg (the command) starts with the prefix defined in the utils class
-        if(!argArray[0].startsWith(BotUtils.BOT_PREFIX))
+        if(!argArray[0].startsWith(BOT_PREFIX))
             return;
 
         // Extract the "command" part of the first arg out by ditching the amount of characters present in the prefix
-        String commandStr = argArray[0].substring(BotUtils.BOT_PREFIX.length());
+        String commandStr = argArray[0].substring(BOT_PREFIX.length());
 
         // Load the rest of the args in the array into a List for safer access
         List<String> argsList = new ArrayList<>(Arrays.asList(argArray));

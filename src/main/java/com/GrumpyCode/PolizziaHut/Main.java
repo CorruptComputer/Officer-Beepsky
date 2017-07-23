@@ -1,4 +1,4 @@
-package com.GrumpyCode.PolizziaHut;
+package com.grumpycode.polizziahut;
 
 import sx.blah.discord.api.IDiscordClient;
 
