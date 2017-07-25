@@ -6,10 +6,11 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RequestBuffer;
 
-class BotUtils {
+public class BotUtils {
 
     // Constants for use throughout the bot
-    static String BOT_PREFIX = "!";
+    public static String DEFAULT_PREFIX = ".";
+    public static String MUSIC_PREFIX = "!!";
 
     // Handles the creation and getting of a IDiscordClient object for a token
     static IDiscordClient getBuiltDiscordClient(String token){
@@ -24,7 +25,7 @@ class BotUtils {
     }
 
     // Helper functions to make certain aspects of the bot easier to use.
-    static void sendMessage(IChannel channel, String message){
+    public static void sendMessage(IChannel channel, String message){
 
         // This might look weird but it'll be explained in another page.
         RequestBuffer.request(() -> {

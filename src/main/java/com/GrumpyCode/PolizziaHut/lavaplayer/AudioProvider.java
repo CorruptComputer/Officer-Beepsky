@@ -17,7 +17,7 @@ public class AudioProvider implements IAudioProvider {
     /**
      * @param audioPlayer Audio player to wrap.
      */
-    public AudioProvider(AudioPlayer audioPlayer) {
+    AudioProvider(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
     }
 

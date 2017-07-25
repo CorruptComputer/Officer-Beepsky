@@ -1,9 +1,20 @@
 group 'PolizziaHut'
-version '0.1.0'
+version '0.1.1'
 
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Polizzia Hut',
+                'Implementation-Version': version,
+                'Main-Class': 'com.grumpycode.polizziahut.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 repositories {
     mavenCentral()
