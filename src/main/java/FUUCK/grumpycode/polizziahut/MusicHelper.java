@@ -19,8 +19,9 @@ public class MusicHelper {
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
     private static final Map<Long, GuildMusicManager> musicManagers = new HashMap<>();
 
+
     private static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
-        long guildId = Long.parseLong(guild.getStringID());
+        long guildId = guild.getLongID();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null) {
