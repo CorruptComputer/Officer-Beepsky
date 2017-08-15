@@ -3,8 +3,8 @@ package com.grumpycode.polizziahut.commands;
 import com.grumpycode.polizziahut.BotUtils;
 import com.grumpycode.polizziahut.Command;
 import com.grumpycode.polizziahut.MusicHelper;
+import com.grumpycode.polizziahut.lavaplayer.TrackScheduler;
 import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.audio.AudioPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +27,15 @@ public class MusicCommands {
             // if the bot is already in another channel don't move
             if(botVoiceChannel == null){
                 // clear the queue before joining
-                AudioPlayer audioP = AudioPlayer.getAudioPlayerForGuild(event.getGuild());
+                TrackScheduler scheduler = MusicHelper.getGuildAudioPlayer(event.getGuild()).getScheduler();
 
-                audioP.clear();
+                scheduler.getQueue().clear();
+                scheduler.nextTrack();
 
                 userVoiceChannel.join();
             }else if(botVoiceChannel != userVoiceChannel){
                 BotUtils.sendMessage(event.getChannel(), "Already in a voice channel, either join that channel or wait for them to finish.");
+                return;
             }
 
             // Turn the args back into a string separated by space
@@ -50,9 +52,10 @@ public class MusicCommands {
             if (botVoiceChannel == null)
                 return;
 
-            AudioPlayer audioP = AudioPlayer.getAudioPlayerForGuild(event.getGuild());
+            TrackScheduler scheduler = MusicHelper.getGuildAudioPlayer(event.getGuild()).getScheduler();
 
-            audioP.clear();
+            scheduler.getQueue().clear();
+            scheduler.nextTrack();
 
             botVoiceChannel.leave();
             event.getMessage().delete();

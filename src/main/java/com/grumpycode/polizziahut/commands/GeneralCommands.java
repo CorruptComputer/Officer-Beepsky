@@ -25,9 +25,9 @@ public class GeneralCommands {
                     "`" + BotUtils.DEFAULT_PREFIX + "help` - You should already know this one.\n" +
                     "`" + BotUtils.DEFAULT_PREFIX + "joinserver` - Bot will send you an invite to the Grumpy Code Discord server.\n\n"+
                     "**Music Commands:**\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "queue <YouTube URL>` - Bot will play the song at that link.\n" +
+                    "`" + BotUtils.MUSIC_PREFIX + "queue <YouTube/SoundCloud URL>` - Bot will play the song at that link.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "stop` - Bot will clear the queue and leave the voice channel.\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Bot will skip the currently playing song.\n");
+                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Bot will skip the currently playing song.\n\n");
 
             RequestBuffer.request(() -> event.getAuthor().getOrCreatePMChannel().sendMessage(builder.build()));
             event.getMessage().delete();

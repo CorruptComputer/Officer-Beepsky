@@ -1,6 +1,17 @@
 language: java
+
 jdk:
-  - openjdk8
- 
+- openjdk8
+
 before_install:
- - chmod +x gradlew
+- chmod +x gradlew
+
+deploy:
+  provider: releases
+  api_key:
+    secure: DSxWjGJJqVr/ErEJCssA0knm3DSrBrA/JqHzaxI/81pJTQj6zE2I8Xvz0WxNY5qFP3TDFbNDe4az5vd9vpKcqhppOu+yJ5HD3zkJKITE0mlR4mjEuOJ7jaVkKzTqTjyYu3q6RRWI32l+J7r14+3vIEA3MY9Uwqydd0bOytVwGsfgCHcsYIYYX+vrkzF5Nj/aYXwM0iKbo+cr5Whe5IFuRO2diFdYA/utRch3zBvVV0doIJ0h3ZDM8jQaWwfctnGO1nwVRgrxXOV0Uwc9Bq9wReI8z+02MhKsu19ze1e9R9LHLPs72CMeSoe6z+hJqoKBIUba/c7u4MGnA1FXs0Mo88s5uequQ+DG9XiO2RdYJAPOyPxB6LeWSNjJIU/8XLvC7kDnep9wsvAXIBFL6M88mhleB/xNMxxSV2Yyc/M4Flx1lKMqgSwglv7rGJkqxske6P58KaNlSIg93KUSYo9tdCcxw3UaKp9Ao8aIrlRBdnWeQOVbScF98WWFuH/y/lWNJGYLDbfnUCYXazJfl/owlirXZp/K2dC56B8F146mRmet3G9u8L2MrbfFacXVbTeQ/A7pRCPDQNlEgR2rVLnctO4G8FkCLGO7+iR8nNzvuSqr99TtVpLp13ZtU1xPcQWI4e7kJMDv24otLys4yxmnWiLl+j6XCgOdaci6NMjnOSI=
+  file: "./build/libs/PolizziaHut-*.jar"
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: GrumpyCode/PolizziaHut

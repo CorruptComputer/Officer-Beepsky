@@ -17,16 +17,15 @@ import java.util.Map;
 public class MusicHelper {
 
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-    private static final Map<Long, GuildMusicManager> musicManagers = new HashMap<>();
+    private static final Map<Long, GuildMusicManager> playerInstances = new HashMap<>();
 
-
-    private static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
+    public static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
         long guildId = guild.getLongID();
-        GuildMusicManager musicManager = musicManagers.get(guildId);
+        GuildMusicManager musicManager = playerInstances.get(guildId);
 
         if (musicManager == null) {
             musicManager = new GuildMusicManager(playerManager);
-            musicManagers.put(guildId, musicManager);
+            playerInstances.put(guildId, musicManager);
         }
 
         guild.getAudioManager().setAudioProvider(musicManager.getAudioProvider());
@@ -74,12 +73,12 @@ public class MusicHelper {
 
     private static void play(GuildMusicManager musicManager, AudioTrack track) {
 
-        musicManager.scheduler.queue(track);
+        musicManager.getScheduler().queue(track);
     }
 
     public static void skipTrack(IChannel channel) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
-        musicManager.scheduler.nextTrack();
+        musicManager.getScheduler().nextTrack();
 
         BotUtils.sendMessage(channel, "Skipped to next track.");
     }
