@@ -6,6 +6,9 @@ jdk:
 before_install:
 - chmod +x gradlew
 
+script:
+- ./gradlew fatJar
+
 deploy:
   provider: releases
   api_key:
@@ -13,4 +16,5 @@ deploy:
   file: "./build/libs/PolizziaHut-*.jar"
   skip_cleanup: true
   on:
+    tags: false
     repo: GrumpyCode/PolizziaHut
