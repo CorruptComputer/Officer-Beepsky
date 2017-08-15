@@ -13,5 +13,4 @@ deploy:
   file: "./build/libs/PolizziaHut-*.jar"
   skip_cleanup: true
   on:
-    tags: true
     repo: GrumpyCode/PolizziaHut
