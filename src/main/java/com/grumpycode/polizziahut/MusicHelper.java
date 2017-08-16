@@ -66,17 +66,7 @@ public class MusicHelper {
                 play(musicManager, firstTrack);
 
                 // the queue for the playlist will start at the linked video
-                boolean start = false;
-                for(int i = 0; i < playlist.getTracks().size(); i++){
-                    while(!start){
-                        if(playlist.getTracks().get(i) == firstTrack){
-                            start = true;
-                            i++;
-                        }else{
-                            i++;
-                        }
-                    }
-
+                for(int i = playlist.getTracks().indexOf(firstTrack) + 1; i < playlist.getTracks().size(); i++){
                     play(musicManager, playlist.getTracks().get(i));
                 }
 
