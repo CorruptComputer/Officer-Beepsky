@@ -1,20 +1,18 @@
-package com.grumpycode.polizziahut.commands;
+package me.nickolasgupton.polizziahut.commands;
 
-import com.grumpycode.polizziahut.BotUtils;
-import com.grumpycode.polizziahut.Command;
-import com.grumpycode.polizziahut.MusicHelper;
-import com.grumpycode.polizziahut.lavaplayer.GuildMusicManager;
-import com.grumpycode.polizziahut.lavaplayer.TrackScheduler;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import me.nickolasgupton.polizziahut.Command;
+import me.nickolasgupton.polizziahut.MusicHelper;
+import me.nickolasgupton.polizziahut.lavaplayer.GuildMusicManager;
+import me.nickolasgupton.polizziahut.lavaplayer.TrackScheduler;
+
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.grumpycode.polizziahut.MusicHelper.getGuildAudioPlayer;
+import static me.nickolasgupton.polizziahut.MusicHelper.getGuildAudioPlayer;
 
 public class MusicCommands {
     public static Map<String, Command> getMusicCommands() {

@@ -1,7 +1,8 @@
-package com.grumpycode.polizziahut;
+package me.nickolasgupton.polizziahut;
 
-import com.grumpycode.polizziahut.commands.GeneralCommands;
-import com.grumpycode.polizziahut.commands.MusicCommands;
+import me.nickolasgupton.polizziahut.commands.GeneralCommands;
+import me.nickolasgupton.polizziahut.commands.MusicCommands;
+
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

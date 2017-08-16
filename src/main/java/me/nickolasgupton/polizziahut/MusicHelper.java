@@ -1,6 +1,6 @@
-package com.grumpycode.polizziahut;
+package me.nickolasgupton.polizziahut;
 
-import com.grumpycode.polizziahut.lavaplayer.GuildMusicManager;
+import me.nickolasgupton.polizziahut.lavaplayer.GuildMusicManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;

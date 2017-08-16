@@ -1,7 +1,7 @@
-package com.grumpycode.polizziahut.commands;
+package me.nickolasgupton.polizziahut.commands;
 
-import com.grumpycode.polizziahut.BotUtils;
-import com.grumpycode.polizziahut.Command;
+import me.nickolasgupton.polizziahut.BotUtils;
+import me.nickolasgupton.polizziahut.Command;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 

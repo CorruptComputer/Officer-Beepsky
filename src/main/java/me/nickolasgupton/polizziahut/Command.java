@@ -1,4 +1,4 @@
-package com.grumpycode.polizziahut;
+package me.nickolasgupton.polizziahut;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

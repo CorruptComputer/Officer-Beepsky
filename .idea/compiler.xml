@@ -2,6 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="me.nickolasgupton.polizziahut_main" target="1.8" />
+      <module name="me.nickolasgupton.polizziahut_test" target="1.8" />
       <module name="PolizziaHut_main" target="1.8" />
       <module name="PolizziaHut_test" target="1.8" />
     </bytecodeTargetLevel>
