@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/GrumpyCode/PolizziaHut.svg?branch=master)](https://travis-ci.org/GrumpyCode/PolizziaHut)
+[![Build Status](https://travis-ci.org/CorruptComputer/PolizziaHut.svg?branch=master)](https://travis-ci.org/CorruptComputer/PolizziaHut)
 ### PolizziaHut is a Discord bot made using:
 * OpenJDK: https://developers.redhat.com/products/openjdk/download/
 * IntelliJ IDEA Community: https://www.jetbrains.com/idea/
