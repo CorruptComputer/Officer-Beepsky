@@ -10,8 +10,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MusicHelper {
@@ -33,16 +36,22 @@ public class MusicHelper {
         return musicManager;
     }
 
-    public static void loadAndPlay(final IChannel channel, final String trackUrl) {
+    public static void loadAndPlay(final IChannel channel, final String trackUrl, final String authorName) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.withColor(255, 0, 0);
+        builder.withFooterText(authorName);
+
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                BotUtils.sendMessage(channel, "Adding to queue " + track.getInfo().title);
+                builder.withTitle("Adding to queue:");
+                builder.withDescription("[" + track.getInfo().title + "](" + trackUrl + ")" + " by " + track.getInfo().author);
 
+                RequestBuffer.request(() -> channel.sendMessage(builder.build()));
                 play(musicManager, track);
             }
 
@@ -54,32 +63,67 @@ public class MusicHelper {
                     firstTrack = playlist.getTracks().get(0);
                 }
 
-                BotUtils.sendMessage(channel, "Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")");
-
                 play(musicManager, firstTrack);
+
+                // the queue for the playlist will start at the linked video
+                boolean start = false;
+                for(int i = 0; i < playlist.getTracks().size(); i++){
+                    while(!start){
+                        if(playlist.getTracks().get(i) == firstTrack){
+                            start = true;
+                            i++;
+                        }else{
+                            i++;
+                        }
+                    }
+
+                    play(musicManager, playlist.getTracks().get(i));
+                }
+
+                String str = getQueue(getGuildAudioPlayer(channel.getGuild()).getScheduler().getQueue());
+
+                builder.withTitle("Adding playlist to queue:");
+                builder.withDescription(playlist.getName() + "\n\n" +
+                        "**First track:** " + "[" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n" +
+                        "**Up Next:**\n" + str);
+
+                RequestBuffer.request(() -> channel.sendMessage(builder.build()));
+
             }
 
             @Override
             public void noMatches() {
-                BotUtils.sendMessage(channel, "Nothing found by " + trackUrl);
+                builder.withTitle("Error queueing track:");
+                builder.withDescription("Nothing found at URL: " + trackUrl);
+
+                RequestBuffer.request(() -> channel.sendMessage(builder.build()));
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                BotUtils.sendMessage(channel, "Could not play: " + exception.getMessage());
+                builder.withTitle("Error queueing track:");
+                builder.withDescription("Could not play track: " + exception.getMessage());
+
+                RequestBuffer.request(() -> channel.sendMessage(builder.build()));
             }
         });
     }
 
     private static void play(GuildMusicManager musicManager, AudioTrack track) {
-
         musicManager.getScheduler().queue(track);
     }
 
-    public static void skipTrack(IChannel channel) {
-        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
-        musicManager.getScheduler().nextTrack();
+    public static String getQueue(List<AudioTrack> queue){
+        String str = "";
 
-        BotUtils.sendMessage(channel, "Skipped to next track.");
+        for(int i = 0; i < queue.size(); i++){
+            str += (i+1) + ". " + "[" + queue.get(i).getInfo().title + "](" + queue.get(i).getInfo().uri + ")" + " by " + queue.get(i).getInfo().author + "\n";
+        }
+
+        if(str.equals("")){
+            str = "Nothing currently queued.";
+        }
+
+        return str;
     }
 }
