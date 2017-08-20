@@ -66,19 +66,18 @@ public class MusicHelper {
                 play(musicManager, firstTrack);
 
                 // the queue for the playlist will start at the linked video
-                for(int i = playlist.getTracks().indexOf(firstTrack) + 1; i < playlist.getTracks().size(); i++){
+                for (int i = playlist.getTracks().indexOf(firstTrack) + 1; i < playlist.getTracks().size(); i++) {
                     play(musicManager, playlist.getTracks().get(i));
                 }
 
                 String str = getQueue(getGuildAudioPlayer(channel.getGuild()).getScheduler().getQueue());
 
+                // message with the first song
                 builder.withTitle("Adding playlist to queue:");
                 builder.withDescription(playlist.getName() + "\n\n" +
                         "**First track:** " + "[" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n" +
-                        "**Up Next:**\n" + str);
-
+                        "**Next up:**\n" + str);
                 RequestBuffer.request(() -> channel.sendMessage(builder.build()));
-
             }
 
             @Override
@@ -107,7 +106,13 @@ public class MusicHelper {
         String str = "";
 
         for(int i = 0; i < queue.size(); i++){
+
             str += (i+1) + ". " + "[" + queue.get(i).getInfo().title + "](" + queue.get(i).getInfo().uri + ")" + " by " + queue.get(i).getInfo().author + "\n";
+            // discord has a character limit of 2048
+            if(i == 9 || str.length() == 1900){
+                str += "+ " + (queue.size() - i) + " more songs.";
+                break;
+            }
         }
 
         if(str.equals("")){

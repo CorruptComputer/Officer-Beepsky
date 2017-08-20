@@ -22,9 +22,10 @@ public class GeneralCommands {
                     "**Music Commands:**\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "queue <YouTube/SoundCloud URL>` - Bot will play the song at that link.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "stop` - Bot will clear the queue and leave the voice channel.\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Bot will skip the currently playing song.\n\n");
+                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Bot will skip the currently playing song.\n\n" +
+                    "PolizziaHut is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/PolizziaHut).");
 
-            builder.withFooterText("PolizziaHut is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/PolizziaHut).");
+            builder.withFooterText("v" + BotUtils.VERSION);
 
             RequestBuffer.request(() -> event.getAuthor().getOrCreatePMChannel().sendMessage(builder.build()));
             event.getMessage().delete();

@@ -8,6 +8,8 @@ import sx.blah.discord.util.RequestBuffer;
 
 public class BotUtils {
 
+    public static String VERSION = BotUtils.class.getPackage().getImplementationVersion();
+
     // Constants for use throughout the bot
     public static String DEFAULT_PREFIX = ".";
     public static String MUSIC_PREFIX = "!!";

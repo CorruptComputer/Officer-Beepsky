@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut_main.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut_main.iml" group="PolizziaHut" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" group="PolizziaHut" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" group="PolizziaHut" />
     </modules>
   </component>
 </project>
