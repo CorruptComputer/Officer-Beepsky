@@ -1,7 +1,17 @@
 [![Build Status](https://travis-ci.org/CorruptComputer/PolizziaHut.svg?branch=master)](https://travis-ci.org/CorruptComputer/PolizziaHut)
 ### PolizziaHut is a Discord bot made using:
-* OpenJDK: https://developers.redhat.com/products/openjdk/download/
-* IntelliJ IDEA Community: https://www.jetbrains.com/idea/
-* Discord4J: https://github.com/austinv11/Discord4J
-* Lava Player: https://github.com/sedmelluq/lavaplayer
-* SLF4J: https://www.slf4j.org/
+* [Discord4J](https://github.com/austinv11/Discord4J)
+* [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
+* [SLF4J](https://www.slf4j.org/)
+
+### Building
+To build you need the latest JDK 8 (9 works as well, but is not officially supported by D4j yet), RedHat's OpenJDK or Oracle's JDK should both work fine, however OpenJDK is what I will be using and what is used for TravisCI. Optionally you may also want to install Intellij IDEA Community.
+
+The easiest way to build is using `./gradlew fatJar` in either command prompt (Windows), or in the terminal (Linux/Mac).
+
+You could alternitively use Intellij and select fatJar from `Gradle Tasks->Other->fatJar`, and once you've done this step you can simply build by pressing the green run arrow at the top.
+
+The build name is fatJar because well, the jar is 'fat'. Which means all dependences will be packed into it in order to make it easily portable.
+
+### Running
+You can run it from the terminal/command prompt by typing `java -jar PolizziaHut-x.x.x.jar <Discord token>`. If no token is provided you will be prompted to enter one.
