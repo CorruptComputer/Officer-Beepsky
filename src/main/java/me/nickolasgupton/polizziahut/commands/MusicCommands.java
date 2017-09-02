@@ -1,5 +1,6 @@
 package me.nickolasgupton.polizziahut.commands;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.nickolasgupton.polizziahut.Command;
 import me.nickolasgupton.polizziahut.MusicHelper;
 import me.nickolasgupton.polizziahut.lavaplayer.GuildMusicManager;
@@ -10,6 +11,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static me.nickolasgupton.polizziahut.MusicHelper.getGuildAudioPlayer;
@@ -70,38 +72,7 @@ public class MusicCommands {
 
         musicCommands.put("q", musicCommands.get("queue")::runCommand);
 
-        musicCommands.put("stop", (event, args) -> {
-
-            IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
-
-            if (botVoiceChannel == null)
-                return;
-
-            TrackScheduler scheduler = getGuildAudioPlayer(event.getGuild()).getScheduler();
-
-            scheduler.getQueue().clear();
-            scheduler.nextTrack();
-
-            botVoiceChannel.leave();
-        });
-
-        // Skips the current song
-        musicCommands.put("skip", (event, args) -> {
-            GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
-
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.withColor(255, 0, 0);
-            builder.withDescription("Skipped to next track.");
-
-            builder.withFooterText(event.getAuthor().getName());
-
-            musicManager.getScheduler().nextTrack();
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-
-            event.getMessage().delete();
-        });
-
-        // Skips the current song
+        // Lists the queue
         musicCommands.put("listqueue", (event, args) -> {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
 
@@ -119,6 +90,44 @@ public class MusicCommands {
         });
 
         musicCommands.put("lq", musicCommands.get("listqueue")::runCommand);
+
+        // Skips the current song
+        musicCommands.put("skip", (event, args) -> {
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
+            List<AudioTrack> queue = musicManager.getScheduler().getQueue();
+            EmbedBuilder builder = new EmbedBuilder();
+
+            builder.withColor(255, 0, 0);
+
+            if(queue.size() > 0) {
+                builder.withDescription("Skipped to next track, now playing:\n" +
+                        "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri + ")" + " by " + queue.get(0).getInfo().author);
+            }else{
+                builder.withDescription("Skipped to next track, nothing left to play.");
+            }
+
+            builder.withFooterText(event.getAuthor().getName());
+
+            musicManager.getScheduler().nextTrack();
+            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+
+            event.getMessage().delete();
+        });
+
+        musicCommands.put("stop", (event, args) -> {
+
+            IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
+
+            if (botVoiceChannel == null)
+                return;
+
+            TrackScheduler scheduler = getGuildAudioPlayer(event.getGuild()).getScheduler();
+
+            scheduler.getQueue().clear();
+            scheduler.nextTrack();
+
+            botVoiceChannel.leave();
+        });
 
         return musicCommands;
     }

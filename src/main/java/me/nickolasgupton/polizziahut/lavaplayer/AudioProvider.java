@@ -44,11 +44,6 @@ public class AudioProvider implements IAudioProvider {
     }
 
     @Override
-    public int getChannels() {
-        return 2;
-    }
-
-    @Override
     public AudioEncodingType getAudioEncodingType() {
         return AudioEncodingType.OPUS;
     }
