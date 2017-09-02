@@ -22,8 +22,8 @@ public class GeneralCommands {
                     "**Music Commands:**\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "queue <YouTube URL>` or `" + BotUtils.MUSIC_PREFIX +"q <YouTube URL>` - Plays the song at that link.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "listqueue` or `" + BotUtils.MUSIC_PREFIX +"lq` - Messages back a list of the current queue.\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Skips the current song.\n\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "stop` - Clears the current queue and leaves the voice channel.\n" +
+                    "`" + BotUtils.MUSIC_PREFIX + "skip` - Skips the current song.\n" +
+                    "`" + BotUtils.MUSIC_PREFIX + "stop` - Clears the current queue and leaves the voice channel.\n\n" +
                     "PolizziaHut is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/PolizziaHut).");
 
             builder.withFooterText("v" + BotUtils.VERSION);
