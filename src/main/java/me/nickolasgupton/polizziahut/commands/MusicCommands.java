@@ -28,7 +28,7 @@ public class MusicCommands {
             builder.withFooterText(event.getAuthor().getName());
 
             // user only messages "!!queue" with no track data
-            if(args.size() == 0){
+            if (args.size() == 0) {
                 builder.withDescription("No track specified.");
                 RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
                 event.getMessage().delete();
@@ -47,7 +47,7 @@ public class MusicCommands {
 
             IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
             // if the bot is not currently in a voice channel, join the user
-            if(botVoiceChannel == null){
+            if (botVoiceChannel == null) {
                 // clear the queue before joining
                 TrackScheduler scheduler = getGuildAudioPlayer(event.getGuild()).getScheduler();
 
@@ -55,14 +55,14 @@ public class MusicCommands {
                 scheduler.nextTrack();
 
                 userVoiceChannel.join();
-            }else
+            } else
                 // if the bot is currently in a voice channel that isn't the one that the user in in
-                if(botVoiceChannel != userVoiceChannel){
-                builder.withDescription("Already in a voice channel, either join that channel or wait for them to finish.");
-                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-                event.getMessage().delete();
-                return;
-            }
+                if (botVoiceChannel != userVoiceChannel) {
+                    builder.withDescription("Already in a voice channel, either join that channel or wait for them to finish.");
+                    RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+                    event.getMessage().delete();
+                    return;
+                }
 
             // Turn the args back into a string separated by space
             String searchStr = String.join(" ", args);
@@ -79,7 +79,7 @@ public class MusicCommands {
             String str = MusicHelper.getQueue(musicManager.getScheduler().getQueue());
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.withColor(255, 0, 0);
+            builder.withColor(100, 255, 100);
             builder.withTitle("Next up:");
             builder.withDescription(str);
 
@@ -97,12 +97,12 @@ public class MusicCommands {
             List<AudioTrack> queue = musicManager.getScheduler().getQueue();
             EmbedBuilder builder = new EmbedBuilder();
 
-            builder.withColor(255, 0, 0);
+            builder.withColor(100, 255, 100);
 
-            if(queue.size() > 0) {
+            if (queue.size() > 0) {
                 builder.withDescription("Skipped to next track, now playing:\n" +
                         "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri + ")" + " by " + queue.get(0).getInfo().author);
-            }else{
+            } else {
                 builder.withDescription("Skipped to next track, nothing left to play.");
             }
 
@@ -118,15 +118,15 @@ public class MusicCommands {
 
             IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
 
-            if (botVoiceChannel == null)
-                return;
+            if (botVoiceChannel == null) return;
 
             TrackScheduler scheduler = getGuildAudioPlayer(event.getGuild()).getScheduler();
 
             scheduler.getQueue().clear();
             scheduler.nextTrack();
-
             botVoiceChannel.leave();
+
+            event.getMessage().delete();
         });
 
         return musicCommands;

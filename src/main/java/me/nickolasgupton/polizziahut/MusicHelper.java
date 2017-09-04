@@ -42,7 +42,7 @@ public class MusicHelper {
         AudioSourceManagers.registerLocalSource(playerManager);
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.withColor(255, 0, 0);
+        builder.withColor(100, 255, 100);
         builder.withFooterText(authorName);
 
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
@@ -82,6 +82,7 @@ public class MusicHelper {
 
             @Override
             public void noMatches() {
+                builder.withColor(255, 0, 0);
                 builder.withTitle("Error queueing track:");
                 builder.withDescription("Nothing found at URL: " + trackUrl);
 
@@ -90,6 +91,7 @@ public class MusicHelper {
 
             @Override
             public void loadFailed(FriendlyException exception) {
+                builder.withColor(255, 0, 0);
                 builder.withTitle("Error queueing track:");
                 builder.withDescription("Could not play track: " + exception.getMessage());
 
@@ -102,23 +104,28 @@ public class MusicHelper {
         musicManager.getScheduler().queue(track);
     }
 
-    public static String getQueue(List<AudioTrack> queue){
-        String str = "";
+    public static String getQueue(List<AudioTrack> queue) {
 
-        for(int i = 0; i < queue.size(); i++){
+        StringBuilder str = new StringBuilder();
 
-            str += (i+1) + ". " + "[" + queue.get(i).getInfo().title + "](" + queue.get(i).getInfo().uri + ")" + " by " + queue.get(i).getInfo().author + "\n";
-            // discord has a character limit of 2048
-            if(i == 9 || str.length() == 1900){
-                str += "+ " + (queue.size() - i) + " more songs.";
+        for (int i = 0; i < queue.size(); i++) {
+
+            // I hate the way this looks, but Intellij says its faster than string concatenation
+            str.append((i + 1)).append(". [").append(queue.get(i).getInfo().title)
+                    .append("](").append(queue.get(i).getInfo().uri)
+                    .append(") by ").append(queue.get(i).getInfo().author).append("\n");
+
+            // discord has a character limit of 2048, lets leave an extra 100 just to be safe
+            if (i == 14 || str.length() == 1948) {
+                str.append("+ ").append((queue.size() - i)).append(" more songs.");
                 break;
             }
         }
 
-        if(str.equals("")){
-            str = "Nothing currently queued.";
+        if (str.toString().equals("")) {
+            str.append("Nothing currently queued.");
         }
 
-        return str;
+        return str.toString();
     }
 }

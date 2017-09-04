@@ -14,7 +14,7 @@ public class GeneralCommands {
 
         generalCommands.put("help", (event, args) -> {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.withColor(255, 0, 0);
+            builder.withColor(100, 255, 100);
             builder.withTitle("__Command List__");
             builder.withDescription(
                     "**General Commands:**\n" +
