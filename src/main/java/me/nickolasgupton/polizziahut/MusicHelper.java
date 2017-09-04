@@ -115,8 +115,8 @@ public class MusicHelper {
                     .append("](").append(queue.get(i).getInfo().uri)
                     .append(") by ").append(queue.get(i).getInfo().author).append("\n");
 
-            // discord has a character limit of 2048, lets leave an extra 100 just to be safe
-            if (i == 14 || str.length() == 1948) {
+            // discord has a character limit of 2048, 200 extra for the rest of the message
+            if (i == 19 || str.length() == 1848) {
                 str.append("+ ").append((queue.size() - i)).append(" more songs.");
                 break;
             }
