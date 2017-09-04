@@ -85,7 +85,14 @@ public class MusicCommands {
 
             builder.withFooterText(event.getAuthor().getName());
 
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            int len = builder.getTotalVisibleCharacters();
+            if(len > 2048){
+                builder.withColor(255, 0, 0);
+                builder.withTitle("Error listing queue:");
+                builder.withDescription("Too long! Length: " + len);
+            }else{
+                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            }
             event.getMessage().delete();
         });
 

@@ -115,8 +115,8 @@ public class MusicHelper {
                     .append("](").append(queue.get(i).getInfo().uri)
                     .append(") by ").append(queue.get(i).getInfo().author).append("\n");
 
-            // discord has a character limit of 2048, 200 extra for the rest of the message
-            if (i == 19 || str.length() == 1848) {
+            // discord has a character limit of 2048, ~300 extra for the rest of the message
+            if (i == 19 || str.length() > 1700) {
                 str.append("+ ").append((queue.size() - i)).append(" more songs.");
                 break;
             }
@@ -125,6 +125,8 @@ public class MusicHelper {
         if (str.toString().equals("")) {
             str.append("Nothing currently queued.");
         }
+
+        System.out.println(str.length());
 
         return str.toString();
     }
