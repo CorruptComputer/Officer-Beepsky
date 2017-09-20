@@ -15,3 +15,12 @@ The build name is fatJar because well, the jar is 'fat'. Which means all depende
 
 ### Running
 You can run it from the terminal/command prompt by typing `java -jar PolizziaHut-x.x.x.jar <Discord token>`. If no token is provided you will be prompted to enter one.
+
+### Build, run, and update script
+Optionally if you are using Linux to host you can use the following script to build, run, and update the bot when needed:
+```
+curl https://raw.githubusercontent.com/CorruptComputer/PolizziaHut/master/startAndRun.sh -o startAndRun.sh
+bash startAndRun.sh
+```
+And when its time to update just run `.restart` and it will update and restart! 
+**WARNING: Currently with the `.restart` command if you do not have the script setup it will not restart the bot, but only shut it down.**
