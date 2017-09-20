@@ -3,10 +3,13 @@ package me.nickolasgupton.polizziahut;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) throws InterruptedException{
+
+        if(args.length < 2){
+            System.out.println("Usage: java -jar PolizziaHut-x.x.x.jar <Discord token> <Owner ID>");
+            System.exit(1);
+        }
 
         String token = args[0];
 

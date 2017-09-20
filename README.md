@@ -14,7 +14,7 @@ You could alternitively use Intellij and select fatJar from `Gradle Tasks->Other
 The build name is fatJar because well, the jar is 'fat'. Which means all dependences will be packed into it in order to make it easily portable.
 
 ### Running
-You can run it from the terminal/command prompt by typing `java -jar PolizziaHut-x.x.x.jar <Discord token>`. If no token is provided you will be prompted to enter one.
+You can run it from the terminal/command prompt by typing `java -jar PolizziaHut-x.x.x.jar <Discord token> <Owner ID>`.
 
 ### Build, run, and update script
 Optionally if you are using Linux to host you can use the following script to build, run, and update the bot when needed:

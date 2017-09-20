@@ -12,9 +12,9 @@ import java.util.*;
 public class CommandHandler {
 
     // static maps of commands mapping from command string to the functional impl
-    private static Map<String, Command> generalCommands = GeneralCommands.getGeneralCommands();
-    private static Map<String, Command> musicCommands = MusicCommands.getMusicCommands();
-    private static Map<String, Command> gameCommands = GameCommands.getGameCommands();
+    private static final Map<String, Command> generalCommands = GeneralCommands.getGeneralCommands();
+    private static final Map<String, Command> musicCommands = MusicCommands.getMusicCommands();
+    private static final Map<String, Command> gameCommands = GameCommands.getGameCommands();
 
 
     @EventSubscriber

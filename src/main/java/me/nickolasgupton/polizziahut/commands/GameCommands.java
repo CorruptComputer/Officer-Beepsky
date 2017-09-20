@@ -1,6 +1,5 @@
 package me.nickolasgupton.polizziahut.commands;
 
-import me.nickolasgupton.polizziahut.BotUtils;
 import me.nickolasgupton.polizziahut.Command;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -15,8 +14,6 @@ public class GameCommands {
         Map<String, Command> gameCommands = new HashMap<>();
 
         gameCommands.put("8ball", (event, args) -> {
-            event.getMessage().addReaction(":white_check_mark:");
-
             Random rdm = new Random();
 
             /*

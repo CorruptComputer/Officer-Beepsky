@@ -8,13 +8,13 @@ import sx.blah.discord.util.RequestBuffer;
 
 public class BotUtils {
 
-    public static String VERSION = BotUtils.class.getPackage().getImplementationVersion();
+    public static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
     public static String OWNER_ID;
 
     // Constants for use throughout the bot
-    public static String DEFAULT_PREFIX = ".";
-    public static String MUSIC_PREFIX = "!!";
-    public static String GAME_PREFIX = "$";
+    public static final String DEFAULT_PREFIX = ".";
+    public static final String MUSIC_PREFIX = "!!";
+    public static final String GAME_PREFIX = "$";
 
     // Handles the creation and getting of a IDiscordClient object for a token
     static IDiscordClient getBuiltDiscordClient(String token){

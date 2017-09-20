@@ -22,8 +22,6 @@ public class MusicCommands {
 
         // Plays the first song found containing the first arg
         musicCommands.put("queue", (event, args) -> {
-            event.getMessage().addReaction(":white_check_mark:");
-
             EmbedBuilder builder = new EmbedBuilder();
             builder.withColor(255, 0, 0);
             builder.withTitle("Error queueing track:");
@@ -82,8 +80,6 @@ public class MusicCommands {
 
         // Lists the queue
         musicCommands.put("listqueue", (event, args) -> {
-            event.getMessage().addReaction(":white_check_mark:");
-
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
 
             String str = MusicHelper.getQueue(musicManager.getScheduler().getQueue());
@@ -110,8 +106,6 @@ public class MusicCommands {
 
         // Skips the current song
         musicCommands.put("skip", (event, args) -> {
-            event.getMessage().addReaction(":white_check_mark:");
-
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
             List<AudioTrack> queue = musicManager.getScheduler().getQueue();
             EmbedBuilder builder = new EmbedBuilder();
@@ -134,8 +128,6 @@ public class MusicCommands {
         });
 
         musicCommands.put("stop", (event, args) -> {
-            event.getMessage().addReaction(":white_check_mark:");
-
             IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
 
             if (botVoiceChannel == null) return;
