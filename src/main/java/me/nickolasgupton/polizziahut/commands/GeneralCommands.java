@@ -13,6 +13,7 @@ public class GeneralCommands {
         Map<String, Command> generalCommands = new HashMap<>();
 
         generalCommands.put("help", (event, args) -> {
+            event.getMessage().addReaction(":white_check_mark:");
             EmbedBuilder builder = new EmbedBuilder();
             builder.withColor(100, 255, 100);
             builder.withTitle("__Command List__");
@@ -37,6 +38,17 @@ public class GeneralCommands {
 
         generalCommands.put("restart", (event, args) -> {
             if(event.getAuthor().getStringID().equals(BotUtils.OWNER_ID)){
+                event.getMessage().addReaction(":white_check_mark:");
+
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.withColor(100, 255, 100);
+                builder.withTitle("Restarting...");
+                builder.withDescription("This may take up to a few minutes if an update is available.\n" +
+                        "Current version: " + BotUtils.VERSION);
+                builder.withFooterText(event.getAuthor().getName());
+                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+
+                event.getMessage().delete();
                 System.exit(1);
             }
         });

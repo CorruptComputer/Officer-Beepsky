@@ -15,6 +15,8 @@ public class GameCommands {
         Map<String, Command> gameCommands = new HashMap<>();
 
         gameCommands.put("8ball", (event, args) -> {
+            event.getMessage().addReaction(":white_check_mark:");
+
             Random rdm = new Random();
 
             /*
