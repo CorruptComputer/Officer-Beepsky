@@ -8,15 +8,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws InterruptedException{
 
-        String token;
+        String token = args[0];
 
-        if (args.length == 0) {
-            Scanner input = new Scanner(System.in);
-            System.out.print("Token: ");
-            token = input.nextLine();
-        }else{
-            token = args[0];
-        }
+        BotUtils.OWNER_ID = args[1];
 
         IDiscordClient client = BotUtils.getBuiltDiscordClient(token);
 

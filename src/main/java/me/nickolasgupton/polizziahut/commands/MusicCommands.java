@@ -22,10 +22,18 @@ public class MusicCommands {
 
         // Plays the first song found containing the first arg
         musicCommands.put("queue", (event, args) -> {
+
+
             EmbedBuilder builder = new EmbedBuilder();
             builder.withColor(255, 0, 0);
             builder.withTitle("Error queueing track:");
             builder.withFooterText(event.getAuthor().getName());
+
+            if(event.getChannel().isPrivate()){
+                builder.withDescription("Cannot queue music in a private chat.");
+                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+                return;
+            }
 
             // user only messages "!!queue" with no track data
             if (args.size() == 0) {

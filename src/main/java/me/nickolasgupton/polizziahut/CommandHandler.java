@@ -1,5 +1,6 @@
 package me.nickolasgupton.polizziahut;
 
+import me.nickolasgupton.polizziahut.commands.GameCommands;
 import me.nickolasgupton.polizziahut.commands.GeneralCommands;
 import me.nickolasgupton.polizziahut.commands.MusicCommands;
 
@@ -13,6 +14,7 @@ public class CommandHandler {
     // static maps of commands mapping from command string to the functional impl
     private static Map<String, Command> generalCommands = GeneralCommands.getGeneralCommands();
     private static Map<String, Command> musicCommands = MusicCommands.getMusicCommands();
+    private static Map<String, Command> gameCommands = GameCommands.getGameCommands();
 
 
     @EventSubscriber
@@ -39,9 +41,7 @@ public class CommandHandler {
             if (generalCommands.containsKey(commandStr)) {
                 generalCommands.get(commandStr).runCommand(event, argsList);
             }
-        }
-
-        if (argArray[0].startsWith(BotUtils.MUSIC_PREFIX)){
+        }else if (argArray[0].startsWith(BotUtils.MUSIC_PREFIX)){
 
             // Extract the "command" part of the first arg out by ditching the amount of characters present in the prefix
             String commandStr = argArray[0].substring(BotUtils.MUSIC_PREFIX.length());
@@ -54,7 +54,20 @@ public class CommandHandler {
             if (musicCommands.containsKey(commandStr)) {
                 musicCommands.get(commandStr).runCommand(event, argsList);
             }
+        }else if (argArray[0].startsWith(BotUtils.GAME_PREFIX)){
+
+        // Extract the "command" part of the first arg out by ditching the amount of characters present in the prefix
+        String commandStr = argArray[0].substring(BotUtils.GAME_PREFIX.length());
+
+        // Load the rest of the args in the array into a List for safer access
+        List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
+        argsList.remove(0); // Remove the command
+
+        // Instead of delegating the work to a switch, automatically do it via calling the mapping if it exists
+        if (gameCommands.containsKey(commandStr)) {
+            gameCommands.get(commandStr).runCommand(event, argsList);
         }
+    }
 
     }
 

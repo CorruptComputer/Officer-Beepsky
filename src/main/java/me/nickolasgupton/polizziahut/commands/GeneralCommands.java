@@ -24,6 +24,8 @@ public class GeneralCommands {
                     "`" + BotUtils.MUSIC_PREFIX + "listqueue` or `" + BotUtils.MUSIC_PREFIX +"lq` - Messages back a list of the current queue.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "skip` - Skips the current song.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "stop` - Clears the current queue and leaves the voice channel.\n\n" +
+                    "**Game Commands:**\n" +
+                    "`" + BotUtils.GAME_PREFIX + "8ball` or `" + BotUtils.GAME_PREFIX +"8ball <question>` - Gives the answer you may not be looking for.\n\n" +
                     "PolizziaHut is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/PolizziaHut).");
 
             builder.withFooterText("v" + BotUtils.VERSION);
@@ -31,6 +33,12 @@ public class GeneralCommands {
             RequestBuffer.request(() -> event.getAuthor().getOrCreatePMChannel().sendMessage(builder.build()));
             event.getMessage().delete();
 
+        });
+
+        generalCommands.put("restart", (event, args) -> {
+            if(event.getAuthor().getStringID().equals(BotUtils.OWNER_ID)){
+                System.exit(1);
+            }
         });
 
         return generalCommands;
