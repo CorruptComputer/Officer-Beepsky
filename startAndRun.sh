@@ -8,7 +8,7 @@ read token
 echo "What is the Discord ID of the owner? "
 read owner
 
-while [true]; do
+while /bin/true; do
     chmod -X gradlew
     ./gradlew fatJar
     java -jar build/libs/PolizziaHut-*.jar "$token" "$owner"
