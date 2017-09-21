@@ -29,7 +29,7 @@ public class GameCommands {
             };
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.withColor(100, 255, 100);
+
 
             if(args.size() > 0){
                 StringBuilder question = new StringBuilder();
@@ -52,10 +52,25 @@ public class GameCommands {
                 builder.withTitle("8Ball says:");
             }
 
-            int certainty = rdm.nextInt(3);
+            // gives them all an even chance, with rdm.nextInt(3) 0 is almost never picked
+            int certainty = rdm.nextInt(30) % 3;
+            switch(certainty){
+                case 0:
+                    builder.withColor(100, 255, 100);
+                    break;
+                case 1:
+                    builder.withColor(255, 255, 100);
+                    break;
+                case 2:
+                    builder.withColor(255, 100, 100);
+                default:
+                    builder.withColor(0, 0, 0);
+            }
+
+
             builder.withDescription(answers[certainty][rdm.nextInt(answers[certainty].length)]);
 
-            builder.withFooterText(event.getAuthor().getName());
+            builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
 
             RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
             event.getMessage().delete();

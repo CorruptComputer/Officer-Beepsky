@@ -42,7 +42,7 @@ public class GeneralCommands {
                 builder.withTitle("Restarting...");
                 builder.withDescription("This may take up to a few minutes if an update is available.\n" +
                         "Current version: " + BotUtils.VERSION);
-                builder.withFooterText(event.getAuthor().getName());
+                builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
                 RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
 
                 event.getMessage().delete();

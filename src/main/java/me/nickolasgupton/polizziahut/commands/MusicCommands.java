@@ -25,7 +25,7 @@ public class MusicCommands {
             EmbedBuilder builder = new EmbedBuilder();
             builder.withColor(255, 0, 0);
             builder.withTitle("Error queueing track:");
-            builder.withFooterText(event.getAuthor().getName());
+            builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
 
             if(event.getChannel().isPrivate()){
                 builder.withDescription("Cannot queue music in a private chat.");
@@ -89,7 +89,7 @@ public class MusicCommands {
             builder.withTitle("Next up:");
             builder.withDescription(str);
 
-            builder.withFooterText(event.getAuthor().getName());
+            builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
 
             int len = builder.getTotalVisibleCharacters();
             if(len > 2048){
@@ -119,7 +119,7 @@ public class MusicCommands {
                 builder.withDescription("Skipped to next track, nothing left to play.");
             }
 
-            builder.withFooterText(event.getAuthor().getName());
+            builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
 
             musicManager.getScheduler().nextTrack();
             RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
