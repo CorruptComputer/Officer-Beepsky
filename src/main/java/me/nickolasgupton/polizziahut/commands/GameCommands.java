@@ -70,7 +70,7 @@ public class GameCommands {
 
             builder.withDescription(answers[certainty][rdm.nextInt(answers[certainty].length)]);
 
-            builder.withFooterText(event.getAuthor().getNicknameForGuild(event.getGuild()));
+            builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
 
             RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
             event.getMessage().delete();
