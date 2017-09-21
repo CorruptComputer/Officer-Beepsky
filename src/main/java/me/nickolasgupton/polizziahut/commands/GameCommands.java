@@ -34,7 +34,14 @@ public class GameCommands {
             if(args.size() > 0){
                 StringBuilder question = new StringBuilder();
 
+                boolean firstWord = true;
                 for(String str: args){
+                    if(!firstWord){
+                        question.append(' ');
+                    }else{
+                        firstWord = false;
+                    }
+
                     question.append(str);
                 }
 
