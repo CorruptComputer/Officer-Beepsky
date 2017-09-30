@@ -64,6 +64,7 @@ public class GameCommands {
                 case 2:
                     builder.withColor(255, 100, 100);
                     break;
+                // hopefully never happens
                 default:
                     builder.withColor(0, 0, 0);
             }

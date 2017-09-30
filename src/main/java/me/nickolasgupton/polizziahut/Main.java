@@ -1,7 +1,10 @@
 package me.nickolasgupton.polizziahut;
 
-import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.RequestBuffer;
+
 
 public class Main {
     public static void main(String[] args) throws InterruptedException{
@@ -11,21 +14,27 @@ public class Main {
             System.exit(1);
         }
 
-        String token = args[0];
+        // setup client and owner ID
+        BotUtils.CLIENT = new ClientBuilder().withToken(args[0]).withRecommendedShardCount().build();
+        BotUtils.OWNER_ID = Long.parseLong(args[1]);
 
-        BotUtils.OWNER_ID = args[1];
-
-        IDiscordClient client = BotUtils.getBuiltDiscordClient(token);
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
-        client.getDispatcher().registerListener(new CommandHandler());
+        BotUtils.CLIENT.getDispatcher().registerListener(new CommandHandler());
 
         // Only login after all events are registered otherwise some may be missed.
-        client.login();
+        BotUtils.CLIENT.login();
 
-        client.getDispatcher().waitFor(ReadyEvent.class);
+        BotUtils.CLIENT.getDispatcher().waitFor(ReadyEvent.class);
 
         // the "Now Playing:" text
-        client.changePlayingText(".help for commands");
+        BotUtils.CLIENT.changePlayingText(".help for commands");
+
+        // send message of successful startup
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.withColor(100, 255, 100);
+        builder.withTitle("Startup complete!");
+        builder.withDescription("Current version: " + BotUtils.VERSION);
+        RequestBuffer.request(() -> BotUtils.CLIENT.getUserByID(BotUtils.OWNER_ID).getOrCreatePMChannel().sendMessage(builder.build()));
     }
 }

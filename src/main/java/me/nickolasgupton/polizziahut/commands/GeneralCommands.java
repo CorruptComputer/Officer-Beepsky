@@ -36,7 +36,7 @@ public class GeneralCommands {
         });
 
         generalCommands.put("restart", (event, args) -> {
-            if(event.getAuthor().getStringID().equals(BotUtils.OWNER_ID)){
+            if(event.getAuthor().getLongID() == BotUtils.OWNER_ID){
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.withColor(100, 255, 100);
                 builder.withTitle("Restarting...");
