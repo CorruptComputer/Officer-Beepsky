@@ -72,7 +72,7 @@ public class MusicCommands {
 
             // Turn the args back into a string separated by space
             String searchStr = String.join(" ", args);
-            MusicHelper.loadAndPlay(event.getChannel(), searchStr, event.getAuthor().getName());
+            MusicHelper.loadAndPlay(event.getChannel(), searchStr, event.getAuthor().getDisplayName(event.getGuild()));
             event.getMessage().delete();
         });
 
