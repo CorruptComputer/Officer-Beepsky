@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PolizziaHut.iml" filepath="$PROJECT_DIR$/PolizziaHut.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut_main.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut_main.iml" group="PolizziaHut" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" filepath="$PROJECT_DIR$/.idea/modules/PolizziaHut_test.iml" group="PolizziaHut" />
     </modules>

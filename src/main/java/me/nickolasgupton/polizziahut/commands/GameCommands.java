@@ -78,15 +78,6 @@ public class GameCommands {
             event.getMessage().delete();
         });
 
-//        gameCommands.put("poker", (event, args) -> {
-//        });
-
-//        gameCommands.put("blackjack", (event, args) -> {
-//        });
-
-//        gameCommands.put("uno", (event, args) -> {
-//        });
-
         return gameCommands;
 
     }
