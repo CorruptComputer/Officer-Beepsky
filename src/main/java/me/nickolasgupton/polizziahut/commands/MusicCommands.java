@@ -17,6 +17,9 @@ import java.util.Map;
 import static me.nickolasgupton.polizziahut.MusicHelper.getGuildAudioPlayer;
 
 public class MusicCommands {
+
+    private static Map<Long, Boolean> isChannelLocked = new HashMap<>();
+
     public static Map<String, Command> getMusicCommands() {
         Map<String, Command> musicCommands = new HashMap<>();
 

@@ -4,6 +4,7 @@ import me.nickolasgupton.polizziahut.commands.GameCommands;
 import me.nickolasgupton.polizziahut.commands.GeneralCommands;
 import me.nickolasgupton.polizziahut.commands.MusicCommands;
 
+import me.nickolasgupton.polizziahut.commands.OwnerCommands;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -13,9 +14,9 @@ public class CommandHandler {
 
     // static maps of commands mapping from command string to the functional impl
     private static final Map<String, Command> generalCommands = GeneralCommands.getGeneralCommands();
+    private static final Map<String, Command> ownerCommands = OwnerCommands.getOwnerCommands();
     private static final Map<String, Command> musicCommands = MusicCommands.getMusicCommands();
     private static final Map<String, Command> gameCommands = GameCommands.getGameCommands();
-
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -55,20 +56,32 @@ public class CommandHandler {
                 musicCommands.get(commandStr).runCommand(event, argsList);
             }
         }else if (argArray[0].startsWith(BotUtils.GAME_PREFIX)){
+            // Extract the "command" part of the first arg out by ditching the amount of characters present in the prefix
+            String commandStr = argArray[0].substring(BotUtils.GAME_PREFIX.length());
 
-        // Extract the "command" part of the first arg out by ditching the amount of characters present in the prefix
-        String commandStr = argArray[0].substring(BotUtils.GAME_PREFIX.length());
+            // Load the rest of the args in the array into a List for safer access
+            List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
+            argsList.remove(0); // Remove the command
 
-        // Load the rest of the args in the array into a List for safer access
-        List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
-        argsList.remove(0); // Remove the command
+            // Instead of delegating the work to a switch, automatically do it via calling the mapping if it exists
+            if (gameCommands.containsKey(commandStr)) {
+                gameCommands.get(commandStr).runCommand(event, argsList);
+            }
+        // else the only thing it could be an owner command, if it is not a private message,
+        // or if it is not the owner just silently ignore it
+        }else{
+            if(event.getChannel().isPrivate() && event.getAuthor().getLongID() == BotUtils.OWNER_ID){
+                String commandStr = argArray[0];
 
-        // Instead of delegating the work to a switch, automatically do it via calling the mapping if it exists
-        if (gameCommands.containsKey(commandStr)) {
-            gameCommands.get(commandStr).runCommand(event, argsList);
+                // Load the rest of the args in the array into a List for safer access
+                List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
+                argsList.remove(0); // Remove the command
+
+                // Instead of delegating the work to a switch, automatically do it via calling the mapping if it exists
+                if (ownerCommands.containsKey(commandStr)) {
+                    ownerCommands.get(commandStr).runCommand(event, argsList);
+                }
+            }
         }
     }
-
-    }
-
 }

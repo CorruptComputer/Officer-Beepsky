@@ -22,5 +22,5 @@ Optionally if you are using Linux to host you can use the following script to bu
 curl https://raw.githubusercontent.com/CorruptComputer/PolizziaHut/master/startAndRun.sh -o startAndRun.sh
 bash startAndRun.sh
 ```
-And when its time to update just run `.restart` and it will update and restart! 
-**WARNING: Currently with the `.restart` command if you do not have the script setup it will not restart the bot, but only shut it down.**
+And when its time to update just private message the bot `restart` and it will update and restart!
+**WARNING: Currently with the `restart` command if you do not have the script setup it will not restart the bot, but only shut it down.**

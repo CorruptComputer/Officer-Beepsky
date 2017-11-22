@@ -35,21 +35,6 @@ public class GeneralCommands {
 
         });
 
-        generalCommands.put("restart", (event, args) -> {
-            if(event.getAuthor().getLongID() == BotUtils.OWNER_ID){
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.withColor(100, 255, 100);
-                builder.withTitle("Restarting...");
-                builder.withDescription("This may take up to a few minutes if an update is available.\n" +
-                        "Current version: " + BotUtils.VERSION);
-                builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-
-                event.getMessage().delete();
-                System.exit(1);
-            }
-        });
-
         return generalCommands;
     }
 }

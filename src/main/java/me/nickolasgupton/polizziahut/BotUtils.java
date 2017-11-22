@@ -17,22 +17,4 @@ public class BotUtils {
     public static final String MUSIC_PREFIX = "!!";
     public static final String GAME_PREFIX = "$";
     public static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
-
-
-
-
-
-    // Helper functions to make certain aspects of the bot easier to use.
-//    public static void sendMessage(IChannel channel, String message){
-//
-//        // This might look weird but it'll be explained in another page.
-//        RequestBuffer.request(() -> {
-//            try{
-//                channel.sendMessage(message);
-//            } catch (DiscordException e){
-//                System.err.println("Message could not be sent with error: ");
-//                e.printStackTrace();
-//            }
-//        });
-//    }
 }
