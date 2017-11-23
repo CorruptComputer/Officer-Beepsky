@@ -12,19 +12,26 @@ public class OwnerCommands {
     public static Map<String, Command> getOwnerCommands() {
         Map<String, Command> ownerCommands = new HashMap<>();
 
-        ownerCommands.put("restart", (event, args) -> {
-            if(event.getAuthor().getLongID() == BotUtils.OWNER_ID){
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.withColor(100, 255, 100);
-                builder.withTitle("Restarting...");
-                builder.withDescription("This may take up to a few minutes if an update is available.\n" +
-                        "Current version: " + BotUtils.VERSION);
-                builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-                RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+        ownerCommands.put("shutdown", (event, args) -> {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.withColor(100, 255, 100);
+            builder.withTitle("Shutting down...");
+            builder.withDescription("Goodbye world.");
+            builder.withFooterText("Current version: " + BotUtils.VERSION);
+            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
 
-                event.getMessage().delete();
-                System.exit(1);
-            }
+            System.exit(0);
+        });
+
+        ownerCommands.put("restart", (event, args) -> {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.withColor(100, 255, 100);
+            builder.withTitle("Restarting...");
+            builder.withDescription("This may take up to a few minutes if an update is available.");
+            builder.withFooterText("Current version: " + BotUtils.VERSION);
+            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+
+            System.exit(1);
         });
 
         return ownerCommands;
