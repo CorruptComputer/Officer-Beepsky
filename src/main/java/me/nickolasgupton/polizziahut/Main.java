@@ -16,7 +16,7 @@ public class Main {
 
         // setup client and owner ID
         BotUtils.CLIENT = new ClientBuilder().withToken(args[0]).withRecommendedShardCount().build();
-        BotUtils.OWNER_ID = Long.parseLong(args[1]);
+        BotUtils.OWNER_ID = Long.parseUnsignedLong(args[1]);
 
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events

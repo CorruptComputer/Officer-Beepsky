@@ -21,6 +21,8 @@ public class CommandHandler {
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) {
 
+        if(BotUtils.isBanned(event.getAuthor().getStringID())) return;
+
         // Given a message "/test arg1 arg2", argArray will contain ["/test", "arg1", "arg"]
         String[] argArray = event.getMessage().getContent().split(" ");
 

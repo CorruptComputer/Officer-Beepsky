@@ -1,5 +1,5 @@
 group 'PolizziaHut'
-version '0.5.1'
+version '0.6.0'
 
 apply plugin: 'java'
 
@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.sedmelluq:lavaplayer:1.2.44"
-    compile "com.github.austinv11:Discord4J:2.9.2"
+    compile "com.sedmelluq:lavaplayer:1.2.45"
+    compile "com.github.austinv11:Discord4J:2.9.3"
     compile "org.slf4j:slf4j-simple:1.8.0-beta0"
 }
