@@ -58,7 +58,7 @@ public class MusicHelper {
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 // if it is a search vs an actual playlist
-                if(trackUrl.startsWith("ytsearch:")){
+                if(trackUrl.startsWith("ytsearch:") || trackUrl.startsWith("scsearch:")){
 
                     builder.withTitle("Adding to queue:");
                     builder.withDescription(playlist.getName() + "\n\n" +

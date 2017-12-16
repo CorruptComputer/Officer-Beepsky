@@ -76,13 +76,13 @@ public class MusicCommands {
             // Turn the args back into a string separated by space
             String searchStr = String.join(" ", args);
 
-            // if it is a not a URL
+            // if it is a not a URL, and does not already contain a search keyword
             if(!(searchStr.startsWith("https://www.youtube.com/watch?v=")
                     || searchStr.startsWith("http://www.youtube.com/watch?v=")
                     || searchStr.startsWith("www.youtube.com/watch?v=")
                     || searchStr.startsWith("https://youtu.be/")
                     || searchStr.startsWith("http://youtu.be/")
-                    || searchStr.startsWith("youtu.be/"))){
+                    || searchStr.startsWith("youtu.be/")) && !(searchStr.startsWith("ytseaerch:") || searchStr.startsWith("scseaerch:"))){
                 searchStr = "ytsearch:" + searchStr;
             }
 
