@@ -82,7 +82,8 @@ public class MusicCommands {
                     || searchStr.startsWith("www.youtube.com/watch?v=")
                     || searchStr.startsWith("https://youtu.be/")
                     || searchStr.startsWith("http://youtu.be/")
-                    || searchStr.startsWith("youtu.be/")) && !(searchStr.startsWith("ytseaerch:") || searchStr.startsWith("scseaerch:"))){
+                    || searchStr.startsWith("youtu.be/"))
+                    && !(searchStr.startsWith("ytsearch:") || searchStr.startsWith("scsearch:"))){
                 searchStr = "ytsearch:" + searchStr;
             }
 
