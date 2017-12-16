@@ -20,7 +20,7 @@ public class GeneralCommands {
                     "**General Commands:**\n" +
                     "`" + BotUtils.DEFAULT_PREFIX + "help` - You should already know this one.\n\n" +
                     "**Music Commands:**\n" +
-                    "`" + BotUtils.MUSIC_PREFIX + "queue <YouTube URL>` or `" + BotUtils.MUSIC_PREFIX +"q <YouTube URL>` - Plays the song at that link.\n" +
+                    "`" + BotUtils.MUSIC_PREFIX + "queue <(YouTube/SoundCloud URL)/YouTube search>` or `" + BotUtils.MUSIC_PREFIX +"q <(YouTube/SoundCloud URL)/YouTube search>` - Plays the song at that link.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "listqueue` or `" + BotUtils.MUSIC_PREFIX +"lq` - Messages back a list of the current queue.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "skip` - Skips the current song.\n" +
                     "`" + BotUtils.MUSIC_PREFIX + "stop` - Clears the current queue and leaves the voice channel.\n\n" +

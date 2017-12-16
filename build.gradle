@@ -1,5 +1,5 @@
 group 'PolizziaHut'
-version '0.6.0'
+version '0.6.1'
 
 apply plugin: 'java'
 
@@ -19,8 +19,9 @@ task fatJar(type: Jar) {
 repositories {
     mavenCentral()
     jcenter()
+
     maven {
-        url  "https://jitpack.io"
+        url "https://jitpack.io"
     }
 }
 

@@ -57,26 +57,36 @@ public class MusicHelper {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                AudioTrack firstTrack = playlist.getSelectedTrack();
+                // if it is a search vs an actual playlist
+                if(trackUrl.startsWith("ytsearch:")){
 
-                if (firstTrack == null) {
-                    firstTrack = playlist.getTracks().get(0);
+                    builder.withTitle("Adding to queue:");
+                    builder.withDescription(playlist.getName() + "\n\n" +
+                            "[" + playlist.getTracks().get(0).getInfo().title + "](" + playlist.getTracks().get(0).getInfo().uri + ")" + " by " + playlist.getTracks().get(0).getInfo().author);
+                    play(musicManager, playlist.getTracks().get(0));
+                }else {
+                    AudioTrack firstTrack = playlist.getSelectedTrack();
+
+                    if (firstTrack == null) {
+                        firstTrack = playlist.getTracks().get(0);
+                    }
+
+                    play(musicManager, firstTrack);
+
+                    // the queue for the playlist will start at the linked video
+                    for (int i = playlist.getTracks().indexOf(firstTrack) + 1; i < playlist.getTracks().size(); i++) {
+                        play(musicManager, playlist.getTracks().get(i));
+                    }
+
+                    String str = getQueue(getGuildAudioPlayer(channel.getGuild()).getScheduler().getQueue());
+
+                    // message with the first song
+                    builder.withTitle("Adding playlist to queue:");
+                    builder.withDescription(playlist.getName() + "\n\n" +
+                            "**First track:** " + "[" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n" +
+                            "**Next up:**\n" + str);
                 }
 
-                play(musicManager, firstTrack);
-
-                // the queue for the playlist will start at the linked video
-                for (int i = playlist.getTracks().indexOf(firstTrack) + 1; i < playlist.getTracks().size(); i++) {
-                    play(musicManager, playlist.getTracks().get(i));
-                }
-
-                String str = getQueue(getGuildAudioPlayer(channel.getGuild()).getScheduler().getQueue());
-
-                // message with the first song
-                builder.withTitle("Adding playlist to queue:");
-                builder.withDescription(playlist.getName() + "\n\n" +
-                        "**First track:** " + "[" + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n" +
-                        "**Next up:**\n" + str);
                 RequestBuffer.request(() -> channel.sendMessage(builder.build()));
             }
 
