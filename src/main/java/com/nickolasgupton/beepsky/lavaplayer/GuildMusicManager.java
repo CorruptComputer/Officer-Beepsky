@@ -1,4 +1,4 @@
-package me.nickolasgupton.polizziahut.lavaplayer;
+package com.nickolasgupton.beepsky.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;

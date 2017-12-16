@@ -1,5 +1,5 @@
-group 'PolizziaHut'
-version '0.6.3'
+group 'Officer-Beepsky'
+version '1.0.0'
 
 apply plugin: 'java'
 
@@ -7,9 +7,9 @@ sourceCompatibility = 1.8
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'Polizzia Hut',
+        attributes 'Implementation-Title': 'Officer-Beepsky',
                 'Implementation-Version': version,
-                'Main-Class': 'me.nickolasgupton.polizziahut.Main'
+                'Main-Class': 'com.nickolasgupton.beepsky.Main'
     }
     baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

@@ -1,6 +1,6 @@
-package me.nickolasgupton.polizziahut.commands;
+package com.nickolasgupton.beepsky.commands;
 
-import me.nickolasgupton.polizziahut.Command;
+import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 

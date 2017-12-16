@@ -1,4 +1,4 @@
-package me.nickolasgupton.polizziahut;
+package com.nickolasgupton.beepsky;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;

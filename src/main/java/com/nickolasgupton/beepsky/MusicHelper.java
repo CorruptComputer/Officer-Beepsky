@@ -1,6 +1,6 @@
-package me.nickolasgupton.polizziahut;
+package com.nickolasgupton.beepsky;
 
-import me.nickolasgupton.polizziahut.lavaplayer.GuildMusicManager;
+import com.nickolasgupton.beepsky.lavaplayer.GuildMusicManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;

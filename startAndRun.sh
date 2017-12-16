@@ -1,6 +1,6 @@
-git clone https://github.com/CorruptComputer/PolizziaHut
+git clone https://github.com/CorruptComputer/Officer-Beepsky
 
-cd PolizziaHut
+cd Officer-Beepsky
 
 echo "What is the Discord token? "
 read token
@@ -13,7 +13,7 @@ for((i = 1; i > 0; i=$?)){
     git pull
     chmod +x gradlew
     ./gradlew fatJar
-    java -jar build/libs/PolizziaHut-*.jar "$token" "$owner"
+    java -jar build/libs/Officer-Beepsky-*.jar "$token" "$owner"
 }
 
 exit 0

@@ -1,10 +1,10 @@
-package me.nickolasgupton.polizziahut;
+package com.nickolasgupton.beepsky;
 
-import me.nickolasgupton.polizziahut.commands.GameCommands;
-import me.nickolasgupton.polizziahut.commands.GeneralCommands;
-import me.nickolasgupton.polizziahut.commands.MusicCommands;
+import com.nickolasgupton.beepsky.commands.GameCommands;
+import com.nickolasgupton.beepsky.commands.GeneralCommands;
+import com.nickolasgupton.beepsky.commands.MusicCommands;
 
-import me.nickolasgupton.polizziahut.commands.OwnerCommands;
+import com.nickolasgupton.beepsky.commands.OwnerCommands;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

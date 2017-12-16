@@ -1,4 +1,4 @@
-package me.nickolasgupton.polizziahut;
+package com.nickolasgupton.beepsky;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

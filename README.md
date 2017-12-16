@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/CorruptComputer/PolizziaHut.svg?branch=master)](https://travis-ci.org/CorruptComputer/PolizziaHut)
-### PolizziaHut is a Discord bot made using:
+[![Build Status](https://travis-ci.org/CorruptComputer/Officer-Beepsky.svg?branch=master)](https://travis-ci.org/CorruptComputer/Officer-Beepsky)
+### Officer-Beepsky is a Discord bot made using:
 * [Discord4J](https://github.com/austinv11/Discord4J)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [SLF4J](https://www.slf4j.org/)
@@ -14,12 +14,12 @@ You could alternitively use Intellij and select fatJar from `Gradle Tasks->Other
 The build name is fatJar because well, the jar is 'fat'. Which means all dependences will be packed into it in order to make it easily portable.
 
 ### Running
-You can run it from the terminal/command prompt by typing `java -jar PolizziaHut-x.x.x.jar <Discord token> <Owner ID>`.
+You can run it from the terminal/command prompt by typing `java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>`.
 
 ### Build, run, and update script
 Optionally if you are using Linux to host you can use the following script to build, run, and update the bot when needed:
 ```
-curl https://raw.githubusercontent.com/CorruptComputer/PolizziaHut/master/startAndRun.sh -o startAndRun.sh
+curl https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/startAndRun.sh -o startAndRun.sh
 bash startAndRun.sh
 ```
 And when its time to update just private message the bot `restart` and it will update and restart!

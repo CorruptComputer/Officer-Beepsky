@@ -1,10 +1,10 @@
-package me.nickolasgupton.polizziahut.commands;
+package com.nickolasgupton.beepsky.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import me.nickolasgupton.polizziahut.Command;
-import me.nickolasgupton.polizziahut.MusicHelper;
-import me.nickolasgupton.polizziahut.lavaplayer.GuildMusicManager;
-import me.nickolasgupton.polizziahut.lavaplayer.TrackScheduler;
+import com.nickolasgupton.beepsky.Command;
+import com.nickolasgupton.beepsky.MusicHelper;
+import com.nickolasgupton.beepsky.lavaplayer.GuildMusicManager;
+import com.nickolasgupton.beepsky.lavaplayer.TrackScheduler;
 
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.nickolasgupton.polizziahut.MusicHelper.getGuildAudioPlayer;
+import static com.nickolasgupton.beepsky.MusicHelper.getGuildAudioPlayer;
 
 public class MusicCommands {
 

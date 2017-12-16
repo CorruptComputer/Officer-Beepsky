@@ -1,7 +1,7 @@
-package me.nickolasgupton.polizziahut.commands;
+package com.nickolasgupton.beepsky.commands;
 
-import me.nickolasgupton.polizziahut.BotUtils;
-import me.nickolasgupton.polizziahut.Command;
+import com.nickolasgupton.beepsky.BotUtils;
+import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -26,7 +26,7 @@ public class GeneralCommands {
                     "`" + BotUtils.MUSIC_PREFIX + "stop` - Clears the current queue and leaves the voice channel.\n\n" +
                     "**Game Commands:**\n" +
                     "`" + BotUtils.GAME_PREFIX + "8ball` or `" + BotUtils.GAME_PREFIX +"8ball <question>` - Gives the answer you may not be looking for.\n\n" +
-                    "PolizziaHut is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/PolizziaHut).");
+                    "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
 
             builder.withFooterText("v" + BotUtils.VERSION);
 
