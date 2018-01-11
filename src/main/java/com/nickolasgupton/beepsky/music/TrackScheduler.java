@@ -76,8 +76,8 @@ public class TrackScheduler {
    * automatically cause it to start playing immediately. The returned collection is thread-safe and
    * can be modified.
    *
-   * To iterate over this queue, use a synchronized block. For example: {@code synchronize
-   * (formatQueueOutput()) { // iteration code } }
+   * <p>To iterate over this queue, use a synchronized block. For example: {@code synchronize
+   * (formatQueueOutput()) { // iteration code } }</p>
    *
    * @return Returns a List of AudioTrack's currently queued
    */
