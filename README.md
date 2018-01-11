@@ -37,3 +37,6 @@ This project follows the [Google Java Style Guide](http://google.github.io/style
 Warnings will appear during the build process if the style is incorrect, you can add the style to your
 Intellij by using [this](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
 and [this guide](https://www.jetbrains.com/help/idea/code-style.html).
+
+The generated JavaDocs can be found [here](http://www.nickolasgupton.com/Officer-Beepsky/). 
+If you make any changes that would require the JavaDocs to be re-generated, please do so in your PR as Travis does not automatically do so.
