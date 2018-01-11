@@ -1,13 +1,18 @@
 group 'Officer-Beepsky'
-version '1.0.1'
+version '1.1.0'
 
 apply plugin: 'java'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.8
 
 task fatJar(type: Jar) {
+    // cleans, builds, checks styles, packages into Jar
+    classes.dependsOn(clean)
+    fatJar.dependsOn(checkstyleMain)
+
     manifest {
-        attributes 'Implementation-Title': 'Officer-Beepsky',
+        attributes 'Implementation-Title': 'Officer Beepsky',
                 'Implementation-Version': version,
                 'Main-Class': 'com.nickolasgupton.beepsky.Main'
     }
@@ -26,7 +31,9 @@ repositories {
 }
 
 dependencies {
+    checkstyle "com.puppycrawl.tools:checkstyle:8.7"
+
     compile "com.sedmelluq:lavaplayer:1.2.45"
     compile "com.github.austinv11:Discord4J:2.9.3"
-    compile "org.slf4j:slf4j-simple:1.8.0-beta0"
+    compile "org.slf4j:slf4j-simple:1.7.25"
 }

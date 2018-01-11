@@ -9,7 +9,6 @@ echo "What is the Discord ID of the owner? "
 read owner
 
 for((i = 1; i > 0; i=$?)){
-    rm -rf build
     git pull
     chmod +x gradlew
     ./gradlew fatJar

@@ -3,6 +3,9 @@ language: java
 jdk:
 - openjdk8
 
+cache:
+  apt: true
+
 before_install:
 - chmod +x gradlew
 
