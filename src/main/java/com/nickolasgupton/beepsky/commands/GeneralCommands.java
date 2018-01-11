@@ -30,9 +30,11 @@ public class GeneralCommands {
               + "**Music Commands:**\n"
 
               + "`" + BotUtils.MUSIC_PREFIX
-              + "queue <(YouTube/SoundCloud URL)/YouTube search>` or `"
-              + BotUtils.MUSIC_PREFIX
-              + "q <(YouTube/SoundCloud URL)/YouTube search>` - Plays the song at that link.\n"
+              + "queue <song>`\n"
+
+              + "or `" + BotUtils.MUSIC_PREFIX
+              + "q <song>` - Song can be in the form of either a YouTube URL, SoundCloud URL,"
+              + " or if it is not a URL it will search from YouTube.\n"
 
               + "`" + BotUtils.MUSIC_PREFIX
               + "listqueue` or `"

@@ -40,6 +40,7 @@ public class TrackScheduler {
    * Add the next track to queue or play right away if nothing is in the queue.
    *
    * @param track The track to play or add to queue.
+   * @return Returns false and does nothing if something is already playing
    */
   public synchronized boolean queue(AudioTrack track) {
     // Calling startTrack with the noInterrupt set to true will start the track only if nothing is
@@ -75,8 +76,10 @@ public class TrackScheduler {
    * automatically cause it to start playing immediately. The returned collection is thread-safe and
    * can be modified.
    *
-   * @apiNote To iterate over this queue, use a synchronized block. For example: {@code synchronize
+   * To iterate over this queue, use a synchronized block. For example: {@code synchronize
    * (formatQueueOutput()) { // iteration code } }
+   *
+   * @return Returns a List of AudioTrack's currently queued
    */
   public List<AudioTrack> getQueue() {
     return this.queue;
