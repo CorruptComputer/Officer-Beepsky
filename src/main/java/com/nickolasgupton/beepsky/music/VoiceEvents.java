@@ -7,7 +7,7 @@ import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeave
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelMoveEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
-public class Events {
+public class VoiceEvents {
 
   /**
    * Called when a user disconnects from the current voice channel.
@@ -25,7 +25,7 @@ public class Events {
         return;
       }
 
-      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      Queue.clear(getGuildAudioPlayer(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }
@@ -47,7 +47,7 @@ public class Events {
         return;
       }
 
-      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      Queue.clear(getGuildAudioPlayer(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }

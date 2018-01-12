@@ -1,0 +1,4 @@
+com.nickolasgupton.beepsky.general.GeneralCommands
+com.nickolasgupton.beepsky.game.GameCommands
+com.nickolasgupton.beepsky.music.MusicCommands
+com.nickolasgupton.beepsky.owner.OwnerCommands

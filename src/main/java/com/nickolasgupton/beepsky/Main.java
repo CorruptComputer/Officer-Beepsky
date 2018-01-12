@@ -1,16 +1,13 @@
 package com.nickolasgupton.beepsky;
 
-import com.nickolasgupton.beepsky.music.Events;
+import com.nickolasgupton.beepsky.music.VoiceEvents;
+import com.nickolasgupton.beepsky.owner.Owner;
 import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
-
 
 public class Main {
 
   /**
-   * The main method for the bot.
+   * The main method for the bot, only handles login and registering listeners.
    *
    * @param args Must be in the form [Discord token, Owner ID]
    * @throws InterruptedException The bot can be interrupted, if so it will usually terminate
@@ -25,28 +22,15 @@ public class Main {
 
     // setup client and owner ID
     BotUtils.CLIENT = new ClientBuilder().withToken(args[0]).withRecommendedShardCount().build();
-    BotUtils.OWNER_ID = Long.parseUnsignedLong(args[1]);
+    Owner.ID = Long.parseUnsignedLong(args[1]);
 
     // Register a listener via the EventSubscriber annotation which allows for organisation and
     // delegation of events
     BotUtils.CLIENT.getDispatcher().registerListener(new CommandHandler());
-    BotUtils.CLIENT.getDispatcher().registerListener(new Events());
+    BotUtils.CLIENT.getDispatcher().registerListener(new VoiceEvents());
+    BotUtils.CLIENT.getDispatcher().registerListener(new OnReady());
 
     // Only login after all events are registered otherwise some may be missed.
     BotUtils.CLIENT.login();
-
-    BotUtils.CLIENT.getDispatcher().waitFor(ReadyEvent.class);
-
-    // the "Now Playing:" text
-    BotUtils.CLIENT.changePlayingText(".help for commands");
-
-    // send message of successful startup
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(100, 255, 100);
-    builder.withTitle("Startup complete!");
-    builder.withDescription("Current version: " + BotUtils.VERSION);
-    RequestBuffer.request(
-        () -> BotUtils.CLIENT.getUserByID(BotUtils.OWNER_ID).getOrCreatePMChannel()
-            .sendMessage(builder.build()));
   }
 }

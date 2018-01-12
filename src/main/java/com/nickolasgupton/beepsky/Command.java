@@ -1,11 +1,13 @@
 package com.nickolasgupton.beepsky;
 
-import java.util.List;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+// Interface to determine if a command should be executed, and then handles its execution
 public interface Command {
 
-  // Interface for a command to be implemented in the command map
-  void runCommand(MessageReceivedEvent event, List<String> args);
+  boolean shouldExecute(MessageReceivedEvent event);
 
+  void execute(MessageReceivedEvent event);
+
+  void getCommands(MessageReceivedEvent event);
 }
