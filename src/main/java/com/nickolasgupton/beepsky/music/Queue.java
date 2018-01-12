@@ -57,7 +57,7 @@ public class Queue {
       scheduler.nextTrack();
 
       userVoiceChannel.join();
-    } else
+    } else {
       // if the bot is currently in a voice channel that isn't the one that the user in in
       if (botVoiceChannel != userVoiceChannel) {
         builder.withDescription(
@@ -66,13 +66,9 @@ public class Queue {
         event.getMessage().delete();
         return;
       }
-
-    String[] split = event.getMessage().getContent().split(" ");
-    String searchStr = "";
-
-    for (int i = 1; i < split.length; i++) {
-      searchStr += split[i] + " ";
     }
+
+    String searchStr = event.getMessage().getContent().split(" ", 2)[1];
 
     // if it does not already contain a search keyword, and is a not a URL
     if (!(searchStr.startsWith("ytsearch:") || searchStr.startsWith("scsearch:"))
