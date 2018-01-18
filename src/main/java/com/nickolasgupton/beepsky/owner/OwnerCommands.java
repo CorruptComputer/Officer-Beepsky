@@ -33,6 +33,11 @@ public class OwnerCommands implements Command {
           UserBans.unban(event.getMessage().getContent().split(" ")[1]);
         }
         break;
+      case "leave":
+        if (event.getMessage().getContent().split(" ").length == 2) {
+          leave(event.getMessage().getContent().split(" ")[1]);
+        }
+        break;
       default:
         break;
     }
@@ -40,6 +45,10 @@ public class OwnerCommands implements Command {
 
   @Override
   public void getCommands(MessageReceivedEvent event) {
+  }
+
+  private void leave(String serverId) {
+    BotUtils.CLIENT.getGuildByID(Long.parseLong(serverId)).leave();
   }
 
   private void shutdown(Boolean restart) {
