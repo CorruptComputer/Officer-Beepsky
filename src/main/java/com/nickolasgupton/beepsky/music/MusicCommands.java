@@ -17,8 +17,9 @@ public class MusicCommands implements Command {
 
   @Override
   public void execute(MessageReceivedEvent event) {
-    switch (event.getMessage().getContent().split(" ")[0].substring(PREFIX.length())
-        .toLowerCase()) {
+
+    String[] command = event.getMessage().getContent().split(" ");
+    switch (command[0].substring(PREFIX.length()).toLowerCase()) {
       case "queue":
       case "q":
         Queue.addToQueue(event);

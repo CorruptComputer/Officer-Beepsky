@@ -15,7 +15,8 @@ public class OwnerCommands implements Command {
   @Override
   public void execute(MessageReceivedEvent event) {
 
-    switch (event.getMessage().getContent().split(" ")[0].toLowerCase()) {
+    String[] command = event.getMessage().getContent().split(" ");
+    switch (command[0].toLowerCase()) {
       case "shutdown":
         shutdown(false);
         break;
@@ -24,18 +25,18 @@ public class OwnerCommands implements Command {
         shutdown(true);
         break;
       case "ban":
-        if (event.getMessage().getContent().split(" ").length == 2) {
-          UserBans.ban(event.getMessage().getContent().split(" ")[1]);
+        if (command.length == 2) {
+          UserBans.ban(command[1]);
         }
         break;
       case "unban":
-        if (event.getMessage().getContent().split(" ").length == 2) {
-          UserBans.unban(event.getMessage().getContent().split(" ")[1]);
+        if (command.length == 2) {
+          UserBans.unban(command[1]);
         }
         break;
       case "leave":
-        if (event.getMessage().getContent().split(" ").length == 2) {
-          leave(event.getMessage().getContent().split(" ")[1]);
+        if (command.length == 2) {
+          leave(command[1]);
         }
         break;
       default:
