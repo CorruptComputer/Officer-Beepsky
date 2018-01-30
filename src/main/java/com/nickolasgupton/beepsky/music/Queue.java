@@ -19,7 +19,7 @@ public class Queue {
   /**
    * Loads and plays the song specified.
    *
-   * @param event Provided by D4J
+   * @param event Provided by D4J.
    */
   static void addToQueue(MessageReceivedEvent event) {
     EmbedBuilder builder = new EmbedBuilder();
@@ -162,6 +162,10 @@ public class Queue {
         });
   }
 
+  /**
+   * Skips the currently playing song and starts the next one.
+   * @param event Provided by D4J.
+   */
   static void nextSong(MessageReceivedEvent event) {
     GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
@@ -185,6 +189,10 @@ public class Queue {
     event.getMessage().delete();
   }
 
+  /**
+   * Lists the currently playing queue.
+   * @param event Provided by D4J.
+   */
   static void listQueue(MessageReceivedEvent event) {
     GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
 
@@ -239,6 +247,10 @@ public class Queue {
     return str.toString();
   }
 
+  /**
+   * Disconnect from voice channel and clear the queue of all songs.
+   * @param event Provided by D4J.
+   */
   static void stop(MessageReceivedEvent event) {
     IVoiceChannel botVoiceChannel = event.getClient().getOurUser()
         .getVoiceStateForGuild(event.getGuild()).getChannel();
@@ -254,6 +266,10 @@ public class Queue {
     event.getMessage().delete();
   }
 
+  /**
+   * Clears the queue for the current guild.
+   * @param scheduler TrackScheduler for the current guild.
+   */
   public static void clear(TrackScheduler scheduler) {
     scheduler.getQueue().clear();
     scheduler.nextTrack();

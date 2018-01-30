@@ -3,7 +3,9 @@ package com.nickolasgupton.beepsky.owner;
 import com.nickolasgupton.beepsky.BotUtils;
 import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.RequestBuffer;
 
 public class OwnerCommands implements Command {
 
@@ -44,14 +46,44 @@ public class OwnerCommands implements Command {
     }
   }
 
+  /**
+   * Sends the available owner commands to the recipient.
+   * @param recipient Who the help message(s) should be sent to.
+   */
   @Override
-  public void getCommands(MessageReceivedEvent event) {
+  public void getCommands(IPrivateChannel recipient) {
+    if (recipient.getRecipient().getStringID().matches(Long.toString(Owner.ID))) {
+      EmbedBuilder builder = new EmbedBuilder();
+      builder.withColor(100, 255, 100);
+      builder.withTitle("Owner Commands:");
+      builder.withDescription(
+          "These must be used in a PM to the bot, else they are ignored.\n\n"
+              + "`shutdown` - Shuts the bot down.\n"
+              + "`restart` "
+              + "or `reboot` - Updates and restarts the bot. Only works if using the provided"
+              + " script.\n"
+
+              + "`ban <Discord ID>` "
+              + "and `unban <Discord ID>` - Bans or unbans the user with that Discord ID.\n"
+
+              + "`leave <Server ID>` - Leaves that server.\n");
+      builder.withFooterText("v" + BotUtils.VERSION);
+      RequestBuffer.request(() -> recipient.sendMessage(builder.build()));
+    }
   }
 
+  /**
+   * Leaves the guild specified.
+   * @param serverId String ID of the server to leave.
+   */
   private void leave(String serverId) {
     BotUtils.CLIENT.getGuildByID(Long.parseLong(serverId)).leave();
   }
 
+  /**
+   * Shuts down or restarts the bot.
+   * @param restart True if you want to restart using the provided script.
+   */
   private void shutdown(Boolean restart) {
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(100, 255, 100);

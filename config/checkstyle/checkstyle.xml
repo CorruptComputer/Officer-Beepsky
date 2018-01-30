@@ -4,6 +4,12 @@
         "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
 
 <!--
+    I changed the JavaDocs to be required on private methods as well.
+    This helps keep the codebase sane and easily navigated.
+                        ~CorruptComputer
+-->
+
+<!--
     Checkstyle configuration that checks the Google coding conventions from Google Java Style
     that can be found at https://google.github.io/styleguide/javaguide.html.
 
@@ -219,7 +225,7 @@
             <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
         <module name="JavadocMethod">
-            <property name="scope" value="public"/>
+            <property name="scope" value="private"/>
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingThrowsTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>

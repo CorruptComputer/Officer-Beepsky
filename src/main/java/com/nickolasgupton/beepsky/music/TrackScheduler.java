@@ -16,6 +16,10 @@ public class TrackScheduler extends AudioEventAdapter {
   private final List<AudioTrack> queue;
   private final AudioPlayer player;
 
+  /**
+   * Constructor for TrackScheduler.
+   * @param player AudioPlayer for the current guild.
+   */
   TrackScheduler(AudioPlayer player) {
     // Because we will be removing from the "head" of the queue frequently, a LinkedList is a better
     // implementation since all elements won't have to be shifted after removing. Additionally,

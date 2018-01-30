@@ -3,6 +3,7 @@ package com.nickolasgupton.beepsky.music;
 import com.nickolasgupton.beepsky.BotUtils;
 import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -40,8 +41,12 @@ public class MusicCommands implements Command {
     }
   }
 
+  /**
+   * Sends the available music commands to the recipient.
+   * @param recipient Who the help message(s) should be sent to.
+   */
   @Override
-  public void getCommands(MessageReceivedEvent event) {
+  public void getCommands(IPrivateChannel recipient) {
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(100, 255, 100);
     builder.withTitle("Music Commands:");
@@ -65,7 +70,6 @@ public class MusicCommands implements Command {
             + "`" + PREFIX
             + "stop` - Clears the current queue and leaves the voice channel.\n");
     builder.withFooterText("v" + BotUtils.VERSION);
-    RequestBuffer
-        .request(() -> event.getAuthor().getOrCreatePMChannel().sendMessage(builder.build()));
+    RequestBuffer.request(() -> recipient.sendMessage(builder.build()));
   }
 }

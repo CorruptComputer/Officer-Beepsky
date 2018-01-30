@@ -19,6 +19,10 @@ import sx.blah.discord.util.EmbedBuilder;
 
 public class UserBans {
 
+  /**
+   * Bans the specified user from using the bot.
+   * @param userId String ID of the Discord user to ban.
+   */
   static void ban(String userId) {
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(100, 255, 100);
@@ -64,6 +68,10 @@ public class UserBans {
     Owner.sendMessage(builder);
   }
 
+  /**
+   * Unbans the specified user from using the bot.
+   * @param userId String ID of the Discord user to unban.
+   */
   static void unban(String userId) {
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(100, 255, 100);
