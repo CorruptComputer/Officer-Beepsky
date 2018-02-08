@@ -3,6 +3,7 @@ package com.nickolasgupton.beepsky.game;
 import com.nickolasgupton.beepsky.BotUtils;
 import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -12,8 +13,8 @@ public class GameCommands implements Command {
   private static String PREFIX = "$";
 
   @Override
-  public boolean shouldExecute(MessageReceivedEvent event) {
-    return event.getMessage().getContent().startsWith(PREFIX);
+  public boolean shouldExecute(IMessage message) {
+    return message.getContent().startsWith(PREFIX);
   }
 
   @Override

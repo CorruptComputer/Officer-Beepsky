@@ -2,108 +2,78 @@ package com.nickolasgupton.beepsky.music;
 
 import static com.nickolasgupton.beepsky.music.MusicHelper.getGuildAudioPlayer;
 
+import com.nickolasgupton.beepsky.BotUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.List;
-import java.util.regex.Pattern;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
 
 public class Queue {
 
+  enum QueueReturnCode {
+    NOT_IN_VOICE,
+    ALREADY_IN_USE,
+    SUCCESS
+  }
+
   /**
    * Loads and plays the song specified.
-   *
-   * @param event Provided by D4J.
+   * @param author Requester of the song.
+   * @param channel Text channel it was requested in
+   * @param track Track to play.
    */
-  static void addToQueue(MessageReceivedEvent event) {
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(255, 0, 0);
-    builder.withTitle("Error queueing track:");
-    builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-
-    // user only messages "!!queue" with no track data
-    if (event.getMessage().getContent().split(" ").length == 1) {
-      builder.withDescription("No track specified.");
-      RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-      event.getMessage().delete();
-      return;
-    }
-
-    IVoiceChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(event.getGuild())
-        .getChannel();
+  static QueueReturnCode addToQueue(IUser author, IChannel channel, final String track) {
+    IVoiceChannel userVoiceChannel = author.getVoiceStateForGuild(channel.getGuild()).getChannel();
 
     // user is not in a voice channel
     if (userVoiceChannel == null) {
-      builder.withDescription("Not in a voice channel, join one and then try again.");
-      RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-      event.getMessage().delete();
-      return;
+      return QueueReturnCode.NOT_IN_VOICE;
     }
 
-    IVoiceChannel botVoiceChannel = event.getClient().getOurUser()
-        .getVoiceStateForGuild(event.getGuild()).getChannel();
+    IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
+        .getVoiceStateForGuild(channel.getGuild()).getChannel();
+
     // if the bot is not currently in a voice channel, join the user
     if (botVoiceChannel == null) {
-      // clear the queue before joining
-      TrackScheduler scheduler = getGuildAudioPlayer(event.getGuild()).getScheduler();
-
-      scheduler.getQueue().clear();
-      scheduler.nextTrack();
-
       userVoiceChannel.join();
     } else {
       // if the bot is currently in a voice channel that isn't the one that the user in in
       if (botVoiceChannel != userVoiceChannel) {
-        builder.withDescription(
-            "Already in a voice channel, either join that channel or wait for them to finish.");
-        RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-        event.getMessage().delete();
-        return;
+        return QueueReturnCode.ALREADY_IN_USE;
       }
-    }
-
-    String searchStr = event.getMessage().getContent().split(" ", 2)[1];
-
-    // if it does not already contain a search keyword, and is a not a URL
-    if (!(searchStr.startsWith("ytsearch:") || searchStr.startsWith("scsearch:"))
-        // RegEx shamelessly copied from:
-        // https://stackoverflow.com/questions/163360/regular-expression-to-match-urls-in-java
-        && !Pattern
-        .compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
-        .matcher(searchStr).matches()) {
-      searchStr = "ytsearch:" + searchStr;
     }
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
+    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(channel.getGuild());
 
+    EmbedBuilder builder = new EmbedBuilder();
+    builder.withFooterText(author.getDisplayName(channel.getGuild()));
     builder.withColor(100, 255, 100);
-    builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
 
-    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(event.getGuild());
-    final String songToPlay = searchStr;
     MusicHelper.playerManager
-        .loadItemOrdered(musicManager, songToPlay, new AudioLoadResultHandler() {
+        .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
           @Override
           public void trackLoaded(AudioTrack track) {
             builder.withTitle("Adding to queue:");
-            builder.withDescription("[" + track.getInfo().title + "](" + songToPlay + ")" + " by "
+            builder.withDescription("[" + track.getInfo().title + "](" + track + ")" + " by "
                 + track.getInfo().author);
 
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            BotUtils.sendMessage(channel, builder.build());
             musicManager.getScheduler().queue(track);
           }
 
           @Override
           public void playlistLoaded(AudioPlaylist playlist) {
             // if it is a search vs an actual playlist
-            if (songToPlay.startsWith("ytsearch:") || songToPlay.startsWith("scsearch:")) {
+            if (track.startsWith("ytsearch:") || track.startsWith("scsearch:")) {
 
               builder.withTitle("Adding to queue:");
               builder.withDescription(playlist.getName() + "\n\n"
@@ -127,7 +97,7 @@ public class Queue {
               }
 
               String str = Queue
-                  .queueToString(MusicHelper.getGuildAudioPlayer(event.getGuild()).getScheduler()
+                  .queueToString(MusicHelper.getGuildAudioPlayer(channel.getGuild()).getScheduler()
                       .getQueue());
 
               // message with the first song
@@ -138,17 +108,16 @@ public class Queue {
                   + "**Next up:**\n" + str);
             }
 
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-            event.getMessage().delete();
+            BotUtils.sendMessage(channel, builder.build());
           }
 
           @Override
           public void noMatches() {
             builder.withColor(255, 0, 0);
             builder.withTitle("Error queueing track:");
-            builder.withDescription("Nothing found at URL: " + songToPlay);
+            builder.withDescription("Nothing found at: " + track);
 
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            BotUtils.sendMessage(channel, builder.build());
           }
 
           @Override
@@ -157,9 +126,11 @@ public class Queue {
             builder.withTitle("Error queueing track:");
             builder.withDescription("Could not play track: " + exception.getMessage());
 
-            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+            BotUtils.sendMessage(channel, builder.build());
           }
         });
+
+    return QueueReturnCode.SUCCESS;
   }
 
   /**
@@ -184,7 +155,7 @@ public class Queue {
     builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
 
     musicManager.getScheduler().nextTrack();
-    RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+    BotUtils.sendMessage(event.getChannel(), builder.build());
 
     event.getMessage().delete();
   }
@@ -211,7 +182,7 @@ public class Queue {
       builder.withTitle("Error listing queue:");
       builder.withDescription("Too long! Length: " + len);
     } else {
-      RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+      BotUtils.sendMessage(event.getChannel(), builder.build());
     }
     event.getMessage().delete();
   }
@@ -270,7 +241,7 @@ public class Queue {
    * Clears the queue for the current guild.
    * @param scheduler TrackScheduler for the current guild.
    */
-  public static void clear(TrackScheduler scheduler) {
+  static void clear(TrackScheduler scheduler) {
     scheduler.getQueue().clear();
     scheduler.nextTrack();
   }

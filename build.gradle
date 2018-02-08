@@ -1,5 +1,5 @@
 group 'com.nickolasgupton.beepsky'
-version '1.2.4'
+version '1.3.0'
 
 apply plugin: 'java'
 apply plugin: 'checkstyle'
@@ -7,9 +7,8 @@ apply plugin: 'checkstyle'
 sourceCompatibility = 1.8
 
 task fatJar(type: Jar) {
-    // cleans, builds, checks styles, packages into Jar
+    // cleans, builds, packages into Jar
     classes.dependsOn(clean)
-    fatJar.dependsOn(checkstyleMain)
 
     manifest {
         attributes 'Implementation-Title': 'Officer Beepsky',

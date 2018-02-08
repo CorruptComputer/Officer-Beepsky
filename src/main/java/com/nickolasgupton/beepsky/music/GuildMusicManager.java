@@ -45,7 +45,7 @@ public class GuildMusicManager {
    *
    * @return The scheduler for AudioTracks.
    */
-  public TrackScheduler getScheduler() {
+  TrackScheduler getScheduler() {
     return this.scheduler;
   }
 
@@ -54,7 +54,7 @@ public class GuildMusicManager {
    *
    * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.
    */
-  public AudioProvider getAudioProvider() {
+  AudioProvider getAudioProvider() {
     return provider;
   }
 }

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CorruptComputer/Officer-Beepsky.svg?branch=master)](https://travis-ci.org/CorruptComputer/Officer-Beepsky)
+[![Build Status](https://semaphoreci.com/api/v1/corruptcomputer/officer-beepsky/branches/master/badge.svg)](https://semaphoreci.com/corruptcomputer/officer-beepsky)
 ### Officer-Beepsky is a Discord bot made using:
 * [Discord4J](https://github.com/austinv11/Discord4J)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
@@ -22,21 +22,33 @@ into it in order to make it easily portable.
 You can run it from the terminal/command prompt by typing `java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>`.
 
 ### Build, run, and update script
-Optionally if you are using Linux to host you can use the following script to build, run, and update
-the bot when needed:
+Optionally you can use the following script to build, run, and update the bot when needed:
+
+**Linux/Mac:**
 ```
-curl https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/startAndRun.sh -o startAndRun.sh
-bash startAndRun.sh
+curl https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/run.sh -o run.sh
+bash run.sh
 ```
+
+**Windows:** (Requires PowerShell)
+```
+Invoke-WebRequest https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/run.ps1 -o run.ps1
+./run.ps1
+```
+
 And when its time to update just private message the bot `restart` and it will update and restart!
 **WARNING: Currently with the `restart` command if you do not have the script setup it will not
 restart the bot, but only shut it down.**
 
 ### Contributing
 This project follows the [Google Java Style Guide](http://google.github.io/styleguide/javaguide.html).
-Warnings will appear during the build process if the style is incorrect, you can add the style to your
-Intellij by using [this](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
+You can add the style to your Intellij by using [this](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml)
 and [this guide](https://www.jetbrains.com/help/idea/code-style.html).
 
+You can check if your code is good by using the `checkstyleMain` gradle task:
+```
+./gradlew checkstyleMain
+```
+
 The generated JavaDocs can be found [here](http://www.nickolasgupton.com/Officer-Beepsky/). 
-If you make any changes that would require the JavaDocs to be re-generated, please do so in your PR as Travis does not automatically do so.
+All PR's should target the `dev` branch. Docs will be re-generated before `master` releases.

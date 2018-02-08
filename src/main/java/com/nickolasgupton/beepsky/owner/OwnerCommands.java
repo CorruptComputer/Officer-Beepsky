@@ -3,6 +3,8 @@ package com.nickolasgupton.beepsky.owner;
 import com.nickolasgupton.beepsky.BotUtils;
 import com.nickolasgupton.beepsky.Command;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -10,14 +12,14 @@ import sx.blah.discord.util.RequestBuffer;
 public class OwnerCommands implements Command {
 
   @Override
-  public boolean shouldExecute(MessageReceivedEvent event) {
-    return event.getChannel().isPrivate() && event.getAuthor().getLongID() == Owner.ID;
+  public boolean shouldExecute(IMessage message) {
+    return message.getChannel().isPrivate() && message.getAuthor().getLongID() == Owner.ID;
   }
 
   @Override
   public void execute(MessageReceivedEvent event) {
 
-    String[] command = event.getMessage().getContent().split(" ");
+    String[] command = event.getMessage().getContent().split(" ", 2);
     switch (command[0].toLowerCase()) {
       case "shutdown":
         shutdown(false);
@@ -41,6 +43,11 @@ public class OwnerCommands implements Command {
           leave(command[1]);
         }
         break;
+      case "announcement":
+        if (command.length == 2) {
+          sendAnnouncement(command[1]);
+        }
+        break;
       default:
         break;
     }
@@ -48,6 +55,7 @@ public class OwnerCommands implements Command {
 
   /**
    * Sends the available owner commands to the recipient.
+   *
    * @param recipient Who the help message(s) should be sent to.
    */
   @Override
@@ -66,7 +74,9 @@ public class OwnerCommands implements Command {
               + "`ban <Discord ID>` "
               + "and `unban <Discord ID>` - Bans or unbans the user with that Discord ID.\n"
 
-              + "`leave <Server ID>` - Leaves that server.\n");
+              + "`leave <Server ID>` - Leaves that server.\n"
+
+              + "`announcement <message>` - Announces to all joined servers.\n");
       builder.withFooterText("v" + BotUtils.VERSION);
       RequestBuffer.request(() -> recipient.sendMessage(builder.build()));
     }
@@ -74,6 +84,7 @@ public class OwnerCommands implements Command {
 
   /**
    * Leaves the guild specified.
+   *
    * @param serverId String ID of the server to leave.
    */
   private void leave(String serverId) {
@@ -82,6 +93,7 @@ public class OwnerCommands implements Command {
 
   /**
    * Shuts down or restarts the bot.
+   *
    * @param restart True if you want to restart using the provided script.
    */
   private void shutdown(Boolean restart) {
@@ -100,6 +112,23 @@ public class OwnerCommands implements Command {
     Owner.sendMessage(builder);
 
     System.exit(restart ? 1 : 0);
+  }
+
+  /**
+   * Announces to all joined servers.
+   * @param message Message to be announced.
+   */
+  private void sendAnnouncement(String message) {
+    EmbedBuilder builder = new EmbedBuilder();
+    builder.withColor(255, 255, 255);
+    builder.withTitle("New Announcement!");
+    builder.withDescription(message);
+    builder.withFooterText("From: " + Owner.getOwnerName());
+
+    for (IGuild guild : BotUtils.CLIENT.getGuilds()) {
+      System.out.println(guild.getName() + "       " + guild.getSystemChannel().getName());
+      BotUtils.sendMessage(guild.getSystemChannel(), builder.build());
+    }
   }
 }
 

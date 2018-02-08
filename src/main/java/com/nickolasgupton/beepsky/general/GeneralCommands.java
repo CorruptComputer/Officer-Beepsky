@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -21,8 +22,8 @@ public class GeneralCommands implements Command {
   private static String PREFIX = ".";
 
   @Override
-  public boolean shouldExecute(MessageReceivedEvent event) {
-    return event.getMessage().getContent().startsWith(PREFIX);
+  public boolean shouldExecute(IMessage message) {
+    return message.getContent().startsWith(PREFIX);
   }
 
   @Override

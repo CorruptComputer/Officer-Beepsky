@@ -4,6 +4,7 @@ import com.nickolasgupton.beepsky.BotUtils;
 import sx.blah.discord.util.EmbedBuilder;
 
 public class Owner {
+
   public static long ID;
 
   public static void sendMessage(String message) {
@@ -12,5 +13,9 @@ public class Owner {
 
   public static void sendMessage(EmbedBuilder message) {
     BotUtils.CLIENT.getUserByID(ID).getOrCreatePMChannel().sendMessage(message.build());
+  }
+
+  public static String getOwnerName() {
+    return BotUtils.CLIENT.getUserByID(ID).getName();
   }
 }

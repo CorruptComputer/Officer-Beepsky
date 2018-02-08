@@ -17,7 +17,7 @@ public class CommandHandler {
     if (!UserBans.isBanned(event.getAuthor().getStringID())) {
       ServiceLoader<Command> serviceLoader = ServiceLoader.load(Command.class);
       for (Command commands : serviceLoader) {
-        if (commands.shouldExecute(event)) {
+        if (commands.shouldExecute(event.getMessage())) {
           commands.execute(event);
         }
       }
