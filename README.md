@@ -32,7 +32,7 @@ bash run.sh
 
 **Windows:** (Requires PowerShell)
 ```
-Invoke-WebRequest https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/run.ps1 -o run.ps1
+Invoke-WebRequest https://raw.githubusercontent.com/CorruptComputer/Officer-Beepsky/master/run.ps1 -OutFile run.ps1
 ./run.ps1
 ```
 
