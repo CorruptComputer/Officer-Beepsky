@@ -32,7 +32,7 @@ repositories {
 dependencies {
     checkstyle "com.puppycrawl.tools:checkstyle:8.7"
 
-    compile "com.sedmelluq:lavaplayer:1.2.45"
-    compile "com.github.austinv11:Discord4J:2.9.3"
+    compile "com.sedmelluq:lavaplayer:1.2.56"
+    compile "com.github.austinv11:Discord4J:2.10"
     compile "org.slf4j:slf4j-simple:1.7.25"
 }

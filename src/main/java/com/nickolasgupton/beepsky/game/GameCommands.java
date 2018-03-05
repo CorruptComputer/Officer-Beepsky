@@ -6,11 +6,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
 
 public class GameCommands implements Command {
 
-  private static String PREFIX = "$";
+  private static final String PREFIX = "$";
 
   @Override
   public boolean shouldExecute(IMessage message) {
@@ -22,7 +21,12 @@ public class GameCommands implements Command {
     String[] command = event.getMessage().getContent().split(" ");
     switch (command[0].substring(PREFIX.length()).toLowerCase()) {
       case "8ball":
-        EightBall.ball(event);
+        if (command.length > 1) {
+          EightBall.roll(event.getAuthor(), event.getChannel(), command[1]);
+        } else {
+          EightBall.roll(event.getAuthor(), event.getChannel(), "");
+        }
+        event.getMessage().delete();
         break;
       default:
         break;
@@ -43,8 +47,7 @@ public class GameCommands implements Command {
             + "8ball` or `"
             + PREFIX
             + "8ball <question>` - Gives the answer you may not be looking for.\n");
-    builder.withFooterText("v" + BotUtils.VERSION);
-    RequestBuffer.request(() -> recipient.sendMessage(builder.build()));
+    BotUtils.sendMessage(recipient, recipient.getRecipient(), builder);
   }
 }
 

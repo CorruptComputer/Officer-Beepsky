@@ -13,7 +13,7 @@ public class OwnerCommands implements Command {
 
   @Override
   public boolean shouldExecute(IMessage message) {
-    return message.getChannel().isPrivate() && message.getAuthor().getLongID() == Owner.ID;
+    return message.getChannel().isPrivate() && message.getAuthor() == Owner.user;
   }
 
   @Override
@@ -60,7 +60,7 @@ public class OwnerCommands implements Command {
    */
   @Override
   public void getCommands(IPrivateChannel recipient) {
-    if (recipient.getRecipient().getStringID().matches(Long.toString(Owner.ID))) {
+    if (recipient.getRecipient() == Owner.user) {
       EmbedBuilder builder = new EmbedBuilder();
       builder.withColor(100, 255, 100);
       builder.withTitle("Owner Commands:");
@@ -111,6 +111,7 @@ public class OwnerCommands implements Command {
     builder.withFooterText("Current version: " + BotUtils.VERSION);
     Owner.sendMessage(builder);
 
+    BotUtils.CLIENT.logout();
     System.exit(restart ? 1 : 0);
   }
 
@@ -123,11 +124,10 @@ public class OwnerCommands implements Command {
     builder.withColor(255, 255, 255);
     builder.withTitle("New Announcement!");
     builder.withDescription(message);
-    builder.withFooterText("From: " + Owner.getOwnerName());
 
     for (IGuild guild : BotUtils.CLIENT.getGuilds()) {
       System.out.println(guild.getName() + "       " + guild.getSystemChannel().getName());
-      BotUtils.sendMessage(guild.getSystemChannel(), builder.build());
+      BotUtils.sendMessage(guild.getSystemChannel(), Owner.user, builder);
     }
   }
 }

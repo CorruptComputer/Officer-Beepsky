@@ -8,8 +8,8 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import java.awt.Color;
 import java.util.List;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -26,11 +26,16 @@ public class Queue {
   /**
    * Loads and plays the song specified.
    * @param author Requester of the song.
-   * @param channel Text channel it was requested in
+   * @param textChannel Text channel it was requested in
    * @param track Track to play.
+   *
+   * @return Returns the status of the addition, can either be NOT_IN_VOICE which means the
+   *     requester is not in a voice channel, ALREADY_IN_USE which means the bot is being used in
+   *     another voice channel for that guild, or SUCCESS which means everything went smoothly.
    */
-  static QueueReturnCode addToQueue(IUser author, IChannel channel, final String track) {
-    IVoiceChannel userVoiceChannel = author.getVoiceStateForGuild(channel.getGuild()).getChannel();
+  static QueueReturnCode addToQueue(IUser author, IChannel textChannel, final String track) {
+    IVoiceChannel userVoiceChannel =
+        author.getVoiceStateForGuild(textChannel.getGuild()).getChannel();
 
     // user is not in a voice channel
     if (userVoiceChannel == null) {
@@ -38,7 +43,7 @@ public class Queue {
     }
 
     IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-        .getVoiceStateForGuild(channel.getGuild()).getChannel();
+        .getVoiceStateForGuild(textChannel.getGuild()).getChannel();
 
     // if the bot is not currently in a voice channel, join the user
     if (botVoiceChannel == null) {
@@ -52,11 +57,10 @@ public class Queue {
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
-    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(channel.getGuild());
+    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(textChannel.getGuild());
 
     EmbedBuilder builder = new EmbedBuilder();
-    builder.withFooterText(author.getDisplayName(channel.getGuild()));
-    builder.withColor(100, 255, 100);
+    builder.withColor(Color.green);
 
     MusicHelper.playerManager
         .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
@@ -66,7 +70,7 @@ public class Queue {
             builder.withDescription("[" + track.getInfo().title + "](" + track + ")" + " by "
                 + track.getInfo().author);
 
-            BotUtils.sendMessage(channel, builder.build());
+            BotUtils.sendMessage(textChannel, author, builder);
             musicManager.getScheduler().queue(track);
           }
 
@@ -97,8 +101,8 @@ public class Queue {
               }
 
               String str = Queue
-                  .queueToString(MusicHelper.getGuildAudioPlayer(channel.getGuild()).getScheduler()
-                      .getQueue());
+                  .queueToString(MusicHelper.getGuildAudioPlayer(textChannel.getGuild())
+                      .getScheduler().getQueue());
 
               // message with the first song
               builder.withTitle("Adding playlist to queue:");
@@ -108,25 +112,25 @@ public class Queue {
                   + "**Next up:**\n" + str);
             }
 
-            BotUtils.sendMessage(channel, builder.build());
+            BotUtils.sendMessage(textChannel, author, builder);
           }
 
           @Override
           public void noMatches() {
-            builder.withColor(255, 0, 0);
+            builder.withColor(Color.red);
             builder.withTitle("Error queueing track:");
             builder.withDescription("Nothing found at: " + track);
 
-            BotUtils.sendMessage(channel, builder.build());
+            BotUtils.sendMessage(textChannel, author, builder);
           }
 
           @Override
           public void loadFailed(FriendlyException exception) {
-            builder.withColor(255, 0, 0);
+            builder.withColor(Color.red);
             builder.withTitle("Error queueing track:");
             builder.withDescription("Could not play track: " + exception.getMessage());
 
-            BotUtils.sendMessage(channel, builder.build());
+            BotUtils.sendMessage(textChannel, author, builder);
           }
         });
 
@@ -135,63 +139,58 @@ public class Queue {
 
   /**
    * Skips the currently playing song and starts the next one.
-   * @param event Provided by D4J.
+   * @param author Requester of skip
+   * @param textChannel Text channel it was requested in
    */
-  static void nextSong(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
+  static void nextSong(IUser author, IChannel textChannel) {
+    GuildMusicManager musicManager = getGuildAudioPlayer(textChannel.getGuild());
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
     EmbedBuilder builder = new EmbedBuilder();
 
-    builder.withColor(100, 255, 100);
+    builder.withColor(Color.green);
 
     if (queue.size() > 0) {
-      builder.withDescription("Skipped to next track, now playing:\n"
-          + "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri + ")" + " by "
-          + queue.get(0).getInfo().author);
+      builder.withTitle("Skipped to next track, now playing:");
+      builder.withDescription("[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri
+          + ")" + " by " + queue.get(0).getInfo().author);
     } else {
-      builder.withDescription("Skipped to next track, nothing left to play.");
+      builder.withTitle("Skipped to next track, nothing left to play.");
     }
 
-    builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-
     musicManager.getScheduler().nextTrack();
-    BotUtils.sendMessage(event.getChannel(), builder.build());
-
-    event.getMessage().delete();
+    BotUtils.sendMessage(textChannel, author, builder);
   }
 
   /**
    * Lists the currently playing queue.
-   * @param event Provided by D4J.
+   * @param author Requester of the queue
+   * @param textChannel Text channel it was requested in
    */
-  static void listQueue(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
+  static void listQueue(IUser author, IChannel textChannel) {
+    GuildMusicManager musicManager = getGuildAudioPlayer(textChannel.getGuild());
 
     String str = queueToString(musicManager.getScheduler().getQueue());
 
     EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(100, 255, 100);
+    builder.withColor(Color.green);
     builder.withTitle("Next up:");
     builder.withDescription(str);
 
-    builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-
     int len = builder.getTotalVisibleCharacters();
     if (len > 2048) {
-      builder.withColor(255, 0, 0);
+      builder.withColor(Color.red);
       builder.withTitle("Error listing queue:");
       builder.withDescription("Too long! Length: " + len);
     } else {
-      BotUtils.sendMessage(event.getChannel(), builder.build());
+      BotUtils.sendMessage(textChannel, author, builder);
     }
-    event.getMessage().delete();
   }
 
   /**
    * Formats the currently queued songs for output.
    *
    * @param queue List of the AudioTracks currently queued
-   * @return Returns Formatted String of the songs
+   * @return Returns formatted String of the songs
    */
   private static String queueToString(List<AudioTrack> queue) {
 
@@ -220,21 +219,24 @@ public class Queue {
 
   /**
    * Disconnect from voice channel and clear the queue of all songs.
-   * @param event Provided by D4J.
+   * @param author Requester of the full stop
+   * @param textChannel Text channel it was requested in
    */
-  static void stop(MessageReceivedEvent event) {
-    IVoiceChannel botVoiceChannel = event.getClient().getOurUser()
-        .getVoiceStateForGuild(event.getGuild()).getChannel();
+  static void stop(IUser author, IChannel textChannel) {
+    IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
+        .getVoiceStateForGuild(textChannel.getGuild()).getChannel();
 
     if (botVoiceChannel == null) {
       return;
     }
 
-    clear(getGuildAudioPlayer(event.getGuild()).getScheduler());
+    clear(getGuildAudioPlayer(textChannel.getGuild()).getScheduler());
+    EmbedBuilder message = new EmbedBuilder();
+    message.withColor(Color.green);
+    message.withTitle("The queue has been cleared!");
 
+    BotUtils.sendMessage(textChannel, author, message);
     botVoiceChannel.leave();
-
-    event.getMessage().delete();
   }
 
   /**

@@ -1,25 +1,51 @@
 package com.nickolasgupton.beepsky.game;
 
+import com.nickolasgupton.beepsky.BotUtils;
+import java.awt.Color;
 import java.util.Random;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
 
-public class EightBall {
+class EightBall {
 
   /**
    * Random chance for either a positive, unsure, or negative answer.
-   * @param event Provided by D4J
+   * @param author Author of the command
+   * @param channel Author of the command
+   * @param question Author of the command
    */
-  public static void ball(MessageReceivedEvent event) {
+  public static void roll(IUser author, IChannel channel, String question) {
+    if (question.length() > 0 && !question.endsWith("?")) {
+      question += "?  ";
+    }
+
+    EmbedBuilder builder = new EmbedBuilder();
+    builder.withTitle(question + "8Ball says:");
+
     Random rdm = new Random();
+    // gives them all an even chance, with rdm.nextInt(3) 0 is almost never picked
+    int certainty = rdm.nextInt(30) % 3;
+    switch (certainty) {
+      case 0:
+        builder.withColor(Color.green);
+        break;
+      case 1:
+        builder.withColor(Color.orange);
+        break;
+      case 2:
+        builder.withColor(Color.red);
+        break;
+      // hopefully never happens
+      default:
+        builder.withColor(0, 0, 0);
+    }
 
     /*
       answers[0][x] = Positive
       answers[1][x] = Unsure
       answers[2][x] = Negative
     */
-
     String[][] answers = {
         {"It is certain", "It is decidedly so", "Without a doubt", "Yes definitely",
             "You may rely on it", "As I see it, yes", "Most likely", "Outlook good", "Yes",
@@ -30,54 +56,8 @@ public class EightBall {
             "Very doubtful"}
     };
 
-    EmbedBuilder builder = new EmbedBuilder();
-
-    try {
-      String[] args = event.getMessage().getContent().split(" ", 2)[1].split(" ");
-      StringBuilder question = new StringBuilder();
-
-      boolean firstWord = true;
-      for (String str : args) {
-        if (!firstWord) {
-          question.append(' ');
-        } else {
-          firstWord = false;
-        }
-
-        question.append(str);
-      }
-
-      if (!question.toString().endsWith("?")) {
-        question.append("?");
-      }
-
-      builder.withTitle(question.toString() + "  8Ball says:");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      builder.withTitle("8Ball says:");
-    }
-
-    // gives them all an even chance, with rdm.nextInt(3) 0 is almost never picked
-    int certainty = rdm.nextInt(30) % 3;
-    switch (certainty) {
-      case 0:
-        builder.withColor(100, 255, 100);
-        break;
-      case 1:
-        builder.withColor(255, 255, 100);
-        break;
-      case 2:
-        builder.withColor(255, 100, 100);
-        break;
-      // hopefully never happens
-      default:
-        builder.withColor(0, 0, 0);
-    }
-
     builder.withDescription(answers[certainty][rdm.nextInt(answers[certainty].length)]);
 
-    builder.withFooterText(event.getAuthor().getDisplayName(event.getGuild()));
-
-    RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
-    event.getMessage().delete();
+    BotUtils.sendMessage(channel, author, builder);
   }
 }

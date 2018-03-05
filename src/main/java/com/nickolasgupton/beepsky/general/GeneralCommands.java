@@ -15,11 +15,10 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
 
 public class GeneralCommands implements Command {
 
-  private static String PREFIX = ".";
+  private static final String PREFIX = ".";
 
   @Override
   public boolean shouldExecute(IMessage message) {
@@ -66,8 +65,7 @@ public class GeneralCommands implements Command {
 
         + "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
 
-    builder.withFooterText("v" + BotUtils.VERSION);
-    RequestBuffer.request(() -> recipient.sendMessage(builder.build()));
+    BotUtils.sendMessage(recipient, recipient.getRecipient(), builder);
   }
 
   /**
@@ -78,6 +76,11 @@ public class GeneralCommands implements Command {
    * @return Returns true if the message should be deleted
    */
   private static boolean changeNameColor(IUser author, IGuild guild, String hexColor) {
+    if (guild == null) {
+      return false;
+    }
+
+    // Check if the bot has permissions to manage roles
     boolean permission = false;
     for (IRole role : guild.getRolesForUser(BotUtils.CLIENT.getOurUser())) {
       if (role.getPermissions().contains(Permissions.MANAGE_PERMISSIONS)) {
@@ -98,7 +101,7 @@ public class GeneralCommands implements Command {
       embedBuilder.withColor(Color.red);
       embedBuilder.withTitle("Color must be in hex format!");
       embedBuilder.withDescription("Example: #FFFFFF or #FFF");
-      RequestBuffer.request(() -> author.getOrCreatePMChannel().sendMessage(embedBuilder.build()));
+      BotUtils.sendMessage(author.getOrCreatePMChannel(), author, embedBuilder);
       return true;
     }
 
@@ -122,7 +125,7 @@ public class GeneralCommands implements Command {
 
     author.addRole(role);
 
-    RequestBuffer.request(() -> author.getOrCreatePMChannel().sendMessage(embedBuilder.build()));
+    BotUtils.sendMessage(author.getOrCreatePMChannel(), author, embedBuilder);
     return true;
   }
 

@@ -10,7 +10,7 @@ import sx.blah.discord.handle.audio.IAudioProvider;
  * calls canProvide before every call to provide(), we pull the frame in canProvide() and use the
  * frame we already pulled in provide().
  */
-public class AudioProvider implements IAudioProvider {
+class AudioProvider implements IAudioProvider {
 
   private final AudioPlayer audioPlayer;
   private AudioFrame lastFrame;

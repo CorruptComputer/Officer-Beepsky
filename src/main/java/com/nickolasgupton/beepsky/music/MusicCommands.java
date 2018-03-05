@@ -10,7 +10,7 @@ import sx.blah.discord.util.EmbedBuilder;
 
 public class MusicCommands implements Command {
 
-  private static String PREFIX = "!!";
+  private static final String PREFIX = "!!";
 
   @Override
   public boolean shouldExecute(IMessage message) {
@@ -27,7 +27,6 @@ public class MusicCommands implements Command {
         EmbedBuilder builder = new EmbedBuilder();
         builder.withColor(255, 0, 0);
         builder.withTitle("Error queueing track:");
-        builder.withFooterText(event.getAuthor().getDisplayName(event.getChannel().getGuild()));
 
         if (command.length == 1) {
           builder.withDescription("No track specified.");
@@ -56,21 +55,22 @@ public class MusicCommands implements Command {
           }
         }
 
-        BotUtils.sendMessage(event.getChannel(), builder.build());
+        BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
         break;
       case "listqueue":
       case "lq":
-        Queue.listQueue(event);
+        Queue.listQueue(event.getAuthor(), event.getChannel());
         break;
       case "skip":
       case "next":
-        Queue.nextSong(event);
+        Queue.nextSong(event.getAuthor(), event.getChannel());
         break;
+      case "clear":
       case "stop":
-        Queue.stop(event);
+        Queue.stop(event.getAuthor(), event.getChannel());
         break;
       default:
-        break;
+        return;
     }
     event.getMessage().delete();
   }
@@ -104,7 +104,6 @@ public class MusicCommands implements Command {
 
             + "`" + PREFIX
             + "stop` - Clears the current queue and leaves the voice channel.\n");
-    builder.withFooterText("v" + BotUtils.VERSION);
-    BotUtils.sendMessage(recipient, builder.build());
+    BotUtils.sendMessage(recipient, recipient.getRecipient(), builder);
   }
 }

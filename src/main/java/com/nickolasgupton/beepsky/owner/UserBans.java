@@ -27,7 +27,7 @@ public class UserBans {
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(100, 255, 100);
 
-    if (userId.equals(String.valueOf(Owner.ID))) {
+    if (userId.equals(String.valueOf(Owner.user.getStringID()))) {
       builder.withColor(255, 0, 0);
       builder.withTitle("Error Banning");
       builder.withDescription("You cannot ban yourself!");

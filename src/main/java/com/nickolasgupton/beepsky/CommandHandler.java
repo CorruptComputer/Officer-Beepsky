@@ -5,7 +5,7 @@ import java.util.ServiceLoader;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-public class CommandHandler {
+class CommandHandler {
 
   /**
    * Called when a messaged is received by the bot, whether it be private or in a server.
@@ -14,13 +14,18 @@ public class CommandHandler {
    */
   @EventSubscriber
   public void onMessageReceived(MessageReceivedEvent event) {
+    // Only continue if the author is not banned
     if (!UserBans.isBanned(event.getAuthor().getStringID())) {
-      ServiceLoader<Command> serviceLoader = ServiceLoader.load(Command.class);
-      for (Command commands : serviceLoader) {
+
+      // Search all available command types
+      for (Command commands : ServiceLoader.load(Command.class)) {
+
+        // Check if the provided message should be executed
         if (commands.shouldExecute(event.getMessage())) {
           commands.execute(event);
         }
       }
+
     }
   }
 }

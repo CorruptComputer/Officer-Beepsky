@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import sx.blah.discord.handle.obj.IGuild;
 
-public class MusicHelper {
+class MusicHelper {
 
   static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
   private static final Map<Long, GuildMusicManager> playerInstances = new HashMap<>();
@@ -19,12 +19,9 @@ public class MusicHelper {
    */
   static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
     long guildId = guild.getLongID();
-    GuildMusicManager musicManager = playerInstances.get(guildId);
 
-    if (musicManager == null) {
-      musicManager = new GuildMusicManager(playerManager);
-      playerInstances.put(guildId, musicManager);
-    }
+    GuildMusicManager musicManager = playerInstances.computeIfAbsent(guildId,
+        manager -> new GuildMusicManager(playerManager));
 
     guild.getAudioManager().setAudioProvider(musicManager.getAudioProvider());
 

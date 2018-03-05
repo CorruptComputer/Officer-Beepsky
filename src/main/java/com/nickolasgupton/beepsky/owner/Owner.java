@@ -1,21 +1,18 @@
 package com.nickolasgupton.beepsky.owner;
 
 import com.nickolasgupton.beepsky.BotUtils;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
 public class Owner {
 
-  public static long ID;
-
-  public static void sendMessage(String message) {
-    BotUtils.CLIENT.getUserByID(ID).getOrCreatePMChannel().sendMessage(message);
-  }
+  public static IUser user;
 
   public static void sendMessage(EmbedBuilder message) {
-    BotUtils.CLIENT.getUserByID(ID).getOrCreatePMChannel().sendMessage(message.build());
+    BotUtils.sendMessage(user.getOrCreatePMChannel(), user, message);
   }
 
   public static String getOwnerName() {
-    return BotUtils.CLIENT.getUserByID(ID).getName();
+    return user.getName();
   }
 }
