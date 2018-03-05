@@ -2,7 +2,7 @@ git clone https://github.com/CorruptComputer/Officer-Beepsky
 
 cd Officer-Beepsky
 
-echo ""
+echo "What is the Discord Token? "
 read token
 
 echo "What is the Discord ID of the owner? "
