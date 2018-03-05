@@ -4,6 +4,24 @@
 *.iml
 /out/
 
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.externalToolBuilders/
+*.launch
+.factorypath
+.project
+.classpath
+
 ### Java ###
 *.class
 *.log

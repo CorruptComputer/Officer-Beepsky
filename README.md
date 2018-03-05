@@ -7,7 +7,7 @@
 ### Building
 To build you need the latest JDK 8 (9 works as well, but is not officially supported by D4j yet),
 RedHat's OpenJDK or Oracle's JDK should both work fine, however OpenJDK is what I will be using and
-what is used for TravisCI. Optionally you may also want to install Intellij IDEA Community.
+what is used for Semaphore Builds. Optionally you may also want to install Intellij IDEA Community or Eclipse.
 
 The easiest way to build is using `./gradlew fatJar` in either command prompt (Windows), or in the
 terminal (Linux/Mac).
