@@ -18,7 +18,7 @@ public class GameCommands implements Command {
 
   @Override
   public void execute(MessageReceivedEvent event) {
-    String[] command = event.getMessage().getContent().split(" ");
+    String[] command = event.getMessage().getContent().split(" ", 2);
     switch (command[0].substring(PREFIX.length()).toLowerCase()) {
       case "8ball":
         if (command.length > 1) {

@@ -100,7 +100,7 @@ public class GeneralCommands implements Command {
     if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor).matches()) {
       embedBuilder.withColor(Color.red);
       embedBuilder.withTitle("Color must be in hex format!");
-      embedBuilder.withDescription("Example: #FFFFFF or #FFF");
+      embedBuilder.withDescription("Example: #FFFFFF");
       BotUtils.sendMessage(author.getOrCreatePMChannel(), author, embedBuilder);
       return true;
     }

@@ -6,6 +6,7 @@ import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
+import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.EmbedBuilder;
 
 class Main {
@@ -22,8 +23,12 @@ class Main {
       System.exit(1);
     }
 
-    // setup client and owner ID
-    BotUtils.CLIENT = new ClientBuilder().withToken(args[0]).withRecommendedShardCount().build();
+    try {
+      BotUtils.CLIENT = new ClientBuilder().withToken(args[0]).withRecommendedShardCount().build();
+    } catch (DiscordException e) {
+      System.out.println("Invalid token, aborting...");
+      System.exit(0);
+    }
 
     // Register listeners via the EventSubscriber annotation which allows for organisation and
     // delegation of events
@@ -41,7 +46,7 @@ class Main {
       // the "Playing:" text
       BotUtils.CLIENT.changePresence(StatusType.ONLINE, ActivityType.PLAYING, ".help for commands");
 
-      Owner.user = BotUtils.CLIENT.getUserByID(Long.parseLong(args[1]));
+      Owner.user = BotUtils.CLIENT.fetchUser(Long.parseLong(args[1]));
 
       // send message of successful startup to bot owner
       EmbedBuilder startupMessage = new EmbedBuilder();

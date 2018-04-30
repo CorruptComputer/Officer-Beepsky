@@ -67,8 +67,8 @@ public class Queue {
           @Override
           public void trackLoaded(AudioTrack track) {
             builder.withTitle("Adding to queue:");
-            builder.withDescription("[" + track.getInfo().title + "](" + track + ")" + " by "
-                + track.getInfo().author);
+            builder.withDescription("[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
+                + " by " + track.getInfo().author);
 
             BotUtils.sendMessage(textChannel, author, builder);
             musicManager.getScheduler().queue(track);
