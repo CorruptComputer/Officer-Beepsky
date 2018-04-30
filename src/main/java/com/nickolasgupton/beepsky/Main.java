@@ -4,6 +4,7 @@ import com.nickolasgupton.beepsky.music.VoiceEvents;
 import com.nickolasgupton.beepsky.owner.Owner;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.impl.events.shard.DisconnectedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.DiscordException;
@@ -34,6 +35,7 @@ class Main {
     // delegation of events
     BotUtils.CLIENT.getDispatcher().registerListener(new CommandHandler());
     BotUtils.CLIENT.getDispatcher().registerListener(new VoiceEvents());
+    BotUtils.CLIENT.getDispatcher().registerListener(new DisconnectHandler());
 
     // Only login after all events are registered otherwise some may be missed.
     BotUtils.CLIENT.login();
