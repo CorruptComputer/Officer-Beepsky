@@ -5,7 +5,7 @@ import sx.blah.discord.handle.impl.events.shard.DisconnectedEvent;
 
 public class DisconnectHandler {
   /**
-   * Sends a message.
+   * Fired when disconnected from Discord for any reason.
    * @param event Provided by D4J.
    */
   @EventSubscriber
