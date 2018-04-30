@@ -22,7 +22,7 @@ into it in order to make it easily portable.
 You can run it from the terminal/command prompt by typing `java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>`.
 
 ### Build, run, and update script
-Optionally you can use the following script to build, run, and update the bot when needed:
+Optionally you can use the following script to build, run, and update the bot when needed. You can also use the arg `-d` to target the `dev` branch.
 
 **Linux/Mac:**
 ```
