@@ -144,9 +144,14 @@ public class Queue {
    */
   static void nextSong(IUser author, IChannel textChannel) {
     GuildMusicManager musicManager = getGuildAudioPlayer(textChannel.getGuild());
+
+    // if the queue is empty ignore the command
+    if (musicManager.getScheduler().getQueue().isEmpty()) {
+      return;
+    }
+
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
     EmbedBuilder builder = new EmbedBuilder();
-
     builder.withColor(Color.green);
 
     if (queue.size() > 0) {
@@ -223,19 +228,22 @@ public class Queue {
    * @param textChannel Text channel it was requested in
    */
   static void stop(IUser author, IChannel textChannel) {
-    IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-        .getVoiceStateForGuild(textChannel.getGuild()).getChannel();
+    GuildMusicManager musicManager = getGuildAudioPlayer(textChannel.getGuild());
 
-    if (botVoiceChannel == null) {
+    // if the queue is empty ignore the command
+    if (musicManager.getScheduler().getQueue().isEmpty()) {
       return;
     }
 
-    clear(getGuildAudioPlayer(textChannel.getGuild()).getScheduler());
+    clear(musicManager.getScheduler());
     EmbedBuilder message = new EmbedBuilder();
     message.withColor(Color.green);
     message.withTitle("The queue has been cleared!");
 
     BotUtils.sendMessage(textChannel, author, message);
+
+    IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
+            .getVoiceStateForGuild(textChannel.getGuild()).getChannel();
     botVoiceChannel.leave();
   }
 
