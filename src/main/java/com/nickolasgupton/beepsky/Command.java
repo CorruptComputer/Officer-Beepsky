@@ -2,7 +2,7 @@ package com.nickolasgupton.beepsky;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IPrivateChannel;
+import sx.blah.discord.handle.obj.IUser;
 
 // Interface to determine if a command should be executed, and then handles its execution
 public interface Command {
@@ -21,8 +21,8 @@ public interface Command {
   void execute(MessageReceivedEvent event);
 
   /**
-   * Sends the available [] commands to the recipient.
-   * @param recipient Who the help message(s) should be sent to.
+   * Returns the usage string for a command.
+   * @return String of the correct usage for the command.
    */
-  void getCommands(IPrivateChannel recipient);
+  String getCommand(IUser recipient);
 }

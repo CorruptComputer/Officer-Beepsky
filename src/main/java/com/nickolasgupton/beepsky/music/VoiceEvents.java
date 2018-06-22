@@ -3,6 +3,7 @@ package com.nickolasgupton.beepsky.music;
 import static com.nickolasgupton.beepsky.music.MusicHelper.getGuildAudioPlayer;
 
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.guild.voice.VoiceDisconnectedEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelMoveEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -25,7 +26,7 @@ public class VoiceEvents {
         return;
       }
 
-      Queue.clear(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }
@@ -47,9 +48,19 @@ public class VoiceEvents {
         return;
       }
 
-      Queue.clear(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }
+  }
+
+  /**
+   * Called when the bot is disconnected from a voice channel for any reason.
+   *
+   * @param event Provided by D4J
+   */
+  @EventSubscriber
+  public void botVoiceDisconnected(VoiceDisconnectedEvent event) {
+    MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
   }
 }

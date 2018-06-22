@@ -1,21 +1,37 @@
-package com.nickolasgupton.beepsky.game;
+package com.nickolasgupton.beepsky.fun;
 
 import com.nickolasgupton.beepsky.BotUtils;
+import com.nickolasgupton.beepsky.Command;
 import java.awt.Color;
 import java.util.Random;
-import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
-class EightBall {
+public class EightBallCommand implements Command {
 
   /**
-   * Random chance for either a positive, unsure, or negative answer.
-   * @param author Author of the command
-   * @param channel Author of the command
-   * @param question Author of the command
+   * Checks the prefix and command name to determine if it should be executed.
+   * @param message The message received.
+   * @return True if the command should be executed.
    */
-  public static void roll(IUser author, IChannel channel, String question) {
+  @Override
+  public boolean shouldExecute(IMessage message) {
+    return message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "8ball");
+  }
+
+  /**
+   * Executes the command if it exists.
+   * @param event Provided by D4J.
+   */
+  @Override
+  public void execute(MessageReceivedEvent event) {
+    String question = "";
+    if (event.getMessage().toString().split(" ", 2).length > 1) {
+      question = event.getMessage().toString().split(" ", 2)[1];
+    }
+
     if (question.length() > 0 && !question.endsWith("?")) {
       question += "?  ";
     }
@@ -58,6 +74,16 @@ class EightBall {
 
     builder.withDescription(answers[certainty][rdm.nextInt(answers[certainty].length)]);
 
-    BotUtils.sendMessage(channel, author, builder);
+    BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+  }
+
+  /**
+   * Returns the usage string for a command.
+   * @return String of the correct usage for the command.
+   */
+  @Override
+  public String getCommand(IUser recipient) {
+    return  "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
+        + "8ball <question>` - Gives the answer you may not be looking for.";
   }
 }

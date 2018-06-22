@@ -46,7 +46,8 @@ class Main {
 
 
       // the "Playing:" text
-      BotUtils.CLIENT.changePresence(StatusType.ONLINE, ActivityType.PLAYING, ".help for commands");
+      BotUtils.CLIENT.changePresence(StatusType.ONLINE, ActivityType.PLAYING,
+          BotUtils.PREFIX + "help for commands");
 
       Owner.user = BotUtils.CLIENT.fetchUser(Long.parseLong(args[1]));
 

@@ -45,7 +45,7 @@ class TrackScheduler extends AudioEventAdapter {
    *
    * @param track The track to play or add to queue.
    */
-  public synchronized void queue(AudioTrack track) {
+  synchronized void queue(AudioTrack track) {
     // Calling startTrack with the noInterrupt set to true will start the track only if nothing is
     // currently playing. If something is playing, it returns false and does nothing. In that case
     // the player was already playing so this track goes to the queue instead.
@@ -60,7 +60,7 @@ class TrackScheduler extends AudioEventAdapter {
   /**
    * Starts the next track, stopping the current one if it is playing.
    */
-  public synchronized void nextTrack() {
+  synchronized void nextTrack() {
     AudioTrack nextTrack = queue.isEmpty() ? null : queue.remove(0);
 
     // Start the next track, regardless of if something is already playing or not. In case queue was
@@ -79,8 +79,12 @@ class TrackScheduler extends AudioEventAdapter {
    *
    * @return Returns a List of AudioTrack's currently queued
    */
-  public List<AudioTrack> getQueue() {
+  List<AudioTrack> getQueue() {
     return this.queue;
+  }
+
+  AudioTrack getPlayingSong() {
+    return player.getPlayingTrack();
   }
 
   //  @Override

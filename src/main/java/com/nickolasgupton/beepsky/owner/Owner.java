@@ -11,8 +11,4 @@ public class Owner {
   public static void sendMessage(EmbedBuilder message) {
     BotUtils.sendMessage(user.getOrCreatePMChannel(), user, message);
   }
-
-  public static String getOwnerName() {
-    return user.getName();
-  }
 }

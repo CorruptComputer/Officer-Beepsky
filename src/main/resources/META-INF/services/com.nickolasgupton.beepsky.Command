@@ -1,4 +1,12 @@
-com.nickolasgupton.beepsky.general.GeneralCommands
-com.nickolasgupton.beepsky.game.GameCommands
-com.nickolasgupton.beepsky.music.MusicCommands
-com.nickolasgupton.beepsky.owner.OwnerCommands
+com.nickolasgupton.beepsky.general.HelpCommand
+com.nickolasgupton.beepsky.fun.EightBallCommand
+com.nickolasgupton.beepsky.fun.NameColorCommand
+com.nickolasgupton.beepsky.music.QueueCommand
+com.nickolasgupton.beepsky.music.ListQueueCommand
+com.nickolasgupton.beepsky.music.SkipCommand
+com.nickolasgupton.beepsky.music.StopCommand
+com.nickolasgupton.beepsky.owner.ShutdownCommand
+com.nickolasgupton.beepsky.owner.BanCommand
+com.nickolasgupton.beepsky.owner.UnbanCommand
+com.nickolasgupton.beepsky.owner.LeaveCommand
+com.nickolasgupton.beepsky.owner.AnnouncementCommand
