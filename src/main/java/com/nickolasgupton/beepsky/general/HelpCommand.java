@@ -33,7 +33,10 @@ public class HelpCommand implements Command {
     builder.withTitle("Available Commands:");
     builder.withDescription("");
     for (Command commands : ServiceLoader.load(Command.class)) {
-      builder.appendDescription(commands.getCommand(event.getAuthor()) + "\n\n");
+      String cmd = commands.getCommand(event.getAuthor());
+      if (cmd.length() > 0) {
+        builder.appendDescription(commands.getCommand(event.getAuthor()) + "\n\n");
+      }
 
       if (builder.getTotalVisibleCharacters() > 1800) {
         BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), builder);
