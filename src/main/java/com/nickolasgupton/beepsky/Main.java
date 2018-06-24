@@ -57,6 +57,7 @@ class Main {
       startupMessage.withTitle("Startup complete!");
       startupMessage.withDescription("Current version: " + BotUtils.VERSION);
       Owner.sendMessage(startupMessage);
+      BotUtils.startTime = System.currentTimeMillis();
     } catch (InterruptedException e) {
       e.printStackTrace();
       BotUtils.CLIENT.logout();

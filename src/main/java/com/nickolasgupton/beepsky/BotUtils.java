@@ -15,7 +15,8 @@ public class BotUtils {
 
   public static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
   public static IDiscordClient CLIENT;
-  public static final String PREFIX = "!";
+  public static final String PREFIX = ";";
+  static long startTime;
 
   /**
    * Sends a message.

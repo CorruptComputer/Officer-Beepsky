@@ -18,7 +18,7 @@ import sx.blah.discord.util.EmbedBuilder;
 public class QueueCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a command should be executed.
+   * Checks prefix, command name, and if there is a track provided.
    *
    * @param message The message received.
    * @return True if the command should be executed.
@@ -45,6 +45,7 @@ public class QueueCommand implements Command {
 
       return true;
     }
+
     return false;
   }
 

@@ -22,6 +22,7 @@ public interface Command {
 
   /**
    * Returns the usage string for a command.
+   * @param recipient The user the command is going to, used for permissions checking.
    * @return String of the correct usage for the command.
    */
   String getCommand(IUser recipient);

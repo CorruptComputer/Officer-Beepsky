@@ -13,6 +13,11 @@ import sx.blah.discord.util.EmbedBuilder;
 
 public class NameColorCommand implements Command {
 
+  /**
+   * Determines if the command, prefix, and permissions are correct.
+   * @param message The message received.
+   * @return True if the command is valid.
+   */
   @Override
   public boolean shouldExecute(IMessage message) {
     if (message.getChannel().isPrivate()) {

@@ -22,7 +22,7 @@ public class EightBallCommand implements Command {
   }
 
   /**
-   * Executes the command if it exists.
+   * Rolls an 8ball, random chance for positive, unsure, and negative.
    * @param event Provided by D4J.
    */
   @Override
@@ -78,7 +78,7 @@ public class EightBallCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a command.
+   * Returns the usage string for the 8ball command.
    * @return String of the correct usage for the command.
    */
   @Override
