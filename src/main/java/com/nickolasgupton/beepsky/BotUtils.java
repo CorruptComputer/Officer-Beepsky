@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -19,7 +23,7 @@ public class BotUtils {
   static long startTime;
 
   /**
-   * Sends a message.
+   * Sends a message, and cleans it up after 5 minutes.
    * @param channel Text channel to send the message to.
    * @param author Author of the original command we are replying to.
    * @param message Message to send.
@@ -27,7 +31,19 @@ public class BotUtils {
   public static void sendMessage(IChannel channel, IUser author, EmbedBuilder message) {
     message.withFooterText("Requested by: " + author.getName() + '#' + author.getDiscriminator()
         + " | Version: " + VERSION);
-    RequestBuffer.request(() -> channel.sendMessage(message.build()));
+    IMessage messageSent = RequestBuffer.request(() -> channel.sendMessage(message.build())).get();
+
+    // if its not a private channel cleanup the messages after a few minutes
+    if (!channel.isPrivate()) {
+      Timer timer = new Timer();
+
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          messageSent.delete();
+        }
+      }, TimeUnit.MINUTES.toMillis(5));
+    }
   }
 
   /**
