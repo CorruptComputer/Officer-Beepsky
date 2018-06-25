@@ -1,6 +1,9 @@
 package com.nickolasgupton.beepsky;
 
 import java.util.ServiceLoader;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -22,6 +25,15 @@ class CommandHandler {
         // Check if the provided message should be executed
         if (commands.shouldExecute(event.getMessage())) {
           commands.execute(event);
+
+          Timer timer = new Timer();
+
+          timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+              event.getMessage().delete();
+            }
+          }, TimeUnit.SECONDS.toMillis(10));
         }
       }
 
