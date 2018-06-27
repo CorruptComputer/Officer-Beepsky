@@ -33,11 +33,11 @@ public class EightBallCommand implements Command {
     }
 
     if (question.length() > 0 && !question.endsWith("?")) {
-      question += "?  ";
+      question += "?";
     }
 
     EmbedBuilder builder = new EmbedBuilder();
-    builder.withTitle(question + "8Ball says:");
+    builder.withTitle(question + " | 8Ball says:");
 
     Random rdm = new Random();
     // gives them all an even chance, with rdm.nextInt(3) 0 is almost never picked
