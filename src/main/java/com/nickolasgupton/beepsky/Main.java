@@ -4,7 +4,6 @@ import com.nickolasgupton.beepsky.music.VoiceEvents;
 import com.nickolasgupton.beepsky.owner.Owner;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.impl.events.shard.DisconnectedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.DiscordException;

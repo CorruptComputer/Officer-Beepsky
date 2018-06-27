@@ -19,7 +19,7 @@ class CommandHandler {
     // Only continue if the author is not banned
     if (!BotUtils.isBanned(event.getAuthor().getStringID())) {
 
-      // Search all available command types
+      // Search all available commands types
       for (Command commands : ServiceLoader.load(Command.class)) {
 
         // Check if the provided message should be executed

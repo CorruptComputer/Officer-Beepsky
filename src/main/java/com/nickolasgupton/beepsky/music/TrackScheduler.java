@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This class schedules tracks for the audio player. It contains the queue of tracks.
  */
-class TrackScheduler extends AudioEventAdapter {
+public class TrackScheduler extends AudioEventAdapter {
 
   private final List<AudioTrack> queue;
   private final AudioPlayer player;
@@ -45,7 +45,7 @@ class TrackScheduler extends AudioEventAdapter {
    *
    * @param track The track to play or add to queue.
    */
-  synchronized void queue(AudioTrack track) {
+  public synchronized void queue(AudioTrack track) {
     // Calling startTrack with the noInterrupt set to true will start the track only if nothing is
     // currently playing. If something is playing, it returns false and does nothing. In that case
     // the player was already playing so this track goes to the queue instead.
@@ -60,7 +60,7 @@ class TrackScheduler extends AudioEventAdapter {
   /**
    * Starts the next track, stopping the current one if it is playing.
    */
-  synchronized void nextTrack() {
+  public synchronized void nextTrack() {
     AudioTrack nextTrack = queue.isEmpty() ? null : queue.remove(0);
 
     // Start the next track, regardless of if something is already playing or not. In case queue was
@@ -79,11 +79,11 @@ class TrackScheduler extends AudioEventAdapter {
    *
    * @return Returns a List of AudioTrack's currently queued
    */
-  List<AudioTrack> getQueue() {
+  public List<AudioTrack> getQueue() {
     return this.queue;
   }
 
-  AudioTrack getPlayingSong() {
+  public AudioTrack getPlayingSong() {
     return player.getPlayingTrack();
   }
 

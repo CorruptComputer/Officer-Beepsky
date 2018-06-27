@@ -1,5 +1,7 @@
 com.nickolasgupton.beepsky
-com.nickolasgupton.beepsky.fun
-com.nickolasgupton.beepsky.general
+com.nickolasgupton.beepsky.fun.commands
+com.nickolasgupton.beepsky.general.commands
 com.nickolasgupton.beepsky.music
+com.nickolasgupton.beepsky.music.commands
 com.nickolasgupton.beepsky.owner
+com.nickolasgupton.beepsky.owner.commands

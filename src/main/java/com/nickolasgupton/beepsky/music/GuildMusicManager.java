@@ -7,7 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventListener;
 /**
  * Holder for both the player and a track scheduler for one guild.
  */
-class GuildMusicManager {
+public class GuildMusicManager {
 
   private final AudioPlayer player;
   private final AudioProvider provider;
@@ -45,7 +45,7 @@ class GuildMusicManager {
    *
    * @return The scheduler for AudioTracks.
    */
-  TrackScheduler getScheduler() {
+  public TrackScheduler getScheduler() {
     return this.scheduler;
   }
 

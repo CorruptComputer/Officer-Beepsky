@@ -15,7 +15,7 @@ public class DisconnectHandler {
   public void onDisconnect(DisconnectedEvent event) {
     // When disconnected the 'now playing' text will get reset, so if we've been up for less than 24
     // hours there is no need to restart.
-    if (System.currentTimeMillis() - BotUtils.startTime < 86400000) {
+    if (System.currentTimeMillis() - BotUtils.startTime < TimeUnit.HOURS.toMillis(24)) {
       System.out.println("\n\nDisconnect reason: \n" + event.getReason() + '\n');
 
       try {

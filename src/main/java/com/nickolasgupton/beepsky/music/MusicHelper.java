@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import sx.blah.discord.handle.obj.IGuild;
 
-class MusicHelper {
+public class MusicHelper {
 
-  static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+  public static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
   private static final Map<Long, GuildMusicManager> playerInstances = new HashMap<>();
 
   /**
@@ -19,7 +19,7 @@ class MusicHelper {
    * @param guild The guild to get the Audio Player of
    * @return GuildMusicManager for the provided Guild
    */
-  static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
+  public static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
     long guildId = guild.getLongID();
 
     GuildMusicManager musicManager = playerInstances.computeIfAbsent(guildId,
@@ -36,7 +36,7 @@ class MusicHelper {
    * @param queue List of the AudioTracks currently queued
    * @return Returns formatted String of the songs
    */
-  static String queueToString(List<AudioTrack> queue) {
+  public static String queueToString(List<AudioTrack> queue) {
 
     StringBuilder str = new StringBuilder();
 
@@ -68,7 +68,7 @@ class MusicHelper {
    *
    * @param scheduler TrackScheduler for the current guild.
    */
-  static void clearQueue(TrackScheduler scheduler) {
+  public static void clearQueue(TrackScheduler scheduler) {
     scheduler.getQueue().clear();
     scheduler.nextTrack();
   }

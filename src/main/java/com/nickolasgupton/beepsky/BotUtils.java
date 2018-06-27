@@ -25,7 +25,7 @@ public class BotUtils {
   /**
    * Sends a message, and cleans it up after 5 minutes.
    * @param channel Text channel to send the message to.
-   * @param author Author of the original command we are replying to.
+   * @param author Author of the original commands we are replying to.
    * @param message Message to send.
    */
   public static void sendMessage(IChannel channel, IUser author, EmbedBuilder message) {
