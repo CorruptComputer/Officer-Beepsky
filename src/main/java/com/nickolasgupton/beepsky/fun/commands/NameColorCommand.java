@@ -3,6 +3,7 @@ package com.nickolasgupton.beepsky.fun.commands;
 import com.nickolasgupton.beepsky.BotUtils;
 import com.nickolasgupton.beepsky.Command;
 import java.awt.Color;
+import java.util.List;
 import java.util.regex.Pattern;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
@@ -65,23 +66,34 @@ public class NameColorCommand implements Command {
 
     embedBuilder.withColor(Color.green);
 
+    List<IRole> currentRoles = event.getAuthor().getRolesForGuild(event.getGuild());
+
+    // remove the current color role
+    for (IRole role: currentRoles) {
+      if (role.getName().startsWith("#")) {
+        event.getAuthor().removeRole(role);
+
+        // if that was the last user with the role, delete it
+        if (event.getGuild().getUsersByRole(role).isEmpty()) {
+          role.delete();
+        }
+      }
+    }
+
     IRole role;
     if (event.getGuild().getRolesByName(hexColor).isEmpty()) {
       role = event.getGuild().createRole();
-      embedBuilder.withTitle("Color successfully added!");
+      role.changeName(hexColor);
+      role.changeColor(Color.decode(hexColor));
+      role.changeHoist(false);
+      role.changeMentionable(false);
     } else {
       role = event.getGuild().getRolesByName(hexColor).get(0);
-      embedBuilder.withTitle("Color successfully updated!");
     }
 
-    role.changeName(hexColor);
-
-    role.changeColor(Color.decode(hexColor));
-
-    role.changeHoist(false);
-    role.changeMentionable(false);
-
     event.getAuthor().addRole(role);
+
+    embedBuilder.withTitle("Color successfully changed!");
 
     BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), embedBuilder);
   }
