@@ -28,11 +28,11 @@ if [ -z "$OWNER" ]; then
     read OWNER
 fi
 
-for((i = 1; i > 0; i=$?)){
-    git pull origin $BRANCH
-    chmod +x gradlew
-    ./gradlew fatJar
-    java -jar build/libs/Officer-Beepsky-*.jar "$TOKEN" "$OWNER"
-}
+for ((i = 1; i > 0; i=$?)); do
+    git pull origin $BRANCH;
+    chmod +x gradlew;
+    ./gradlew fatJar;
+    java -jar build/libs/Officer-Beepsky-*.jar "$TOKEN" "$OWNER";
+done
 
 exit 0
