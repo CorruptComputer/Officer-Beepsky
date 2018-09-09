@@ -1,0 +1,13 @@
+xyz.gupton.nickolas.beepsky.general.commands.HelpCommand
+xyz.gupton.nickolas.beepsky.fun.commands.EightBallCommand
+xyz.gupton.nickolas.beepsky.fun.commands.NameColorCommand
+xyz.gupton.nickolas.beepsky.music.commands.QueueCommand
+xyz.gupton.nickolas.beepsky.music.commands.ListQueueCommand
+xyz.gupton.nickolas.beepsky.music.commands.SkipCommand
+xyz.gupton.nickolas.beepsky.music.commands.StopCommand
+xyz.gupton.nickolas.beepsky.music.commands.TimeSetCommand
+xyz.gupton.nickolas.beepsky.owner.commands.ShutdownCommand
+xyz.gupton.nickolas.beepsky.owner.commands.BanCommand
+xyz.gupton.nickolas.beepsky.owner.commands.UnbanCommand
+xyz.gupton.nickolas.beepsky.owner.commands.LeaveCommand
+xyz.gupton.nickolas.beepsky.owner.commands.AnnouncementCommand

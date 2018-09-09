@@ -3,9 +3,11 @@
 * [Discord4J](https://github.com/austinv11/Discord4J)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [SLF4J](https://www.slf4j.org/)
+* [JDBI](https://github.com/jdbi/jdbi/)
+* [SQLite JDBC](https://github.com/xerial/sqlite-jdbc)
 
 ### Building
-To build you need the latest JDK 8 (9 works as well, but is not officially supported by D4j yet),
+To build you need the latest JDK 8 (9+ does NOT work),
 RedHat's OpenJDK or Oracle's JDK should both work fine, however OpenJDK is what I will be using and
 what is used for Semaphore Builds. Optionally you may also want to install Intellij IDEA Community or Eclipse.
 
@@ -37,8 +39,7 @@ Invoke-WebRequest https://raw.githubusercontent.com/CorruptComputer/Officer-Beep
 ```
 
 And when its time to update just private message the bot `restart` and it will update and restart!
-**WARNING: Currently with the `restart` command if you do not have the script setup it will not
-restart the bot, but only shut it down.**
+**WARNING: The `restart` command will only shut it down if you do not use the script.**
 
 ### Contributing
 This project follows the [Google Java Style Guide](http://google.github.io/styleguide/javaguide.html).
