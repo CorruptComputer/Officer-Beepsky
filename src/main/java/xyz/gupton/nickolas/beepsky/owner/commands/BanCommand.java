@@ -1,8 +1,5 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.Writer;
@@ -10,6 +7,9 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 public class BanCommand implements Command {
 
@@ -71,7 +71,7 @@ public class BanCommand implements Command {
 
       builder.withTitle("Ban Successful");
       builder.withDescription(BotUtils.CLIENT.getUserByID(userId).getName()
-              + " is now banned.");
+          + " is now banned.");
     } catch (Exception e) {
       builder.withColor(255, 0, 0);
       e.printStackTrace();

@@ -9,6 +9,7 @@ public interface Command {
 
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
+   *
    * @param message The message received.
    * @return True if the commands should be executed.
    */
@@ -16,12 +17,14 @@ public interface Command {
 
   /**
    * Executes the commands if it exists.
+   *
    * @param event Provided by D4J.
    */
   void execute(MessageReceivedEvent event);
 
   /**
    * Returns the usage string for a commands.
+   *
    * @param recipient The user the commands is going to, used for permissions checking.
    * @return String of the correct usage for the commands.
    */

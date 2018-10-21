@@ -1,13 +1,13 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 public class AnnouncementCommand implements Command {
 

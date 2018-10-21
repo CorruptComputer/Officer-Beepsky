@@ -1,8 +1,5 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 import java.awt.Color;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -11,6 +8,9 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
 public class TimeSetCommand implements Command {
 

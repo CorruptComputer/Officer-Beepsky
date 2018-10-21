@@ -1,8 +1,8 @@
 package xyz.gupton.nickolas.beepsky.owner;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
 
 public class Owner {
 

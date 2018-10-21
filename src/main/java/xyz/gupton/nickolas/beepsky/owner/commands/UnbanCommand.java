@@ -1,8 +1,5 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -12,6 +9,9 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 public class UnbanCommand implements Command {
 
@@ -35,6 +35,7 @@ public class UnbanCommand implements Command {
 
   /**
    * Unbans the user specified in the message.
+   *
    * @param event Provided by D4J.
    */
   @Override
@@ -48,7 +49,7 @@ public class UnbanCommand implements Command {
       builder.withColor(255, 0, 0);
       builder.withTitle("Error Unbanning");
       builder.withDescription(BotUtils.CLIENT.getUserByID(userId).getName()
-              + " is not banned.");
+          + " is not banned.");
       Owner.sendMessage(builder);
       return;
     }
@@ -63,7 +64,7 @@ public class UnbanCommand implements Command {
 
       builder.withTitle("Unban Successful");
       builder.withDescription(BotUtils.CLIENT.getUserByID(userId).getName()
-              + " has been unbanned.");
+          + " has been unbanned.");
     } catch (Exception e) {
       builder.withColor(255, 0, 0);
       e.printStackTrace();
@@ -76,6 +77,7 @@ public class UnbanCommand implements Command {
 
   /**
    * Returns the usage string for the commands.
+   *
    * @return String of the correct usage for the commands.
    */
   @Override

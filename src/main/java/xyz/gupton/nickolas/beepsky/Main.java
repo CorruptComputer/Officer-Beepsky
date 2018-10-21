@@ -1,13 +1,13 @@
 package xyz.gupton.nickolas.beepsky;
 
-import xyz.gupton.nickolas.beepsky.music.VoiceEvents;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.music.VoiceEvents;
+import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 class Main {
 
@@ -42,7 +42,6 @@ class Main {
     try {
       // Will not continue until the bot is fully ready to use.
       BotUtils.CLIENT.getDispatcher().waitFor(ReadyEvent.class);
-
 
       // the "Playing:" text
       BotUtils.CLIENT.changePresence(StatusType.ONLINE, ActivityType.PLAYING,

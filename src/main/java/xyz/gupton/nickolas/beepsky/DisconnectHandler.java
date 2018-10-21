@@ -7,8 +7,10 @@ import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
 public class DisconnectHandler {
+
   /**
    * Fired when disconnected from Discord for any reason.
+   *
    * @param event Provided by D4J.
    */
   @EventSubscriber

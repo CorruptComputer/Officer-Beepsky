@@ -1,12 +1,12 @@
 package xyz.gupton.nickolas.beepsky.general.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
 import java.util.ServiceLoader;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
 
 public class HelpCommand implements Command {
 
@@ -43,7 +43,8 @@ public class HelpCommand implements Command {
         builder.withDescription("");
       }
     }
-    builder.appendDescription("Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
+    builder.appendDescription(
+        "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
     BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), builder);
   }
 

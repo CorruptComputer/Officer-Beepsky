@@ -2,9 +2,6 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildAudioPlayer;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.awt.Color;
 import java.util.List;
@@ -13,6 +10,9 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 
 public class SkipCommand implements Command {
 

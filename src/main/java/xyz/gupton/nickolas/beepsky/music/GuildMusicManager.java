@@ -18,6 +18,7 @@ public class GuildMusicManager {
    * Creates a player and a track scheduler.
    *
    * @param manager Audio player manager to use for creating the player.
+   * @param guild Guild the manager is being used for.
    */
   GuildMusicManager(AudioPlayerManager manager, IGuild guild) {
     player = manager.createPlayer();
@@ -29,6 +30,7 @@ public class GuildMusicManager {
 
   /**
    * Adds a listener to be registered for audio events.
+   *
    * @param listener Listener to be added
    */
   public void addAudioListener(AudioEventListener listener) {
@@ -37,6 +39,7 @@ public class GuildMusicManager {
 
   /**
    * Removes a listener that was registered for audio events.
+   *
    * @param listener Listener to be removed
    */
   public void removeAudioListener(AudioEventListener listener) {

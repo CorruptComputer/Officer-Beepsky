@@ -3,8 +3,9 @@
 * [Discord4J](https://github.com/austinv11/Discord4J)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [SLF4J](https://www.slf4j.org/)
-* [JDBI](https://github.com/jdbi/jdbi/)
-* [SQLite JDBC](https://github.com/xerial/sqlite-jdbc)
+
+[//]: # (* [JDBI](https://github.com/jdbi/jdbi/   These aren't quite ready)
+[//]: # (* [SQLite JDBC](https://github.com/xerial/sqlite-jdbc)
 
 ### Building
 To build you need the latest JDK 8 (9+ does NOT work),

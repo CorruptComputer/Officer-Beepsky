@@ -1,18 +1,19 @@
 package xyz.gupton.nickolas.beepsky.fun.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
 import java.awt.Color;
 import java.util.Random;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
 
 public class EightBallCommand implements Command {
 
   /**
    * Checks the prefix and commands name to determine if it should be executed.
+   *
    * @param message The message received.
    * @return True if the commands should be executed.
    */
@@ -23,6 +24,7 @@ public class EightBallCommand implements Command {
 
   /**
    * Rolls an 8ball, random chance for positive, unsure, and negative.
+   *
    * @param event Provided by D4J.
    */
   @Override
@@ -79,11 +81,12 @@ public class EightBallCommand implements Command {
 
   /**
    * Returns the usage string for the 8ball commands.
+   *
    * @return String of the correct usage for the commands.
    */
   @Override
   public String getCommand(IUser recipient) {
-    return  "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
+    return "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
         + "8ball <question>` - Gives the answer you may not be looking for.";
   }
 }

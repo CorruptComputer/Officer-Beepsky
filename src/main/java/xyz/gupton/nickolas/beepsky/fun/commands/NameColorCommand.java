@@ -1,7 +1,5 @@
 package xyz.gupton.nickolas.beepsky.fun.commands;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
 import java.awt.Color;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -11,11 +9,14 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
 
 public class NameColorCommand implements Command {
 
   /**
    * Determines if the commands, prefix, and permissions are correct.
+   *
    * @param message The message received.
    * @return True if the commands is valid.
    */
@@ -69,7 +70,7 @@ public class NameColorCommand implements Command {
     List<IRole> currentRoles = event.getAuthor().getRolesForGuild(event.getGuild());
 
     // remove the current color role
-    for (IRole role: currentRoles) {
+    for (IRole role : currentRoles) {
       if (role.getName().startsWith("#")) {
         event.getAuthor().removeRole(role);
 

@@ -2,16 +2,16 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildAudioPlayer;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
-import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
-import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.awt.Color;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
+import xyz.gupton.nickolas.beepsky.BotUtils;
+import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
+import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
 public class ListQueueCommand implements Command {
 

@@ -1,17 +1,15 @@
 package xyz.gupton.nickolas.beepsky.music;
 
-import xyz.gupton.nickolas.beepsky.BotUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import xyz.gupton.nickolas.beepsky.BotUtils;
 
 /**
  * This class schedules tracks for the audio player. It contains the queue of tracks.
@@ -24,6 +22,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
   /**
    * Constructor for TrackScheduler.
+   *
    * @param player AudioPlayer for the current guild.
    */
   TrackScheduler(AudioPlayer player) {
@@ -46,13 +45,13 @@ public class TrackScheduler extends AudioEventAdapter {
         GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(guild);
 
         if (musicManager.getScheduler().getPlayingSong() == null
-                && musicManager.getScheduler().getQueue().isEmpty()) {
+            && musicManager.getScheduler().getQueue().isEmpty()) {
           MusicHelper.clearQueue(musicManager.getScheduler());
 
           nextTrack();
 
           IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-                  .getVoiceStateForGuild(guild).getChannel();
+              .getVoiceStateForGuild(guild).getChannel();
 
           botVoiceChannel.leave();
         }
