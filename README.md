@@ -25,7 +25,7 @@ into it in order to make it easily portable.
 You can run it from the terminal/command prompt by typing `java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>`.
 
 ### Build, run, and update script
-Optionally you can use the following script to build, run, and update the bot when needed. You can also use the arg `-d` to target the `dev` branch.
+Optionally you can use the following script to build, run, and update the bot when needed.
 
 **Linux/Mac:**
 ```
@@ -53,4 +53,3 @@ You can check if your code is good by using the `checkstyleMain` gradle task:
 ```
 
 The generated JavaDocs can be found [here](http://www.nickolasgupton.com/Officer-Beepsky/). 
-All PR's should target the `dev` branch. Docs will be re-generated before `master` releases.
