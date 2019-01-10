@@ -103,7 +103,7 @@ public class QueueCommand implements Command {
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
-    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(event.getGuild());
+    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(event.getGuild());
 
     final String track = song;
     EmbedBuilder builder = new EmbedBuilder();
@@ -147,7 +147,7 @@ public class QueueCommand implements Command {
               }
 
               String str = MusicHelper
-                  .queueToString(MusicHelper.getGuildAudioPlayer(event.getGuild())
+                  .queueToString(MusicHelper.getGuildMusicManager(event.getGuild())
                       .getScheduler().getQueue());
 
               // message with the first song

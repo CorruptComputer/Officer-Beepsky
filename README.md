@@ -52,4 +52,4 @@ You can check if your code is good by using the `checkstyleMain` gradle task:
 ./gradlew checkstyleMain
 ```
 
-The generated JavaDocs can be found [here](http://www.nickolasgupton.com/Officer-Beepsky/). 
+The generated JavaDocs can be found [here](https://nickolas.gupton.xyz/Officer-Beepsky/). 

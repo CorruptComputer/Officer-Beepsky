@@ -61,7 +61,7 @@ public class TimeSetCommand implements Command {
 
   @Override
   public void execute(MessageReceivedEvent event) {
-    long lengthOfTrack = MusicHelper.getGuildAudioPlayer(event.getGuild())
+    long lengthOfTrack = MusicHelper.getGuildMusicManager(event.getGuild())
         .getScheduler().getPlayingSong().getDuration();
 
     String[] time = event.getMessage().toString().split(" ")[1].split(":");
@@ -88,7 +88,7 @@ public class TimeSetCommand implements Command {
       BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
     }
 
-    MusicHelper.getGuildAudioPlayer(event.getGuild())
+    MusicHelper.getGuildMusicManager(event.getGuild())
         .getScheduler().getPlayingSong().setPosition(timeToSet);
 
     EmbedBuilder builder = new EmbedBuilder();

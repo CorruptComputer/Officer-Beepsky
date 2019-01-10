@@ -1,6 +1,6 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
-import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildAudioPlayer;
+import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.awt.Color;
@@ -38,7 +38,7 @@ public class ListQueueCommand implements Command {
    */
   @Override
   public void execute(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+    GuildMusicManager musicManager = getGuildMusicManager(event.getGuild());
 
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(Color.green);

@@ -1,6 +1,6 @@
 package xyz.gupton.nickolas.beepsky.music;
 
-import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildAudioPlayer;
+import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.voice.VoiceDisconnectedEvent;
@@ -26,7 +26,7 @@ public class VoiceEvents {
         return;
       }
 
-      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      MusicHelper.clearQueue(getGuildMusicManager(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }
@@ -48,7 +48,7 @@ public class VoiceEvents {
         return;
       }
 
-      MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
+      MusicHelper.clearQueue(getGuildMusicManager(event.getGuild()).getScheduler());
 
       botVoiceChannel.leave();
     }
@@ -61,6 +61,6 @@ public class VoiceEvents {
    */
   @EventSubscriber
   public void botVoiceDisconnected(VoiceDisconnectedEvent event) {
-    MusicHelper.clearQueue(getGuildAudioPlayer(event.getGuild()).getScheduler());
+    MusicHelper.clearQueue(getGuildMusicManager(event.getGuild()).getScheduler());
   }
 }

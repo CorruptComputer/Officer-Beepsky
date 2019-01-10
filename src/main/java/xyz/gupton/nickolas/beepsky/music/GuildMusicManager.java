@@ -56,6 +56,15 @@ public class GuildMusicManager {
   }
 
   /**
+   * Gets the AudioPlayer for the current guild.
+   *
+   * @return The AudioPlayer for the guild.
+   */
+  public AudioPlayer getAudioPlayer() {
+    return this.player;
+  }
+
+  /**
    * Gets the Audio Provider for the current guild.
    *
    * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.

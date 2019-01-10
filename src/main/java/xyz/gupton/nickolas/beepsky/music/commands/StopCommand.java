@@ -44,7 +44,7 @@ public class StopCommand implements Command {
    */
   @Override
   public void execute(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(event.getGuild());
+    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(event.getGuild());
     MusicHelper.clearQueue(musicManager.getScheduler());
 
     IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()

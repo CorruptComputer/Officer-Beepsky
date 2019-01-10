@@ -14,12 +14,12 @@ public class MusicHelper {
   private static final Map<Long, GuildMusicManager> playerInstances = new HashMap<>();
 
   /**
-   * Returns the provided Guilds audio player.
+   * Returns the provided Guilds music manager.
    *
-   * @param guild The guild to get the Audio Player of
+   * @param guild The guild to get the music manager of
    * @return GuildMusicManager for the provided Guild
    */
-  public static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
+  public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
     long guildId = guild.getLongID();
 
     GuildMusicManager musicManager = playerInstances.computeIfAbsent(guildId,

@@ -42,7 +42,7 @@ public class TrackScheduler extends AudioEventAdapter {
           nextTrack();
         }
 
-        GuildMusicManager musicManager = MusicHelper.getGuildAudioPlayer(guild);
+        GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild);
 
         if (musicManager.getScheduler().getPlayingSong() == null
             && musicManager.getScheduler().getQueue().isEmpty()) {

@@ -1,6 +1,6 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
-import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildAudioPlayer;
+import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.awt.Color;
@@ -29,7 +29,7 @@ public class SkipCommand implements Command {
       return false;
     }
 
-    if (getGuildAudioPlayer(message.getGuild()).getScheduler().getPlayingSong() == null) {
+    if (getGuildMusicManager(message.getGuild()).getScheduler().getPlayingSong() == null) {
       return false;
     }
 
@@ -46,7 +46,7 @@ public class SkipCommand implements Command {
    */
   @Override
   public void execute(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+    GuildMusicManager musicManager = getGuildMusicManager(event.getGuild());
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
     EmbedBuilder builder = new EmbedBuilder();
     builder.withColor(Color.green);

@@ -6,6 +6,7 @@ xyz.gupton.nickolas.beepsky.music.commands.ListQueueCommand
 xyz.gupton.nickolas.beepsky.music.commands.SkipCommand
 xyz.gupton.nickolas.beepsky.music.commands.StopCommand
 xyz.gupton.nickolas.beepsky.music.commands.TimeSetCommand
+xyz.gupton.nickolas.beepsky.music.commands.VolumeCommand
 xyz.gupton.nickolas.beepsky.owner.commands.ShutdownCommand
 xyz.gupton.nickolas.beepsky.owner.commands.BanCommand
 xyz.gupton.nickolas.beepsky.owner.commands.UnbanCommand
