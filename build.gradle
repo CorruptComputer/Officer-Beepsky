@@ -1,5 +1,5 @@
 group 'xyz.gupton.nickolas.beepsky'
-version '1.6.1'
+version '1.6.2'
 
 apply plugin: 'java'
 apply plugin: 'checkstyle'
