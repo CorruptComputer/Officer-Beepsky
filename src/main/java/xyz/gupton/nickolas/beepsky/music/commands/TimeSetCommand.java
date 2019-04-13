@@ -1,43 +1,47 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
-import java.awt.Color;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
 public class TimeSetCommand implements Command {
 
+  /**
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   *
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
+   */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate()) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null) {
       return false;
     }
 
-    if (message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "timeset")
-        || message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "ts")) {
-      IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-          .getVoiceStateForGuild(message.getGuild()).getChannel();
+    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "timeset")
+        || message.startsWith(BotUtils.PREFIX + "ts")) {
 
       // if the bot is not in a voice channel ignore the commands
-      if (botVoiceChannel == null) {
+      try {
+        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+            .getChannel().block();
+      } catch (NullPointerException e) {
         return false;
       }
 
       // split the ;time and <time> from each other
-      String[] msg = message.toString().split(" ", 2);
+      String[] msg = message.split(" ", 2);
 
       if (msg.length < 2) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withColor(Color.red);
-        builder.withTitle("No time given!");
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
+        BotUtils.sendMessage(channel, author, "No time given!", "");
         return false;
       }
 
@@ -45,11 +49,9 @@ public class TimeSetCommand implements Command {
       Pattern pattern = Pattern.compile("(\\d{1,2}:)?([0-5]?\\d:)?[0-5]?\\d");
 
       if (!pattern.matcher(msg[1]).matches()) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withColor(Color.red);
-        builder.withTitle("Incorrect formatting for the time, try `[HH:][MM:]SS`. "
-            + "The `HH:` and `MM:` are optional.");
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
+        BotUtils
+            .sendMessage(channel, author, "Incorrect formatting for the time, try `[HH:][MM:]SS`. "
+                + "The `HH:` and `MM:` are optional.", "");
         return false;
       }
 
@@ -59,12 +61,21 @@ public class TimeSetCommand implements Command {
     }
   }
 
+  /**
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   *
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    long lengthOfTrack = MusicHelper.getGuildMusicManager(event.getGuild())
-        .getScheduler().getPlayingSong().getDuration();
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    long lengthOfTrack = MusicHelper.getGuildMusicManager(guild.getId()).getScheduler()
+        .getPlayingSong()
+        .getDuration();
 
-    String[] time = event.getMessage().toString().split(" ")[1].split(":");
+    String[] time = message.split(" ")[1].split(":");
 
     long timeToSet = 0;
 
@@ -82,23 +93,23 @@ public class TimeSetCommand implements Command {
     }
 
     if (timeToSet > lengthOfTrack) {
-      EmbedBuilder builder = new EmbedBuilder();
-      builder.withColor(Color.red);
-      builder.withTitle("The time specified is after the track ends!");
-      BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+      BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "");
     }
 
-    MusicHelper.getGuildMusicManager(event.getGuild())
-        .getScheduler().getPlayingSong().setPosition(timeToSet);
+    MusicHelper.getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong()
+        .setPosition(timeToSet);
 
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(Color.green);
-    builder.withTitle("The time has been set to " + event.getMessage().toString().split(" ")[1]);
-    BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+    BotUtils.sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "");
   }
 
+  /**
+   * Returns the usage string for a commands.
+   *
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
+   */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "time <time>` or `"
         + BotUtils.PREFIX + "t <time>` - Sets the time to the time specified, usage: \n"
         + "`[HH:][MM:]SS`. The `HH:` and `MM:` are optional.";

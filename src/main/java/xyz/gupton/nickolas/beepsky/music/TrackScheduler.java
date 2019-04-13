@@ -4,12 +4,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import discord4j.core.object.util.Snowflake;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import xyz.gupton.nickolas.beepsky.BotUtils;
 
 /**
  * This class schedules tracks for the audio player. It contains the queue of tracks.
@@ -18,14 +16,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
   private final List<AudioTrack> queue;
   private final AudioPlayer player;
-  public IGuild guild;
 
   /**
    * Constructor for TrackScheduler.
    *
    * @param player AudioPlayer for the current guild.
+   * @param guild Snowflake ID of the current Guild.
    */
-  TrackScheduler(AudioPlayer player) {
+  TrackScheduler(AudioPlayer player, Snowflake guild) {
     // Because we will be removing from the "head" of the queue frequently, a LinkedList is a better
     // implementation since all elements won't have to be shifted after removing. Additionally,
     // choosing to add in between the queue will similarly not cause many elements to shift and wil
@@ -50,10 +48,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
           nextTrack();
 
-          IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-              .getVoiceStateForGuild(guild).getChannel();
-
-          botVoiceChannel.leave();
+          musicManager.getBotVoiceConnection().disconnect();
+          musicManager.setBotVoiceConnection(null);
         }
       }
     });

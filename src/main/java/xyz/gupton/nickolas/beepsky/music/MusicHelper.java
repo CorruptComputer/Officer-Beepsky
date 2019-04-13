@@ -3,10 +3,10 @@ package xyz.gupton.nickolas.beepsky.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import discord4j.core.object.util.Snowflake;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import sx.blah.discord.handle.obj.IGuild;
 
 public class MusicHelper {
 
@@ -19,15 +19,9 @@ public class MusicHelper {
    * @param guild The guild to get the music manager of
    * @return GuildMusicManager for the provided Guild
    */
-  public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
-    long guildId = guild.getLongID();
-
-    GuildMusicManager musicManager = playerInstances.computeIfAbsent(guildId,
+  public static synchronized GuildMusicManager getGuildMusicManager(Snowflake guild) {
+    return playerInstances.computeIfAbsent(guild.asLong(),
         manager -> new GuildMusicManager(playerManager, guild));
-
-    guild.getAudioManager().setAudioProvider(musicManager.getAudioProvider());
-
-    return musicManager;
   }
 
   /**

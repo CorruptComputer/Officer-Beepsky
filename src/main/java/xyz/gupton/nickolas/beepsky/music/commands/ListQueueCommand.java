@@ -3,11 +3,9 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import java.awt.Color;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -18,47 +16,48 @@ public class ListQueueCommand implements Command {
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate()) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null) {
       return false;
     }
 
-    return (message.toString().toLowerCase().equals(BotUtils.PREFIX + "listqueue")
-        || message.toString().toLowerCase().equals(BotUtils.PREFIX + "lq"));
+    return (message.toLowerCase().equals(BotUtils.PREFIX + "listqueue")
+        || message.toLowerCase().equals(BotUtils.PREFIX + "lq"));
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildMusicManager(event.getGuild());
-
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(Color.green);
-    builder.withTitle("Current queue:");
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    GuildMusicManager musicManager = getGuildMusicManager(guild.getId());
     AudioTrackInfo playingInfo = musicManager.getScheduler().getPlayingSong().getInfo();
-    builder.withDescription("Now playing: " + "[" + playingInfo.title + "](" + playingInfo.uri
-        + ") by " + playingInfo.author + "\n\n");
 
-    builder.appendDescription(MusicHelper.queueToString(musicManager.getScheduler().getQueue()));
-
-    BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+    BotUtils.sendMessage(channel, author, "Current queue:", "Now playing: " + "["
+        + playingInfo.title + "](" + playingInfo.uri + ") by " + playingInfo.author + "\n\n"
+        + MusicHelper.queueToString(musicManager.getScheduler().getQueue()));
   }
 
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "listqueue` or `"
         + BotUtils.PREFIX + "lq` - Messages back a list of the current queue.";
   }

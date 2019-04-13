@@ -1,14 +1,27 @@
 package xyz.gupton.nickolas.beepsky.owner;
 
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.object.util.Snowflake;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 
 public class Owner {
 
-  public static IUser user;
+  public static Snowflake USER;
 
-  public static void sendMessage(EmbedBuilder message) {
-    BotUtils.sendMessage(user.getOrCreatePMChannel(), user, message);
+  /**
+   * Sends a message to the Owner of the bot.
+   *
+   * @param title String, title of the message to send.
+   * @param description String, description of the message to send.
+   */
+  public static void sendMessage(String title, String description) {
+    try {
+      BotUtils.CLIENT.getUserById(USER).block().getPrivateChannel().block()
+          .createMessage(messageSpec ->
+              messageSpec
+                  .setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description))
+          ).block();
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    }
   }
 }

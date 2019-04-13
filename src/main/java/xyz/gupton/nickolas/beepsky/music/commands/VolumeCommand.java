@@ -3,11 +3,9 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import java.awt.Color;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
@@ -16,29 +14,36 @@ public class VolumeCommand implements Command {
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate()) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null) {
       return false;
     }
 
-    if (message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "volume")
-        || message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "vol")) {
-      String[] msg = message.toString().split(" ");
+    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "volume")
+        || message.toLowerCase().startsWith(BotUtils.PREFIX + "vol")) {
 
-      EmbedBuilder builder = new EmbedBuilder();
-      builder.withColor(Color.red);
-      builder.withTitle("Error changing volume:");
+      // if the bot is not in a voice channel ignore the commands
+      try {
+        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+            .getChannel().block();
+      } catch (NullPointerException e) {
+        return false;
+      }
+
+      String[] msg = message.split(" ");
 
       if (msg.length > 2) {
 
-        builder.withDescription("This command only takes 1 argument, you provided: "
-            + (msg.length - 1));
+        BotUtils.sendMessage(channel, author, "Error changing volume:",
+            "This command only takes 1 argument, you provided: " + (msg.length - 1));
 
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
         return false;
       }
 
@@ -47,16 +52,16 @@ public class VolumeCommand implements Command {
       try {
         vol = Integer.parseInt(msg[1]);
       } catch (NumberFormatException e) {
-        builder.withDescription("The volume must be a number between 0 and 100");
+        BotUtils.sendMessage(channel, author, "Error changing volume:",
+            "The volume must be a number between 0 and 100");
 
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
         return false;
       }
 
       if (vol < 0 || vol > 100) {
-        builder.withDescription("The volume must be a number between 0 and 100");
+        BotUtils.sendMessage(channel, author, "Error changing volume:",
+            "The volume must be a number between 0 and 100");
 
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
         return false;
       }
 
@@ -67,31 +72,33 @@ public class VolumeCommand implements Command {
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    AudioPlayer musicManager = getGuildMusicManager(event.getGuild()).getAudioPlayer();
-    int volume = Integer.parseInt(event.getMessage().toString().split(" ")[1]);
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    AudioPlayer musicManager = getGuildMusicManager(guild.getId()).getAudioPlayer();
+    int volume = Integer.parseInt(message.split(" ")[1]);
 
     musicManager.setVolume(volume);
 
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(Color.green);
-    builder.withTitle("The volume has been set to " + volume);
-    BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "");
   }
 
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "volume <volume>` or `"
-        + BotUtils.PREFIX + "vol <volume>` - Sets the volume for the audio streamed, number between 0 and 100.";
+        + BotUtils.PREFIX
+        + "vol <volume>` - Sets the volume for the audio streamed, number between 0 and 100.";
   }
 }

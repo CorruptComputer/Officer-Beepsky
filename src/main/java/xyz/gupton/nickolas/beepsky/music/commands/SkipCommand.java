@@ -3,79 +3,84 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.awt.Color;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import java.util.List;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
+import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
 public class SkipCommand implements Command {
 
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
 
-    if (message.getChannel().isPrivate()) {
+    if (guild == null) {
       return false;
     }
 
-    if (getGuildMusicManager(message.getGuild()).getScheduler().getPlayingSong() == null) {
+    // if the bot is not in a voice channel ignore the commands
+    try {
+      guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+          .getChannel().block();
+    } catch (NullPointerException e) {
       return false;
     }
 
-    return (message.toString().toLowerCase().equals(BotUtils.PREFIX + "next")
-        || message.toString().toLowerCase().equals(BotUtils.PREFIX + "n")
-        || message.toString().toLowerCase().equals(BotUtils.PREFIX + "skip")
-        || message.toString().toLowerCase().equals(BotUtils.PREFIX + "s"));
+    if (getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong() == null) {
+      return false;
+    }
+
+    return (message.toLowerCase().equals(BotUtils.PREFIX + "next")
+        || message.toLowerCase().equals(BotUtils.PREFIX + "n")
+        || message.toLowerCase().equals(BotUtils.PREFIX + "skip")
+        || message.toLowerCase().equals(BotUtils.PREFIX + "s"));
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    GuildMusicManager musicManager = getGuildMusicManager(event.getGuild());
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    GuildMusicManager musicManager = getGuildMusicManager(guild.getId());
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(Color.green);
 
     if (queue.size() > 0) {
-      builder.withTitle("Skipped to next track, now playing:");
-      builder.withDescription("[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri
-          + ")" + " by " + queue.get(0).getInfo().author);
-      musicManager.getScheduler().nextTrack();
-      BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
-    } else {
-      IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-          .getVoiceStateForGuild(event.getGuild()).getChannel();
-      botVoiceChannel.leave();
+      BotUtils.sendMessage(channel, author, "Skipped to next track, now playing:",
+          "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri
+              + ")" + " by " + queue.get(0).getInfo().author);
 
-      EmbedBuilder message = new EmbedBuilder();
-      message.withColor(Color.green);
-      message.withTitle("Skipped to next track, nothing left to play!");
-      BotUtils.sendMessage(event.getChannel(), event.getAuthor(), message);
+      musicManager.getScheduler().nextTrack();
+    } else {
+      MusicHelper.clearQueue(musicManager.getScheduler());
+      BotUtils.sendMessage(channel, author, "Skipped to next track, nothing left to play!", "");
     }
   }
 
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "skip`, `" + BotUtils.PREFIX + "s`, `"
         + BotUtils.PREFIX + "next`, or `" + BotUtils.PREFIX + "n` - Skips the current song.";
   }

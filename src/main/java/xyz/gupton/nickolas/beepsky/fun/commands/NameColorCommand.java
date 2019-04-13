@@ -1,39 +1,48 @@
 package xyz.gupton.nickolas.beepsky.fun.commands;
 
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.Role;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Permission;
 import java.awt.Color;
 import java.util.List;
 import java.util.regex.Pattern;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
 public class NameColorCommand implements Command {
 
   /**
-   * Determines if the commands, prefix, and permissions are correct.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands is valid.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate()) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null) {
       return false;
     }
 
-    if (message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
+    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
       // Check if the bot has permissions to manage roles
       boolean permission = false;
-      for (IRole role : message.getGuild().getRolesForUser(BotUtils.CLIENT.getOurUser())) {
-        if (role.getPermissions().contains(Permissions.MANAGE_PERMISSIONS)) {
-          permission = true;
-          break;
+
+      try {
+        for (Role role : guild.getMemberById(BotUtils.CLIENT.getSelf().block().getId()).block()
+            .getRoles().toIterable()) {
+          if (role.getPermissions().contains(Permission.MANAGE_ROLES)) {
+            permission = true;
+            break;
+          }
         }
+      } catch (NullPointerException e) {
+        return false;
       }
 
       // if no permissions silently ignore the message
@@ -41,15 +50,11 @@ public class NameColorCommand implements Command {
         return false;
       }
 
-      String hexColor = message.toString().split(" ", 2)[1];
-      EmbedBuilder embedBuilder = new EmbedBuilder();
+      String hexColor = message.split(" ", 2)[1];
+
       // if the name color specified is a valid hex code
       if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor).matches()) {
-        embedBuilder.withColor(Color.red);
-        embedBuilder.withTitle("Color must be in hex format!");
-        embedBuilder.withDescription("Example: #FFFFFF");
-        BotUtils.sendMessage(message.getAuthor().getOrCreatePMChannel(), message.getAuthor(),
-            embedBuilder);
+        BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF");
         return false;
       }
 
@@ -59,48 +64,75 @@ public class NameColorCommand implements Command {
     return false;
   }
 
+  /**
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   *
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    EmbedBuilder embedBuilder = new EmbedBuilder();
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    String hexColor = message.split(" ", 2)[1];
+    Member member = guild.getMemberById(author.getId()).block();
 
-    String hexColor = event.getMessage().toString().split(" ", 2)[1];
+    try {
+      List<Role> currentRoles = member.getRoles().collectList()
+          .block();
+      // remove the current color role
+      for (Role role : currentRoles) {
+        if (role.getName().startsWith("#")) {
+          member.removeRole(role.getId());
 
-    embedBuilder.withColor(Color.green);
-
-    List<IRole> currentRoles = event.getAuthor().getRolesForGuild(event.getGuild());
-
-    // remove the current color role
-    for (IRole role : currentRoles) {
-      if (role.getName().startsWith("#")) {
-        event.getAuthor().removeRole(role);
-
-        // if that was the last user with the role, delete it
-        if (event.getGuild().getUsersByRole(role).isEmpty()) {
-          role.delete();
+          boolean empty = true;
+          outer:
+          for (Member m : guild.getMembers().toIterable()) {
+            for (Role r : m.getRoles().toIterable()) {
+              if (role == r) {
+                empty = false;
+                break outer;
+              }
+            }
+          }
+          // if that was the last user with the role, delete it
+          if (empty) {
+            role.delete().block();
+          }
         }
+      }
+    } catch (NullPointerException e) {
+      // do nothing
+    }
+
+    Role role = null;
+    for (Role r : guild.getRoles().toIterable()) {
+      if (r.getName().equals(hexColor)) {
+        role = r;
+        break;
       }
     }
 
-    IRole role;
-    if (event.getGuild().getRolesByName(hexColor).isEmpty()) {
-      role = event.getGuild().createRole();
-      role.changeName(hexColor);
-      role.changeColor(Color.decode(hexColor));
-      role.changeHoist(false);
-      role.changeMentionable(false);
-    } else {
-      role = event.getGuild().getRolesByName(hexColor).get(0);
+    if (role == null) {
+      role = guild.createRole(roleCreateSpec ->
+          roleCreateSpec.setName(hexColor).setColor(Color.decode(hexColor)).setHoist(false)
+              .setMentionable(false)
+      ).block();
     }
 
-    event.getAuthor().addRole(role);
+    member.addRole(role.getId()).block();
 
-    embedBuilder.withTitle("Color successfully changed!");
-
-    BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), embedBuilder);
+    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "");
   }
 
+  /**
+   * Returns the usage string for a commands.
+   *
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
+   */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX
         + "namecolor <hex code>` - Changes your name's color to the one provided,"
         + " ignores the commands if not allowed by the server.";

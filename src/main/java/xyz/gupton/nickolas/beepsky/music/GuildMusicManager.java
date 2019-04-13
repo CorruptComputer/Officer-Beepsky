@@ -3,7 +3,8 @@ package xyz.gupton.nickolas.beepsky.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventListener;
-import sx.blah.discord.handle.obj.IGuild;
+import discord4j.core.object.util.Snowflake;
+import discord4j.voice.VoiceConnection;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
@@ -11,8 +12,9 @@ import sx.blah.discord.handle.obj.IGuild;
 public class GuildMusicManager {
 
   private final AudioPlayer player;
-  private final AudioProvider provider;
+  private final D4jAudioProvider provider;
   private final TrackScheduler scheduler;
+  private VoiceConnection botVoiceConnection = null;
 
   /**
    * Creates a player and a track scheduler.
@@ -20,12 +22,10 @@ public class GuildMusicManager {
    * @param manager Audio player manager to use for creating the player.
    * @param guild Guild the manager is being used for.
    */
-  GuildMusicManager(AudioPlayerManager manager, IGuild guild) {
-    player = manager.createPlayer();
-    provider = new AudioProvider(player);
-    scheduler = new TrackScheduler(player);
-
-    scheduler.guild = guild;
+  GuildMusicManager(AudioPlayerManager manager, Snowflake guild) {
+    this.player = manager.createPlayer();
+    this.provider = new D4jAudioProvider(player);
+    this.scheduler = new TrackScheduler(player, guild);
   }
 
   /**
@@ -69,8 +69,16 @@ public class GuildMusicManager {
    *
    * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.
    */
-  AudioProvider getAudioProvider() {
+  public D4jAudioProvider getAudioProvider() {
     return provider;
+  }
+
+  VoiceConnection getBotVoiceConnection() {
+    return botVoiceConnection;
+  }
+
+  public void setBotVoiceConnection(VoiceConnection connection) {
+    this.botVoiceConnection = connection;
   }
 }
 

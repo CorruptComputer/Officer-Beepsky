@@ -5,13 +5,11 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.awt.Color;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.VoiceChannel;
 import java.util.regex.Pattern;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -20,28 +18,27 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class QueueCommand implements Command {
 
   /**
-   * Checks prefix, commands name, and if there is a track provided.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate()) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null) {
       return false;
     }
 
-    if (message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "queue")
-        || message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "q")) {
-      String[] split = message.toString().toLowerCase().split(" ", 2);
+    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "queue")
+        || message.toLowerCase().startsWith(BotUtils.PREFIX + "q")) {
+      String[] split = message.split(" ", 2);
 
       // user messages just "!q" with no track info
       if (split.length == 1) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withColor(255, 0, 0);
-        builder.withTitle("Error queueing track:");
-        builder.withDescription("No track specified.");
-        BotUtils.sendMessage(message.getChannel(), message.getAuthor(), builder);
+        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.");
         return false;
       }
 
@@ -52,13 +49,16 @@ public class QueueCommand implements Command {
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    String song = event.getMessage().toString().split(" ", 2)[1];
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    String song = message.split(" ", 2)[1];
 
     if (!(song.startsWith("ytsearch:") || song.startsWith("scsearch:"))
         // RegEx shamelessly copied from:
@@ -69,54 +69,49 @@ public class QueueCommand implements Command {
       song = "ytsearch:" + song;
     }
 
-    IVoiceChannel userVoiceChannel =
-        event.getAuthor().getVoiceStateForGuild(event.getChannel().getGuild()).getChannel();
+    VoiceChannel userVoiceChannel =
+        guild.getMemberById(author.getId()).block().getVoiceState().block().getChannel().block();
 
     // user is not in a voice channel
     if (userVoiceChannel == null) {
-      EmbedBuilder builder = new EmbedBuilder();
-      builder.withColor(255, 0, 0);
-      builder.withTitle("Error queueing track:");
-      builder.withDescription("You are not in a voice channel.");
-      BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+      BotUtils
+          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.");
+
       return;
     }
 
-    IVoiceChannel botVoiceChannel = BotUtils.CLIENT.getOurUser()
-        .getVoiceStateForGuild(event.getGuild()).getChannel();
+    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
 
     // if the bot is not currently in a voice channel, join the user
-    if (botVoiceChannel == null) {
-      userVoiceChannel.join();
-    } else {
+    try {
+      VoiceChannel botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
+          .getVoiceState().block().getChannel().block();
       // if the bot is currently in a voice channel that isn't the one that the user in in
-      if (botVoiceChannel != userVoiceChannel) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withColor(255, 0, 0);
-        builder.withTitle("Error queueing track:");
-        builder.withDescription("Music player currently in use with another channel,"
-            + " either join that one or wait for them to finish.");
-        BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+      if (botVoiceChannel != null && botVoiceChannel != userVoiceChannel) {
+        BotUtils.sendMessage(channel, author, "Error queueing track:",
+            "Music player currently in use with another channel, "
+                + "either join that one or wait for them to finish.");
         return;
       }
+    } catch (NullPointerException e) {
+      // silently ignore the error, as it does happen occasionally
     }
+
+    musicManager.setBotVoiceConnection(userVoiceChannel.join(spec ->
+        spec.setProvider(musicManager.getAudioProvider())).block());
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
-    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(event.getGuild());
 
     final String track = song;
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(Color.green);
     MusicHelper.playerManager
         .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
           @Override
           public void trackLoaded(AudioTrack track) {
-            builder.withTitle("Adding to queue:");
-            builder.withDescription("[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
-                + " by " + track.getInfo().author);
+            BotUtils.sendMessage(channel, author, "Adding to queue:",
+                "[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
+                    + " by " + track.getInfo().author);
 
-            BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
             musicManager.getScheduler().queue(track);
           }
 
@@ -125,11 +120,12 @@ public class QueueCommand implements Command {
             // if it is a search vs an actual playlist
             if (track.startsWith("ytsearch:") || track.startsWith("scsearch:")) {
 
-              builder.withTitle("Adding to queue:");
-              builder.withDescription(playlist.getName() + "\n\n"
-                  + "[" + playlist.getTracks().get(0).getInfo().title + "]("
-                  + playlist.getTracks().get(0).getInfo().uri + ")" + " by "
-                  + playlist.getTracks().get(0).getInfo().author);
+              BotUtils.sendMessage(channel, author, "Adding to queue:",
+                  playlist.getName() + "\n\n" + "["
+                      + playlist.getTracks().get(0).getInfo().title + "]("
+                      + playlist.getTracks().get(0).getInfo().uri + ")" + " by "
+                      + playlist.getTracks().get(0).getInfo().author);
+
               musicManager.getScheduler().queue(playlist.getTracks().get(0));
             } else {
               AudioTrack firstTrack = playlist.getSelectedTrack();
@@ -146,37 +142,27 @@ public class QueueCommand implements Command {
                 musicManager.getScheduler().queue(playlist.getTracks().get(i));
               }
 
-              String str = MusicHelper
-                  .queueToString(MusicHelper.getGuildMusicManager(event.getGuild())
-                      .getScheduler().getQueue());
+              String str = MusicHelper.queueToString(musicManager.getScheduler().getQueue());
 
               // message with the first song
-              builder.withTitle("Adding playlist to queue:");
-              builder.withDescription(playlist.getName() + "\n\n"
-                  + "**First track:** " + "[" + firstTrack.getInfo().title + "]("
-                  + firstTrack.getInfo().uri + ")\n\n"
-                  + str);
+              BotUtils.sendMessage(channel, author, "Adding playlist to queue:",
+                  playlist.getName() + "\n\n" + "**First track:** " + "["
+                      + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n"
+                      + str);
             }
 
-            BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
           }
 
           @Override
           public void noMatches() {
-            builder.withColor(Color.red);
-            builder.withTitle("Error queueing track:");
-            builder.withDescription("Nothing found at: " + track);
-
-            BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+            BotUtils.sendMessage(channel, author, "Error queueing track:",
+                "Nothing found at: " + track);
           }
 
           @Override
           public void loadFailed(FriendlyException exception) {
-            builder.withColor(Color.red);
-            builder.withTitle("Error queueing track:");
-            builder.withDescription("Could not play track: " + exception.getMessage());
-
-            BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+            BotUtils.sendMessage(channel, author, "Error queueing track:",
+                "Could not play track: " + exception.getMessage());
           }
         });
   }
@@ -184,10 +170,11 @@ public class QueueCommand implements Command {
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "queue <song>` or `"
         + BotUtils.PREFIX + "q <song>` - Song can be in the form of either a YouTube URL, "
         + "SoundCloud URL, or if it is not a URL it will search from YouTube.";

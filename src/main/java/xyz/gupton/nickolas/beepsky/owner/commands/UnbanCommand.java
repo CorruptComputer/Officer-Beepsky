@@ -1,14 +1,17 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Channel.Type;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Snowflake;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
@@ -18,71 +21,68 @@ public class UnbanCommand implements Command {
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate() && message.getAuthor() == Owner.user) {
-      if (message.toString().split(" ").length != 2) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null && author.getId().equals(Owner.USER)) {
+      if (message.split(" ").length != 2) {
         return false;
       }
-      return (message.toString().toLowerCase().startsWith("unban"));
+      return (message.toLowerCase().startsWith("unban"));
     }
 
     return false;
   }
 
   /**
-   * Unbans the user specified in the message.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(100, 255, 100);
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
 
-    Long userId = Long.parseUnsignedLong(event.getMessage().toString().split(" ", 2)[1]);
-
-    if (!BotUtils.isBanned(userId.toString())) {
-      builder.withColor(255, 0, 0);
-      builder.withTitle("Error Unbanning");
-      builder.withDescription(BotUtils.CLIENT.getUserByID(userId).getName()
+    if (!BotUtils.isBanned(userId.asString())) {
+      Owner.sendMessage("Error Unbanning", BotUtils.CLIENT.getUserById(userId).block().getUsername()
           + " is not banned.");
-      Owner.sendMessage(builder);
       return;
     }
 
     try {
       File file = new File("banned.txt");
       List<String> out = Files.lines(file.toPath())
-          .filter(line -> !line.contains(userId.toString()))
+          .filter(line -> !line.contains(userId.asString()))
           .collect(Collectors.toList());
       Files.write(file.toPath(), out, StandardOpenOption.WRITE,
           StandardOpenOption.TRUNCATE_EXISTING);
 
-      builder.withTitle("Unban Successful");
-      builder.withDescription(BotUtils.CLIENT.getUserByID(userId).getName()
-          + " has been unbanned.");
+      Owner
+          .sendMessage("Unban Successful", BotUtils.CLIENT.getUserById(userId).block().getUsername()
+              + " has been unbanned.");
     } catch (Exception e) {
-      builder.withColor(255, 0, 0);
       e.printStackTrace();
-      builder.withTitle("Error Unbanning");
-      builder.withDescription("Error: " + e.getMessage());
+      Owner.sendMessage("Error Unbanning", e.getMessage());
     }
-
-    Owner.sendMessage(builder);
   }
 
   /**
-   * Returns the usage string for the commands.
+   * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
-    if (recipient == Owner.user) {
+  public String getCommand(User recipient) {
+    if (recipient.getId().equals(Owner.USER)) {
       return "`unban <Discord ID>` - Unbans the user with that Discord ID from using this bot.";
     }
 

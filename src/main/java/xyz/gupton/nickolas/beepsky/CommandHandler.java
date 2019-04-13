@@ -1,42 +1,48 @@
 package xyz.gupton.nickolas.beepsky;
 
-import java.util.ServiceLoader;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 
 class CommandHandler {
 
   /**
    * Called when a messaged is received by the bot, whether it be private or in a server.
    *
-   * @param event Provided by D4J
+   * @param event Provided by Discord4j.
    */
-  @EventSubscriber
-  public void onMessageReceived(MessageReceivedEvent event) {
-    // Only continue if the author is not banned
-    if (!BotUtils.isBanned(event.getAuthor().getStringID())) {
+  static void onMessageReceived(MessageCreateEvent event) {
+    Guild guild = event.getGuild().blockOptional().orElse(null);
+    User author = event.getMessage().getAuthor().orElse(null);
+    MessageChannel channel = event.getMessage().getChannel().block();
+    String message = event.getMessage().getContent().orElse(null);
 
-      // Search all available commands types
-      for (Command commands : ServiceLoader.load(Command.class)) {
+    if (author == null
+        || message == null
+        || author.isBot()
+        || BotUtils.isBanned(author.getId().asString())) {
+      return;
+    }
 
-        // Check if the provided message should be executed
-        if (commands.shouldExecute(event.getMessage())) {
-          commands.execute(event);
+    // Search all available commands types
+    for (Command command : BotUtils.commands) {
 
-          Timer timer = new Timer();
+      // Check if the provided message should be executed
+      if (command.shouldExecute(guild, author, channel, message)) {
 
-          timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-              event.getMessage().delete();
-            }
-          }, TimeUnit.SECONDS.toMillis(10));
-        }
+        command.execute(guild, author, channel, message);
+
+        //TODO: replace this with ScheduledExecutorService
+        //Timer timer = new Timer();
+
+        //timer.schedule(new TimerTask() {
+        //  @Override
+        //  public void run() {
+        //    event.getMessage().delete().block();
+        //  }
+        //}, TimeUnit.SECONDS.toMillis(10));
       }
-
     }
   }
 }

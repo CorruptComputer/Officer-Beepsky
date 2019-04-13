@@ -1,10 +1,8 @@
 package xyz.gupton.nickolas.beepsky.general.commands;
 
-import java.util.ServiceLoader;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
@@ -13,48 +11,57 @@ public class HelpCommand implements Command {
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    return message.toString().toLowerCase().equals(BotUtils.PREFIX + "help");
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    return message.toLowerCase().equals(BotUtils.PREFIX + "help");
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withColor(100, 255, 100);
-    builder.withTitle("Available Commands:");
-    builder.withDescription("");
-    for (Command commands : ServiceLoader.load(Command.class)) {
-      String cmd = commands.getCommand(event.getAuthor());
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+
+    StringBuilder commandStr = new StringBuilder();
+
+    for (Command commands : BotUtils.commands) {
+      String cmd = commands.getCommand(author);
       if (cmd.length() > 0) {
-        builder.appendDescription(commands.getCommand(event.getAuthor()) + "\n\n");
+        commandStr.append(cmd);
+        commandStr.append("\n\n");
       }
 
-      if (builder.getTotalVisibleCharacters() > 1800) {
-        BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), builder);
-        builder.withDescription("");
+      if (commandStr.length() > 1800) {
+        BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
+            commandStr.toString());
+        commandStr.delete(0, commandStr.length());
       }
     }
-    builder.appendDescription(
+    commandStr.append(
         "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
-    BotUtils.sendMessage(event.getAuthor().getOrCreatePMChannel(), event.getAuthor(), builder);
+    BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
+        commandStr.toString());
   }
 
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "help` - You should already know this one.";
   }
 }

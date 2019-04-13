@@ -1,56 +1,77 @@
 package xyz.gupton.nickolas.beepsky;
 
+import discord4j.core.DiscordClient;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.RequestBuffer;
+import java.util.ServiceLoader;
 
 public class BotUtils {
 
-  public static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
-  public static IDiscordClient CLIENT;
+  static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
+  public static DiscordClient CLIENT;
   public static final String PREFIX = ";";
+  public static final ServiceLoader<Command> commands = ServiceLoader.load(Command.class);
   static long startTime;
 
+
   /**
-   * Sends a message, and cleans it up after 5 minutes.
+   * Sends a message with default color (dark gray).
    *
-   * @param channel Text channel to send the message to.
-   * @param author Author of the original commands we are replying to.
-   * @param message Message to send.
+   * @param channel MessageChannel, channel to send the message to.
+   * @param author User, author of the original commands we are replying to.
+   * @param title String, title of the message to send.
+   * @param description String, body of the message to send.
    */
-  public static void sendMessage(IChannel channel, IUser author, EmbedBuilder message) {
-    message.withFooterText("Requested by: " + author.getName() + '#' + author.getDiscriminator()
-        + " | Version: " + VERSION);
-    IMessage messageSent = RequestBuffer.request(() -> channel.sendMessage(message.build())).get();
+  public static void sendMessage(MessageChannel channel, User author, String title,
+      String description) {
+    sendMessage(channel, author, title, description, new Color(44, 47, 51));
+  }
 
-    // if its not a private channel cleanup the messages after a few minutes
-    if (!channel.isPrivate()) {
-      Timer timer = new Timer();
+  /**
+   * Sends a message.
+   *
+   * @param channel MessageChannel, channel to send the message to.
+   * @param author User, author of the original commands we are replying to.
+   * @param title String, title of the message to send.
+   * @param description String, body of the message to send.
+   * @param color Color, color of the message to send.
+   */
+  public static void sendMessage(MessageChannel channel, User author, String title,
+      String description, Color color) {
+    channel.createMessage(messageSpec -> {
+      messageSpec.setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description)
+          .setFooter("Requested by: " + author.getUsername() + '#' + author.getDiscriminator()
+              + " | Version: " + VERSION, null).setColor(color));
+    }).block();
 
-      timer.schedule(new TimerTask() {
-        @Override
-        public void run() {
-          messageSent.delete();
-        }
-      }, TimeUnit.MINUTES.toMillis(5));
-    }
+    //TODO: replace this with ScheduledExecutorService
+    //if its not a private channel cleanup the messages after a few minutes
+    //if (channel.getType() != Type.DM) {
+    //  Timer timer = new Timer();
+
+    //  timer.schedule(new TimerTask() {
+    //    @Override
+    //    public void run() {
+    //      try {
+    //        message.block().delete();
+    //      } catch (NullPointerException e) {
+    //        e.printStackTrace();
+    //      }
+    //    }
+    //  }, TimeUnit.MINUTES.toMillis(5));
+    //}
   }
 
   /**
    * Tests if the provided user is banned.
    *
-   * @param userId string ID of the Discord user
+   * @param userId String, ID of the Discord user to check.
    * @return boolean, true if they are banned
    */
   public static boolean isBanned(String userId) {
@@ -61,10 +82,12 @@ public class BotUtils {
 
       while ((line = banBuffer.readLine()) != null) {
         if (line.equals(userId)) {
+          banBuffer.close();
           return true;
         }
       }
 
+      banBuffer.close();
       return false;
     } catch (FileNotFoundException e) {
       return false;

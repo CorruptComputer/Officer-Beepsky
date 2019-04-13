@@ -1,63 +1,51 @@
 package xyz.gupton.nickolas.beepsky.fun.commands;
 
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
 import java.awt.Color;
 import java.util.Random;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
 public class EightBallCommand implements Command {
 
   /**
-   * Checks the prefix and commands name to determine if it should be executed.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    return message.toString().toLowerCase().startsWith(BotUtils.PREFIX + "8ball");
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    return message.toLowerCase().startsWith(BotUtils.PREFIX + "8ball");
   }
 
   /**
-   * Rolls an 8ball, random chance for positive, unsure, and negative.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
     String question = "";
-    if (event.getMessage().toString().split(" ", 2).length > 1) {
-      question = event.getMessage().toString().split(" ", 2)[1];
+    if (message.split(" ", 2).length > 1) {
+      question = message.split(" ", 2)[1];
     }
 
     if (question.length() > 0 && !question.endsWith("?")) {
       question += "?";
     }
 
-    EmbedBuilder builder = new EmbedBuilder();
-    builder.withTitle(question + " | 8Ball says:");
-
     Random rdm = new Random();
     // gives them all an even chance, with rdm.nextInt(3) 0 is almost never picked
     int certainty = rdm.nextInt(30) % 3;
-    switch (certainty) {
-      case 0:
-        builder.withColor(Color.green);
-        break;
-      case 1:
-        builder.withColor(Color.orange);
-        break;
-      case 2:
-        builder.withColor(Color.red);
-        break;
-      // hopefully never happens
-      default:
-        builder.withColor(0, 0, 0);
-    }
 
     /*
       answers[0][x] = Positive
@@ -73,19 +61,20 @@ public class EightBallCommand implements Command {
         {"Don't count on it", "My reply is no", "My sources say no", "Outlook not so good",
             "Very doubtful"}
     };
+    Color[] color = {Color.green, Color.orange, Color.red};
 
-    builder.withDescription(answers[certainty][rdm.nextInt(answers[certainty].length)]);
-
-    BotUtils.sendMessage(event.getChannel(), event.getAuthor(), builder);
+    BotUtils.sendMessage(channel, author, question + " | 8Ball says:",
+        answers[certainty][rdm.nextInt(answers[certainty].length)], color[certainty]);
   }
 
   /**
-   * Returns the usage string for the 8ball commands.
+   * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
+  public String getCommand(User recipient) {
     return "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
         + "8ball <question>` - Gives the answer you may not be looking for.";
   }

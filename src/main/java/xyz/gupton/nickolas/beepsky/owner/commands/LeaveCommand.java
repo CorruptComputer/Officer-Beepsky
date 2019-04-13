@@ -1,8 +1,9 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Snowflake;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
@@ -12,40 +13,47 @@ public class LeaveCommand implements Command {
   /**
    * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param message The message received.
-   * @return True if the commands should be executed.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
+   * @return boolean, true if the commands should be executed.
    */
   @Override
-  public boolean shouldExecute(IMessage message) {
-    if (message.getChannel().isPrivate() && message.getAuthor() == Owner.user) {
-      if (message.toString().split(" ").length != 2) {
+  public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    if (guild == null && author.getId().equals(Owner.USER)) {
+      if (message.split(" ").length != 2) {
         return false;
       }
-      return (message.toString().toLowerCase().startsWith("leave"));
+
+      return (message.toLowerCase().startsWith("leave"));
     }
 
     return false;
   }
 
   /**
-   * Executes the commands if it exists.
+   * Checks things such as prefix and permissions to determine if a commands should be executed.
    *
-   * @param event Provided by D4J.
+   * @param guild Guild, guild the message was received from, can be null for PM's.
+   * @param author User, the author of the message.
+   * @param channel MessageChannel, channel the message was received in.
+   * @param message String, the contents of the message received.
    */
   @Override
-  public void execute(MessageReceivedEvent event) {
-    BotUtils.CLIENT.getGuildByID(Long.parseLong(event.getMessage().toString()
-        .split(" ", 2)[1])).leave();
+  public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    BotUtils.CLIENT.getGuildById(Snowflake.of(message.split(" ", 2)[1])).block().leave().block();
   }
 
   /**
    * Returns the usage string for a commands.
    *
-   * @return String of the correct usage for the commands.
+   * @param recipient User, who command is going to, used for permissions checking.
+   * @return String, the correct usage for the command.
    */
   @Override
-  public String getCommand(IUser recipient) {
-    if (recipient == Owner.user) {
+  public String getCommand(User recipient) {
+    if (recipient.getId().equals(Owner.USER)) {
       return "`leave <Server ID>` - Leaves that server.";
     }
 
