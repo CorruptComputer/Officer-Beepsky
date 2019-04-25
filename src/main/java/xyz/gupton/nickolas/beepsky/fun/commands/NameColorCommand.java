@@ -54,7 +54,7 @@ public class NameColorCommand implements Command {
 
       // if the name color specified is a valid hex code
       if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor).matches()) {
-        BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF");
+        BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF", Color.red);
         return false;
       }
 
@@ -122,7 +122,7 @@ public class NameColorCommand implements Command {
 
     member.addRole(role.getId()).block();
 
-    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "");
+    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "", Color.green);
   }
 
   /**
