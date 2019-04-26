@@ -16,7 +16,7 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class ListQueueCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks that the message was sent in a Guild and that the command matches.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -35,7 +35,7 @@ public class ListQueueCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Gets the queue of songs in a Guild and sends it back in a list.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -53,7 +53,7 @@ public class ListQueueCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the ListQueueCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

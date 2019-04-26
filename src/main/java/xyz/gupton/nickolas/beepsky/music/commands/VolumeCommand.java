@@ -13,7 +13,7 @@ import xyz.gupton.nickolas.beepsky.Command;
 public class VolumeCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks that the message was sent in a Guild, and that the command matches.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -23,6 +23,9 @@ public class VolumeCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    int vol;
+    String[] msg = message.split(" ");
+
     if (guild == null) {
       return false;
     }
@@ -38,17 +41,12 @@ public class VolumeCommand implements Command {
         return false;
       }
 
-      String[] msg = message.split(" ");
-
       if (msg.length > 2) {
-
         BotUtils.sendMessage(channel, author, "Error changing volume:",
             "This command only takes 1 argument, you provided: " + (msg.length - 1), Color.red);
 
         return false;
       }
-
-      int vol;
 
       try {
         vol = Integer.parseInt(msg[1]);
@@ -73,7 +71,7 @@ public class VolumeCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Set the volume to the one specified in the message.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -91,7 +89,7 @@ public class VolumeCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the VolumeCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

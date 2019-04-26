@@ -4,12 +4,10 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.event.domain.lifecycle.DisconnectEvent;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Message;
 import discord4j.core.object.presence.Activity;
 import discord4j.core.object.presence.Presence;
 import discord4j.core.object.util.Snowflake;
 import discord4j.rest.http.client.ClientException;
-import reactor.core.publisher.Mono;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 class Main {
@@ -23,7 +21,7 @@ class Main {
 
     if (args.length != 2) {
       System.out.println("Usage: java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>");
-      System.exit(1);
+      System.exit(0);
     }
 
     try {

@@ -6,7 +6,6 @@ import discord4j.core.object.entity.GuildChannel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Permission;
-import discord4j.core.object.util.PermissionSet;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;

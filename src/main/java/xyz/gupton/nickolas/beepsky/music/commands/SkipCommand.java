@@ -16,7 +16,8 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class SkipCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks that the message was sent in a Guild, that command matches, and that the Guild has a
+   * currently playing song.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -26,31 +27,30 @@ public class SkipCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-
     if (guild == null) {
       return false;
     }
 
-    // if the bot is not in a voice channel ignore the commands
-    try {
-      guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
-          .getChannel().block();
-    } catch (NullPointerException e) {
-      return false;
-    }
-
-    if (getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong() == null) {
-      return false;
-    }
-
-    return (message.toLowerCase().equals(BotUtils.PREFIX + "next")
+    if (message.toLowerCase().equals(BotUtils.PREFIX + "next")
         || message.toLowerCase().equals(BotUtils.PREFIX + "n")
         || message.toLowerCase().equals(BotUtils.PREFIX + "skip")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "s"));
+        || message.toLowerCase().equals(BotUtils.PREFIX + "s")) {
+      // if the bot is not in a voice channel ignore the commands
+      try {
+        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+            .getChannel().block();
+      } catch (NullPointerException e) {
+        return false;
+      }
+
+      return true;
+    }
+
+    return false;
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Skips to the next song in the queue for the Guild, if no song is available it stops playback.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -76,7 +76,7 @@ public class SkipCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the SkipCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

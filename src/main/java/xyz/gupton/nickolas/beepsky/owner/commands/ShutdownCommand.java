@@ -1,9 +1,6 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
-import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Channel.Type;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import xyz.gupton.nickolas.beepsky.BotUtils;
@@ -13,7 +10,7 @@ import xyz.gupton.nickolas.beepsky.owner.Owner;
 public class ShutdownCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks the command and if it was sent in a PM to the bot.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -33,7 +30,7 @@ public class ShutdownCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Shuts down or restarts the bot depending on the message.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -57,7 +54,7 @@ public class ShutdownCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the ShutdownCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

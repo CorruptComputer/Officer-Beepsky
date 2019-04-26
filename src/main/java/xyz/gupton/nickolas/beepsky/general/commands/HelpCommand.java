@@ -10,7 +10,7 @@ import xyz.gupton.nickolas.beepsky.Command;
 public class HelpCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks the message for the correct command.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -24,7 +24,7 @@ public class HelpCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * PM's the user all available commands.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -33,7 +33,6 @@ public class HelpCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-
     StringBuilder commandStr = new StringBuilder();
 
     for (Command commands : BotUtils.commands) {
@@ -56,7 +55,7 @@ public class HelpCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the HelpCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.
