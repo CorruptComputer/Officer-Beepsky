@@ -6,8 +6,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.util.List;
 import java.awt.Color;
+import java.util.List;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -70,7 +70,8 @@ public class SkipCommand implements Command {
       musicManager.getScheduler().nextTrack();
     } else {
       MusicHelper.clearQueue(musicManager.getScheduler());
-      BotUtils.sendMessage(channel, author, "Skipped to next track, nothing left to play!", "", Color.red);
+      BotUtils.sendMessage(channel, author, "Skipped to next track, nothing left to play!", "",
+          Color.red);
     }
   }
 

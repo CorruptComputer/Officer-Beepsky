@@ -9,8 +9,8 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.VoiceChannel;
-import java.util.regex.Pattern;
 import java.awt.Color;
+import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -39,7 +39,8 @@ public class QueueCommand implements Command {
 
       // user messages just "!q" with no track info
       if (split.length == 1) {
-        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.", Color.red);
+        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.",
+            Color.red);
         return false;
       }
 
@@ -76,19 +77,20 @@ public class QueueCommand implements Command {
     // user is not in a voice channel
     if (userVoiceChannel == null) {
       BotUtils
-          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.", Color.red);
+          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
+              Color.red);
 
       return;
     }
 
     GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
-
+    VoiceChannel botVoiceChannel = null;
     // if the bot is not currently in a voice channel, join the user
     try {
-      VoiceChannel botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
+      botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
           .getVoiceState().block().getChannel().block();
       // if the bot is currently in a voice channel that isn't the one that the user in in
-      if (botVoiceChannel != null && botVoiceChannel != userVoiceChannel) {
+      if (botVoiceChannel != null && !botVoiceChannel.getId().equals(userVoiceChannel.getId())) {
         BotUtils.sendMessage(channel, author, "Error queueing track:",
             "Music player currently in use with another channel, "
                 + "either join that one or wait for them to finish.", Color.red);
@@ -98,12 +100,13 @@ public class QueueCommand implements Command {
       // silently ignore the error, as it does happen occasionally
     }
 
-    musicManager.setBotVoiceConnection(userVoiceChannel.join(spec ->
-        spec.setProvider(musicManager.getAudioProvider())).block());
+    if (botVoiceChannel == null) {
+      musicManager.setBotVoiceConnection(userVoiceChannel.join(spec ->
+          spec.setProvider(musicManager.getAudioProvider())).block());
+    }
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
-
     final String track = song;
     MusicHelper.playerManager
         .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
