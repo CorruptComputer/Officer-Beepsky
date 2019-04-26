@@ -13,7 +13,8 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class TimeSetCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks that the message was sent in a Guild, that command matches, and that the Guild has a
+   * currently playing song.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -23,6 +24,11 @@ public class TimeSetCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    // Regex for pattern matching of HH:MM:SS with parts being optional
+    Pattern pattern = Pattern.compile("(\\d{1,2}:)?([0-5]?\\d:)?[0-5]?\\d");
+    // split the ;time and <time> from each other
+    String[] msg = message.split(" ", 2);
+
     if (guild == null) {
       return false;
     }
@@ -38,16 +44,10 @@ public class TimeSetCommand implements Command {
         return false;
       }
 
-      // split the ;time and <time> from each other
-      String[] msg = message.split(" ", 2);
-
       if (msg.length < 2) {
         BotUtils.sendMessage(channel, author, "No time given!", "", Color.red);
         return false;
       }
-
-      // Regex for pattern matching of HH:MM:SS with parts being optional
-      Pattern pattern = Pattern.compile("(\\d{1,2}:)?([0-5]?\\d:)?[0-5]?\\d");
 
       if (!pattern.matcher(msg[1]).matches()) {
         BotUtils
@@ -57,13 +57,14 @@ public class TimeSetCommand implements Command {
       }
 
       return true;
-    } else {
-      return false;
     }
+
+    return false;
+
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Sets the time for the current song to the time specified in the message.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -72,13 +73,11 @@ public class TimeSetCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    long lengthOfTrack = MusicHelper.getGuildMusicManager(guild.getId()).getScheduler()
+    String[] time = message.split(" ")[1].split(":");
+    long timeToSet = 0;
+    long lengthOfCurrentTrack = MusicHelper.getGuildMusicManager(guild.getId()).getScheduler()
         .getPlayingSong()
         .getDuration();
-
-    String[] time = message.split(" ")[1].split(":");
-
-    long timeToSet = 0;
 
     // Has hours set.
     if (time.length > 2) {
@@ -93,7 +92,7 @@ public class TimeSetCommand implements Command {
       timeToSet += TimeUnit.SECONDS.toMillis(Long.parseLong(time[0]));
     }
 
-    if (timeToSet > lengthOfTrack) {
+    if (timeToSet > lengthOfCurrentTrack) {
       BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "",
           Color.red);
     }
@@ -106,7 +105,7 @@ public class TimeSetCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the TimeSetCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

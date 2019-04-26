@@ -19,7 +19,8 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class QueueCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks if the message was sent in a Guild
+   * and if the command matches the requirements to queue the song.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -29,15 +30,16 @@ public class QueueCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    String[] split = message.split(" ", 2);
+
     if (guild == null) {
       return false;
     }
 
     if (message.toLowerCase().startsWith(BotUtils.PREFIX + "queue")
         || message.toLowerCase().startsWith(BotUtils.PREFIX + "q")) {
-      String[] split = message.split(" ", 2);
 
-      // user messages just "!q" with no track info
+      // If no track info is provided don't continue.
       if (split.length == 1) {
         BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.",
             Color.red);
@@ -51,7 +53,8 @@ public class QueueCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Queue's the song provided by the message for the Guild provided,
+   * and joins the authors VoiceChannel.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -60,19 +63,36 @@ public class QueueCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
+    // Setup variables
     String song = message.split(" ", 2)[1];
+    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
+    VoiceChannel botVoiceChannel = null;
+    VoiceChannel userVoiceChannel;
+    final String track;
 
-    if (!(song.startsWith("ytsearch:") || song.startsWith("scsearch:"))
+    // If the song matches a search string or a video URL its good to go,
+    // otherwise prepend the ytsearch: string to it.
+    if ((song.startsWith("ytsearch:") || song.startsWith("scsearch:"))
         // RegEx shamelessly copied from:
         // https://stackoverflow.com/questions/163360/regular-expression-to-match-urls-in-java
-        && !Pattern
+        && Pattern
         .compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
         .matcher(song).matches()) {
-      song = "ytsearch:" + song;
+      track = song;
+    } else {
+      track = "ytsearch:" + song;
     }
 
-    VoiceChannel userVoiceChannel =
-        guild.getMemberById(author.getId()).block().getVoiceState().block().getChannel().block();
+    try {
+      userVoiceChannel =
+          guild.getMemberById(author.getId()).block().getVoiceState().block().getChannel().block();
+    } catch (NullPointerException e) {
+      BotUtils
+          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
+              Color.red);
+
+      return;
+    }
 
     // user is not in a voice channel
     if (userVoiceChannel == null) {
@@ -83,9 +103,7 @@ public class QueueCommand implements Command {
       return;
     }
 
-    GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
-    VoiceChannel botVoiceChannel = null;
-    // if the bot is not currently in a voice channel, join the user
+    // If the bot is in a different voice channel than the user don't continue.
     try {
       botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
           .getVoiceState().block().getChannel().block();
@@ -100,6 +118,7 @@ public class QueueCommand implements Command {
       // silently ignore the error, as it does happen occasionally
     }
 
+    // Join the user if the bot is not already in there.
     if (botVoiceChannel == null) {
       musicManager.setBotVoiceConnection(userVoiceChannel.join(spec ->
           spec.setProvider(musicManager.getAudioProvider())).block());
@@ -107,7 +126,6 @@ public class QueueCommand implements Command {
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);
     AudioSourceManagers.registerLocalSource(MusicHelper.playerManager);
-    final String track = song;
     MusicHelper.playerManager
         .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
           @Override
@@ -172,7 +190,7 @@ public class QueueCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the QueueCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

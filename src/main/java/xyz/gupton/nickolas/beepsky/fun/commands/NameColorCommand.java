@@ -15,7 +15,8 @@ import xyz.gupton.nickolas.beepsky.Command;
 public class NameColorCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks if the command was sent in a Guild, if the command matches,
+   * and if the bot has permission to edit roles.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -25,14 +26,15 @@ public class NameColorCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
+    String hexColor = message.split(" ", 2)[1];
+    boolean permission = false;
+
     if (guild == null) {
       return false;
     }
 
     if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
       // Check if the bot has permissions to manage roles
-      boolean permission = false;
-
       try {
         for (Role role : guild.getMemberById(BotUtils.CLIENT.getSelf().block().getId()).block()
             .getRoles().toIterable()) {
@@ -50,8 +52,6 @@ public class NameColorCommand implements Command {
         return false;
       }
 
-      String hexColor = message.split(" ", 2)[1];
-
       // if the name color specified is a valid hex code
       if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor).matches()) {
         BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
@@ -66,7 +66,7 @@ public class NameColorCommand implements Command {
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Changes the color of a users name to the one specified by the message.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -127,7 +127,7 @@ public class NameColorCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the NameColorCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

@@ -19,7 +19,7 @@ public interface Command {
   boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message);
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Executes the command.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -29,7 +29,7 @@ public interface Command {
   void execute(Guild guild, User author, MessageChannel channel, String message);
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the command.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

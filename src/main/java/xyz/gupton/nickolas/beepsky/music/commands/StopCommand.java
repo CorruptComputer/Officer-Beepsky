@@ -12,7 +12,8 @@ import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 public class StopCommand implements Command {
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Checks that the command was sent in a Guild, the command is correct, and that the bot is
+   * currently in a VoiceChannel.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -26,20 +27,25 @@ public class StopCommand implements Command {
       return false;
     }
 
-    // if the bot is not in a voice channel ignore the commands
-    try {
-      guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
-          .getChannel().block();
-    } catch (NullPointerException e) {
-      return false;
+    if (message.toLowerCase().equals(BotUtils.PREFIX + "stop")
+        || message.toLowerCase().equals(BotUtils.PREFIX + "clear")) {
+
+      // if the bot is not in a voice channel ignore the commands
+      try {
+        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+            .getChannel().block();
+      } catch (NullPointerException e) {
+        return false;
+      }
+
+      return true;
     }
 
-    return (message.toLowerCase().equals(BotUtils.PREFIX + "stop")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "clear"));
+    return false;
   }
 
   /**
-   * Checks things such as prefix and permissions to determine if a commands should be executed.
+   * Clears the queue for the current Guild.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -54,7 +60,7 @@ public class StopCommand implements Command {
   }
 
   /**
-   * Returns the usage string for a commands.
+   * Returns the usage string for the StopCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.
