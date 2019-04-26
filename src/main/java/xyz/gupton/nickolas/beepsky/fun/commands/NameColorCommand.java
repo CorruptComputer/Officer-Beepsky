@@ -26,8 +26,8 @@ public class NameColorCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    String hexColor = message.split(" ", 2)[1];
     boolean permission = false;
+    String[] hexColor = message.split(" ", 2);
 
     if (guild == null) {
       return false;
@@ -52,8 +52,14 @@ public class NameColorCommand implements Command {
         return false;
       }
 
+      if (hexColor.length != 2) {
+        BotUtils.sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
+            Color.red);
+        return false;
+      }
+
       // if the name color specified is a valid hex code
-      if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor).matches()) {
+      if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor[1]).matches()) {
         BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
             Color.red);
         return false;
