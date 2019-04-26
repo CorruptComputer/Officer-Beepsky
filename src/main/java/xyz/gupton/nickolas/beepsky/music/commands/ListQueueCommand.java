@@ -10,6 +10,7 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
+import java.awt.Color;
 
 public class ListQueueCommand implements Command {
 
@@ -47,7 +48,7 @@ public class ListQueueCommand implements Command {
 
     BotUtils.sendMessage(channel, author, "Current queue:", "Now playing: " + "["
         + playingInfo.title + "](" + playingInfo.uri + ") by " + playingInfo.author + "\n\n"
-        + MusicHelper.queueToString(musicManager.getScheduler().getQueue()));
+        + MusicHelper.queueToString(musicManager.getScheduler().getQueue()), Color.green);
   }
 
   /**
