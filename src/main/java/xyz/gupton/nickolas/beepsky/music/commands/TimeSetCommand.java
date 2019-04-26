@@ -3,9 +3,9 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import java.awt.Color;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
@@ -94,13 +94,15 @@ public class TimeSetCommand implements Command {
     }
 
     if (timeToSet > lengthOfTrack) {
-      BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "", Color.red);
+      BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "",
+          Color.red);
     }
 
     MusicHelper.getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong()
         .setPosition(timeToSet);
 
-    BotUtils.sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "", Color.green);
+    BotUtils.sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "",
+        Color.green);
   }
 
   /**

@@ -3,11 +3,11 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
-import java.awt.Color;
 
 public class StopCommand implements Command {
 

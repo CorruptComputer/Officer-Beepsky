@@ -1,8 +1,12 @@
 package xyz.gupton.nickolas.beepsky;
 
 import discord4j.core.DiscordClient;
+import discord4j.core.object.entity.Channel.Type;
+import discord4j.core.object.entity.GuildChannel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Permission;
+import discord4j.core.object.util.PermissionSet;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,11 +48,18 @@ public class BotUtils {
    */
   public static void sendMessage(MessageChannel channel, User author, String title,
       String description, Color color) {
-    channel.createMessage(messageSpec -> {
+    if (channel.getType() == Type.GUILD_TEXT) {
+      if (!((GuildChannel)channel).getEffectivePermissions(BotUtils.CLIENT.getSelfId().get())
+          .block().contains(Permission.SEND_MESSAGES)) {
+        return;
+      }
+    }
+
+    channel.createMessage(messageSpec ->
       messageSpec.setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description)
           .setFooter("Requested by: " + author.getUsername() + '#' + author.getDiscriminator()
-              + " | Version: " + VERSION, null).setColor(color));
-    }).block();
+              + " | Version: " + VERSION, null).setColor(color))
+    ).block();
 
     //TODO: replace this with ScheduledExecutorService
     //if its not a private channel cleanup the messages after a few minutes

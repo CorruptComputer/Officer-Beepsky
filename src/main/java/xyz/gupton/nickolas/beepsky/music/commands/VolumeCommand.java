@@ -2,11 +2,11 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
-import java.awt.Color;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
