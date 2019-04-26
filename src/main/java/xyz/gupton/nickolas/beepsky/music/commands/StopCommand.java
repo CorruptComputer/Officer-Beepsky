@@ -7,6 +7,7 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
+import java.awt.Color;
 
 public class StopCommand implements Command {
 
@@ -49,7 +50,7 @@ public class StopCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
     MusicHelper.clearQueue(musicManager.getScheduler());
-    BotUtils.sendMessage(channel, author, "The queue has been cleared!", "");
+    BotUtils.sendMessage(channel, author, "The queue has been cleared!", "", Color.green);
   }
 
   /**

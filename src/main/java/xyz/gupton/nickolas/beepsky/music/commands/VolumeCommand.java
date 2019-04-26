@@ -2,6 +2,7 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
+import java.awt.Color;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
@@ -42,7 +43,7 @@ public class VolumeCommand implements Command {
       if (msg.length > 2) {
 
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "This command only takes 1 argument, you provided: " + (msg.length - 1));
+            "This command only takes 1 argument, you provided: " + (msg.length - 1), Color.red);
 
         return false;
       }
@@ -53,14 +54,14 @@ public class VolumeCommand implements Command {
         vol = Integer.parseInt(msg[1]);
       } catch (NumberFormatException e) {
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "The volume must be a number between 0 and 100");
+            "The volume must be a number between 0 and 100", Color.red);
 
         return false;
       }
 
       if (vol < 0 || vol > 100) {
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "The volume must be a number between 0 and 100");
+            "The volume must be a number between 0 and 100", Color.red);
 
         return false;
       }
@@ -86,7 +87,7 @@ public class VolumeCommand implements Command {
 
     musicManager.setVolume(volume);
 
-    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "");
+    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "", Color.green);
   }
 
   /**

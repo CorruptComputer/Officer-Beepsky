@@ -10,6 +10,7 @@ import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.VoiceChannel;
 import java.util.regex.Pattern;
+import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -38,7 +39,7 @@ public class QueueCommand implements Command {
 
       // user messages just "!q" with no track info
       if (split.length == 1) {
-        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.");
+        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.", Color.red);
         return false;
       }
 
@@ -75,7 +76,7 @@ public class QueueCommand implements Command {
     // user is not in a voice channel
     if (userVoiceChannel == null) {
       BotUtils
-          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.");
+          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.", Color.red);
 
       return;
     }
@@ -90,7 +91,7 @@ public class QueueCommand implements Command {
       if (botVoiceChannel != null && botVoiceChannel != userVoiceChannel) {
         BotUtils.sendMessage(channel, author, "Error queueing track:",
             "Music player currently in use with another channel, "
-                + "either join that one or wait for them to finish.");
+                + "either join that one or wait for them to finish.", Color.red);
         return;
       }
     } catch (NullPointerException e) {
@@ -110,7 +111,7 @@ public class QueueCommand implements Command {
           public void trackLoaded(AudioTrack track) {
             BotUtils.sendMessage(channel, author, "Adding to queue:",
                 "[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
-                    + " by " + track.getInfo().author);
+                    + " by " + track.getInfo().author, Color.green);
 
             musicManager.getScheduler().queue(track);
           }
@@ -124,7 +125,7 @@ public class QueueCommand implements Command {
                   playlist.getName() + "\n\n" + "["
                       + playlist.getTracks().get(0).getInfo().title + "]("
                       + playlist.getTracks().get(0).getInfo().uri + ")" + " by "
-                      + playlist.getTracks().get(0).getInfo().author);
+                      + playlist.getTracks().get(0).getInfo().author, Color.green);
 
               musicManager.getScheduler().queue(playlist.getTracks().get(0));
             } else {
@@ -148,7 +149,7 @@ public class QueueCommand implements Command {
               BotUtils.sendMessage(channel, author, "Adding playlist to queue:",
                   playlist.getName() + "\n\n" + "**First track:** " + "["
                       + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n"
-                      + str);
+                      + str, Color.green);
             }
 
           }
@@ -156,13 +157,13 @@ public class QueueCommand implements Command {
           @Override
           public void noMatches() {
             BotUtils.sendMessage(channel, author, "Error queueing track:",
-                "Nothing found at: " + track);
+                "Nothing found at: " + track, Color.red);
           }
 
           @Override
           public void loadFailed(FriendlyException exception) {
             BotUtils.sendMessage(channel, author, "Error queueing track:",
-                "Could not play track: " + exception.getMessage());
+                "Could not play track: " + exception.getMessage(), Color.red);
           }
         });
   }

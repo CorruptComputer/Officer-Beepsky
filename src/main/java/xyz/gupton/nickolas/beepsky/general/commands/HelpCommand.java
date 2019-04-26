@@ -1,5 +1,6 @@
 package xyz.gupton.nickolas.beepsky.general.commands;
 
+import java.awt.Color;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
@@ -44,14 +45,14 @@ public class HelpCommand implements Command {
 
       if (commandStr.length() > 1800) {
         BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
-            commandStr.toString());
+            commandStr.toString(), Color.orange);
         commandStr.delete(0, commandStr.length());
       }
     }
     commandStr.append(
         "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
     BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
-        commandStr.toString());
+        commandStr.toString(), Color.orange);
   }
 
   /**
