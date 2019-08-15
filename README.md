@@ -6,7 +6,7 @@
 * [SLF4J](https://www.slf4j.org/)
 
 ### Building
-To build you need JDK 8+,RedHat's OpenJDK or Oracle's JDK should both work fine, 
+To build you need JDK 10, RedHat's OpenJDK or Oracle's JDK should both work fine, 
 however OpenJDK is what I will be using and what is used for Semaphore Builds. 
 Optionally you may also want to install Intellij IDEA Community.
 
