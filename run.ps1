@@ -6,7 +6,7 @@ $owner = Read-Host -Prompt 'What is the Discord ID of the owner? '
 
 for($i = 1; $i -gt 0; $i = $LASTEXITCODE){
    git pull origin master
-   ./gradlew.bat fatJar
+   ./gradlew.bat jar
    $file = Resolve-Path 'build/libs/Officer-Beepsky-*.jar' | Select-Object -ExpandProperty Path
    java -jar $file $token $owner
 }

@@ -37,7 +37,7 @@ repositories {
 ext.d4jVersion = '3.0.11'
 
 dependencies {
-    checkstyle 'com.puppycrawl.tools:checkstyle:8.23'
+    checkstyle 'com.puppycrawl.tools:checkstyle:8.27'
 
     compile "com.discord4j:discord4j-core:$d4jVersion"
     compile "com.discord4j:discord4j-voice:$d4jVersion"

@@ -4,20 +4,20 @@
 * [Discord4J](https://github.com/austinv11/Discord4J)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [SLF4J](https://www.slf4j.org/)
+* [CheckStyle](https://checkstyle.sourceforge.io/)
 
 ### Building
-To build you need JDK 10, RedHat's OpenJDK or Oracle's JDK should both work fine, 
+To build you need JDK 11, RedHat's OpenJDK or Oracle's JDK should both work fine, 
 however OpenJDK is what I will be using and what is used for Semaphore Builds. 
 Optionally you may also want to install Intellij IDEA Community.
 
-The easiest way to build is using `./gradlew fatJar` in either PowerShell (Windows), or in the
+The easiest way to build is using `./gradlew jar` in either PowerShell (Windows), or in the
 terminal (Linux/Mac).
 
-You could alternatively use Intellij and select fatJar from `Gradle Tasks->Other->fatJar`, and once
+You could alternatively use Intellij and select fatJar from `Gradle Tasks->Build->jar`, and once
 you've done this step you can simply build by pressing the green run arrow at the top.
 
-The build name is fatJar because well, the jar is 'fat'. Which means all dependencies will be packed
-into it in order to make it easily portable.
+The jar will built so that all dependencies will be packed into it in order to make it easily portable.
 
 ### Running
 You can run it from the terminal/PowerShell by typing `java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>`.
