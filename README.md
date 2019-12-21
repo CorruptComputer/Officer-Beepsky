@@ -14,7 +14,7 @@ Optionally you may also want to install Intellij IDEA Community.
 The easiest way to build is using `./gradlew jar` in either PowerShell (Windows), or in the
 terminal (Linux/Mac).
 
-You could alternatively use Intellij and select fatJar from `Gradle Tasks->Build->jar`, and once
+You could alternatively use Intellij and select jar from `Gradle Tasks->Build->jar`, and once
 you've done this step you can simply build by pressing the green run arrow at the top.
 
 The jar will built so that all dependencies will be packed into it in order to make it easily portable.
