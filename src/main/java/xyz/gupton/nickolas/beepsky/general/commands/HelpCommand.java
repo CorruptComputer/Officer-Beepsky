@@ -6,6 +6,7 @@ import discord4j.core.object.entity.User;
 import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 
 public class HelpCommand implements Command {
 
@@ -20,7 +21,7 @@ public class HelpCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    return message.toLowerCase().equals(BotUtils.PREFIX + "help");
+    return message.toLowerCase().equals(Globals.PREFIX + "help");
   }
 
   /**
@@ -35,7 +36,7 @@ public class HelpCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     StringBuilder commandStr = new StringBuilder();
 
-    for (Command commands : BotUtils.commands) {
+    for (Command commands : Globals.commands) {
       String cmd = commands.getCommand(author);
       if (cmd.length() > 0) {
         commandStr.append(cmd);
@@ -62,6 +63,6 @@ public class HelpCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "help` - You should already know this one.";
+    return "`" + Globals.PREFIX + "help` - You should already know this one.";
   }
 }

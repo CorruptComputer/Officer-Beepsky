@@ -1,4 +1,4 @@
-package xyz.gupton.nickolas.beepsky.owner.commands;
+package xyz.gupton.nickolas.beepsky.admin.commands;
 
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
@@ -9,7 +9,8 @@ import java.io.FileWriter;
 import java.io.Writer;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
+import xyz.gupton.nickolas.beepsky.Globals;
+import xyz.gupton.nickolas.beepsky.configuration.Bot;
 
 public class BanCommand implements Command {
 
@@ -24,7 +25,7 @@ public class BanCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().toString().equals(Globals.CONFIG.getOwner())) {
       if (message.split(" ").length != 2) {
         return false;
       }
@@ -46,13 +47,13 @@ public class BanCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
 
-    if (userId.equals(Owner.USER)) {
-      Owner.sendMessage("Error:", "You cannot ban yourself!");
+    if (userId.toString().equals(Globals.CONFIG.getOwner())) {
+      BotUtils.sendOwnerMessage("Error:", "You cannot ban yourself!");
       return;
     }
 
     if (BotUtils.isBanned(userId.asString())) {
-      Owner.sendMessage("Error:", BotUtils.CLIENT.getUserById(userId).block()
+      BotUtils.sendOwnerMessage("Error:", Globals.CLIENT.getUserById(userId).block()
           .getUsername() + " is already banned.");
       return;
     }
@@ -66,12 +67,12 @@ public class BanCommand implements Command {
 
       output.close();
 
-      Owner.sendMessage("Ban Successful:", BotUtils.CLIENT.getUserById(userId).block()
+      BotUtils.sendOwnerMessage("Ban Successful:", Globals.CLIENT.getUserById(userId).block()
           .getUsername() + " is now banned.");
 
     } catch (Exception e) {
       e.printStackTrace();
-      Owner.sendMessage("Error Banning:", e.getMessage());
+      BotUtils.sendOwnerMessage("Error Banning:", e.getMessage());
     }
   }
 
@@ -82,7 +83,7 @@ public class BanCommand implements Command {
    * @return String, the correct usage for the command.
    */
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().toString().equals(Globals.CONFIG.getOwner())) {
       return "`ban <Discord ID>` - Bans the user with that Discord ID from using this bot.";
     }
 

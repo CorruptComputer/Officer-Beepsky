@@ -7,8 +7,8 @@ xyz.gupton.nickolas.beepsky.music.commands.SkipCommand
 xyz.gupton.nickolas.beepsky.music.commands.StopCommand
 xyz.gupton.nickolas.beepsky.music.commands.TimeSetCommand
 xyz.gupton.nickolas.beepsky.music.commands.VolumeCommand
-xyz.gupton.nickolas.beepsky.owner.commands.ShutdownCommand
-xyz.gupton.nickolas.beepsky.owner.commands.BanCommand
-xyz.gupton.nickolas.beepsky.owner.commands.UnbanCommand
-xyz.gupton.nickolas.beepsky.owner.commands.LeaveCommand
-xyz.gupton.nickolas.beepsky.owner.commands.AnnouncementCommand
+xyz.gupton.nickolas.beepsky.admin.commands.ShutdownCommand
+xyz.gupton.nickolas.beepsky.admin.commands.BanCommand
+xyz.gupton.nickolas.beepsky.admin.commands.UnbanCommand
+xyz.gupton.nickolas.beepsky.admin.commands.LeaveCommand
+xyz.gupton.nickolas.beepsky.admin.commands.AnnouncementCommand

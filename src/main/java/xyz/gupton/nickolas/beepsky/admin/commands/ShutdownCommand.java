@@ -1,11 +1,11 @@
-package xyz.gupton.nickolas.beepsky.owner.commands;
+package xyz.gupton.nickolas.beepsky.admin.commands;
 
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
+import xyz.gupton.nickolas.beepsky.Globals;
 
 public class ShutdownCommand implements Command {
 
@@ -20,7 +20,7 @@ public class ShutdownCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().toString().equals(Globals.CONFIG.getOwner())) {
       return (message.toLowerCase().equals("shutdown")
           || message.toLowerCase().equals("restart")
           || message.toLowerCase().equals("reboot"));
@@ -43,13 +43,13 @@ public class ShutdownCommand implements Command {
     boolean restart = !message.toLowerCase().equals("shutdown");
 
     if (restart) {
-      Owner.sendMessage("Restarting...",
+      BotUtils.sendOwnerMessage("Restarting...",
           "This may take up to a few minutes if an update is available.");
     } else {
-      Owner.sendMessage("Shutting down...", "Goodbye world.");
+      BotUtils.sendOwnerMessage("Shutting down...", "Goodbye world.");
     }
 
-    BotUtils.CLIENT.logout().block();
+    Globals.CLIENT.logout().block();
     System.exit(restart ? 1 : 0);
   }
 
@@ -61,7 +61,7 @@ public class ShutdownCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().toString().equals(Globals.CONFIG.getOwner())) {
       return "__**The following commands must be used in a PM, else they are ignored.**__\n\n"
           + "`shutdown` - Shuts the bot down.\n\n"
           + "`restart` or `reboot` "

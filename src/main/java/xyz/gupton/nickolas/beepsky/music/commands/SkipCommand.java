@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.List;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
@@ -31,13 +32,13 @@ public class SkipCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().equals(BotUtils.PREFIX + "next")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "n")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "skip")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "s")) {
+    if (message.toLowerCase().equals(Globals.PREFIX + "next")
+        || message.toLowerCase().equals(Globals.PREFIX + "n")
+        || message.toLowerCase().equals(Globals.PREFIX + "skip")
+        || message.toLowerCase().equals(Globals.PREFIX + "s")) {
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(Globals.CLIENT.getSelfId().get()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -83,7 +84,7 @@ public class SkipCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "skip`, `" + BotUtils.PREFIX + "s`, `"
-        + BotUtils.PREFIX + "next`, or `" + BotUtils.PREFIX + "n` - Skips the current song.";
+    return "`" + Globals.PREFIX + "skip`, `" + Globals.PREFIX + "s`, `"
+        + Globals.PREFIX + "next`, or `" + Globals.PREFIX + "n` - Skips the current song.";
   }
 }

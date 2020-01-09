@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 
 public class NameColorCommand implements Command {
 
@@ -33,10 +34,10 @@ public class NameColorCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
+    if (message.toLowerCase().startsWith(Globals.PREFIX + "namecolor")) {
       // Check if the bot has permissions to manage roles
       try {
-        for (Role role : guild.getMemberById(BotUtils.CLIENT.getSelf().block().getId()).block()
+        for (Role role : guild.getMemberById(Globals.CLIENT.getSelf().block().getId()).block()
             .getRoles().toIterable()) {
           if (role.getPermissions().contains(Permission.MANAGE_ROLES)) {
             permission = true;
@@ -140,7 +141,7 @@ public class NameColorCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX
+    return "`" + Globals.PREFIX
         + "namecolor <hex code>` - Changes your name's color to the one provided,"
         + " ignores the commands if not allowed by the server.";
   }

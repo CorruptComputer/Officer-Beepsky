@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
 public class TimeSetCommand implements Command {
@@ -33,12 +34,12 @@ public class TimeSetCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "timeset")
-        || message.startsWith(BotUtils.PREFIX + "ts")) {
+    if (message.toLowerCase().startsWith(Globals.PREFIX + "timeset")
+        || message.startsWith(Globals.PREFIX + "ts")) {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(Globals.CLIENT.getSelfId().get()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -112,8 +113,8 @@ public class TimeSetCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "time <time>` or `"
-        + BotUtils.PREFIX + "t <time>` - Sets the time to the time specified, usage: \n"
+    return "`" + Globals.PREFIX + "time <time>` or `"
+        + Globals.PREFIX + "t <time>` - Sets the time to the time specified, usage: \n"
         + "`[HH:][MM:]SS`. The `HH:` and `MM:` are optional.";
   }
 }

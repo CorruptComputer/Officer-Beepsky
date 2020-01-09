@@ -9,6 +9,7 @@ import discord4j.core.object.entity.User;
 import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
@@ -30,8 +31,8 @@ public class ListQueueCommand implements Command {
       return false;
     }
 
-    return (message.toLowerCase().equals(BotUtils.PREFIX + "listqueue")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "lq"));
+    return (message.toLowerCase().equals(Globals.PREFIX + "listqueue")
+        || message.toLowerCase().equals(Globals.PREFIX + "lq"));
   }
 
   /**
@@ -60,7 +61,7 @@ public class ListQueueCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "listqueue` or `"
-        + BotUtils.PREFIX + "lq` - Messages back a list of the current queue.";
+    return "`" + Globals.PREFIX + "listqueue` or `"
+        + Globals.PREFIX + "lq` - Messages back a list of the current queue.";
   }
 }

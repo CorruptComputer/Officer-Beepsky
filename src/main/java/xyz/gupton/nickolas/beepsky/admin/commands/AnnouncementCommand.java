@@ -1,11 +1,13 @@
-package xyz.gupton.nickolas.beepsky.owner.commands;
+package xyz.gupton.nickolas.beepsky.admin.commands;
 
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Snowflake;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
-import xyz.gupton.nickolas.beepsky.owner.Owner;
+import xyz.gupton.nickolas.beepsky.Globals;
+import xyz.gupton.nickolas.beepsky.configuration.Configuration;
 
 public class AnnouncementCommand implements Command {
 
@@ -19,7 +21,7 @@ public class AnnouncementCommand implements Command {
    * @return boolean, true if the commands should be executed.
    */
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().toString().equals(Globals.CONFIG.getOwner())) {
       if (message.split(" ", 2).length != 2) {
         return false;
       }
@@ -39,10 +41,10 @@ public class AnnouncementCommand implements Command {
    * @param message String, the contents of the message received.
    */
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    for (Guild g : BotUtils.CLIENT.getGuilds().toIterable()) {
+    for (Guild g : Globals.CLIENT.getGuilds().toIterable()) {
       System.out.println(g.getName() + "\t\t" + g.getSystemChannel().block().getName());
       BotUtils.sendMessage(g.getSystemChannel().block(),
-          BotUtils.CLIENT.getUserById(Owner.USER).block(), "New Announcement!",
+              Globals.CLIENT.getUserById(Snowflake.of(Globals.CONFIG.getOwner())).block(), "New Announcement!",
           message.split(" ", 2)[1]);
     }
   }
@@ -55,7 +57,7 @@ public class AnnouncementCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().toString().equals(Globals.CONFIG.getOwner())) {
       return "`announcement <message>` - Announces the message to all joined servers.";
     }
 

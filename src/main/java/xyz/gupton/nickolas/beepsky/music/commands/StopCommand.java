@@ -6,6 +6,7 @@ import discord4j.core.object.entity.User;
 import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
@@ -27,12 +28,12 @@ public class StopCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().equals(BotUtils.PREFIX + "stop")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "clear")) {
+    if (message.toLowerCase().equals(Globals.PREFIX + "stop")
+        || message.toLowerCase().equals(Globals.PREFIX + "clear")) {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(Globals.CLIENT.getSelfId().get()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -67,7 +68,7 @@ public class StopCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "stop` or `"
-        + BotUtils.PREFIX + "clear` - Clears the current queue and leaves the voice channel.";
+    return "`" + Globals.PREFIX + "stop` or `"
+        + Globals.PREFIX + "clear` - Clears the current queue and leaves the voice channel.";
   }
 }

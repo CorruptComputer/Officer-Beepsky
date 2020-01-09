@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
@@ -36,8 +37,8 @@ public class QueueCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "queue")
-        || message.toLowerCase().startsWith(BotUtils.PREFIX + "q")) {
+    if (message.toLowerCase().startsWith(Globals.PREFIX + "queue")
+        || message.toLowerCase().startsWith(Globals.PREFIX + "q")) {
 
       // If no track info is provided don't continue.
       if (split.length == 1) {
@@ -105,7 +106,7 @@ public class QueueCommand implements Command {
 
     // If the bot is in a different voice channel than the user don't continue.
     try {
-      botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
+      botVoiceChannel = guild.getMemberById(Globals.CLIENT.getSelfId().get()).block()
           .getVoiceState().block().getChannel().block();
       // if the bot is currently in a voice channel that isn't the one that the user in in
       if (botVoiceChannel != null && !botVoiceChannel.getId().equals(userVoiceChannel.getId())) {
@@ -197,8 +198,8 @@ public class QueueCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "queue <song>` or `"
-        + BotUtils.PREFIX + "q <song>` - Song can be in the form of either a YouTube URL, "
+    return "`" + Globals.PREFIX + "queue <song>` or `"
+        + Globals.PREFIX + "q <song>` - Song can be in the form of either a YouTube URL, "
         + "SoundCloud URL, or if it is not a URL it will search from YouTube.";
   }
 }

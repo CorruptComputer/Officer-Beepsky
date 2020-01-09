@@ -9,6 +9,7 @@ import discord4j.core.object.entity.User;
 import java.awt.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 
 public class VolumeCommand implements Command {
 
@@ -30,12 +31,12 @@ public class VolumeCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "volume")
-        || message.toLowerCase().startsWith(BotUtils.PREFIX + "vol")) {
+    if (message.toLowerCase().startsWith(Globals.PREFIX + "volume")
+        || message.toLowerCase().startsWith(Globals.PREFIX + "vol")) {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(Globals.CLIENT.getSelfId().get()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -96,8 +97,8 @@ public class VolumeCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "volume <volume>` or `"
-        + BotUtils.PREFIX
+    return "`" + Globals.PREFIX + "volume <volume>` or `"
+        + Globals.PREFIX
         + "vol <volume>` - Sets the volume for the audio streamed, number between 0 and 100.";
   }
 }

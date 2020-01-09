@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.util.Random;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.Globals;
 
 public class EightBallCommand implements Command {
 
@@ -21,7 +22,7 @@ public class EightBallCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    return message.toLowerCase().startsWith(BotUtils.PREFIX + "8ball");
+    return message.toLowerCase().startsWith(Globals.PREFIX + "8ball");
   }
 
   /**
@@ -76,7 +77,7 @@ public class EightBallCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
+    return "`" + Globals.PREFIX + "8ball` or `" + Globals.PREFIX
         + "8ball <question>` - Gives the answer you may not be looking for.";
   }
 }

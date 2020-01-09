@@ -26,7 +26,7 @@ class CommandHandler {
     }
 
     // Search all available commands types
-    for (Command command : BotUtils.commands) {
+    for (Command command : Globals.commands) {
 
       // Check if the provided message should be executed
       if (command.shouldExecute(guild, author, channel, message)) {

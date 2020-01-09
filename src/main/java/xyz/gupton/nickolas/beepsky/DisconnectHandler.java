@@ -15,7 +15,7 @@ class DisconnectHandler {
   static void onDisconnect(DisconnectEvent event) {
     // When disconnected the 'now playing' text will get reset, and if we've been up for less than
     // 24 hours there is no need to restart.
-    if (System.currentTimeMillis() - BotUtils.startTime < TimeUnit.HOURS.toMillis(24)) {
+    if (System.currentTimeMillis() - Globals.startTime < TimeUnit.HOURS.toMillis(24)) {
       System.out.println("\n\nDisconnect reason: \n" + event.toString() + '\n');
 
       try {
@@ -25,8 +25,8 @@ class DisconnectHandler {
         e.printStackTrace();
       }
 
-      BotUtils.CLIENT
-          .updatePresence(Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands")))
+      Globals.CLIENT
+          .updatePresence(Presence.online(Activity.playing(Globals.PREFIX + "help for commands")))
           .block();
     } else { // else, lets just take the chance to update and restart.
       System.out.println("\n\nDisconnect reason: \n" + event.toString() + "\n\nRestarting...");
