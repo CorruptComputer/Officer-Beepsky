@@ -1,4 +1,4 @@
-[![Officer Beepsky](https://i.imgur.com/BMbWjGx.png)](https://tgstation13.org/wiki/Beepsky#Securitron) [![Build Status](https://semaphoreci.com/api/v1/corruptcomputer/officer-beepsky/branches/master/badge.svg)](https://semaphoreci.com/corruptcomputer/officer-beepsky)
+[![Officer Beepsky](https://i.imgur.com/BMbWjGx.png)](https://tgstation13.org/wiki/Beepsky#Securitron)
 
 ### Officer-Beepsky is a Discord bot made using:
 * [Discord4J](https://github.com/austinv11/Discord4J)
