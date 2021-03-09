@@ -48,6 +48,13 @@ dependencies {
     compile 'org.slf4j:slf4j-simple:2.0.0-alpha1'
 }
 
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled false
+    }
+}
+
 sonarqube {
   properties {
     property "sonar.projectKey", "CorruptComputer_Officer-Beepsky"
