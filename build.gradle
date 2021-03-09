@@ -26,6 +26,10 @@ jar {
     }
 }
 
+startScripts {
+    mainClassName 'xyz.gupton.nickolas.beepsky.Main'
+}
+
 repositories {
     mavenCentral()
     jcenter()
@@ -35,13 +39,11 @@ repositories {
     }
 }
 
-ext.d4jVersion = '3.0.12'
-
 dependencies {
     checkstyle 'com.puppycrawl.tools:checkstyle:8.28'
 
-    compile "com.discord4j:discord4j-core:$d4jVersion"
-    compile "com.discord4j:discord4j-voice:$d4jVersion"
+    compile 'com.discord4j:discord4j-core:3.0.12'
+    compile 'com.discord4j:discord4j-voice:3.0.12'
     compile 'com.sedmelluq:lavaplayer:1.3.33'
     compile 'org.slf4j:slf4j-simple:2.0.0-alpha1'
 }
