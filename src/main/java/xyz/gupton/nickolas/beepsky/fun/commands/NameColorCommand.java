@@ -8,7 +8,9 @@ import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.rest.util.Color;
 import discord4j.rest.util.Permission;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import reactor.core.publisher.Flux;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
@@ -36,8 +38,11 @@ public class NameColorCommand implements Command {
     if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
       // Check if the bot has permissions to manage roles
       try {
-        for (Role role : guild.getMemberById(BotUtils.GATEWAY.getSelf().block().getId()).block()
-            .getRoles().toIterable()) {
+        Flux<Role> selfRoles = Objects.requireNonNull(
+            guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block()
+        ).getRoles();
+
+        for (Role role : selfRoles.toIterable()) {
           if (role.getPermissions().contains(Permission.MANAGE_ROLES)) {
             permission = true;
             break;
@@ -120,13 +125,20 @@ public class NameColorCommand implements Command {
       }
     }
 
+    // if it doesn't already exist we need to create a new one
     if (role == null) {
-      Color.of(java.awt.Color.decode(hexColor).getRGB());
       role = guild.createRole(roleCreateSpec ->
           roleCreateSpec.setName(hexColor)
               .setColor(Color.of(java.awt.Color.decode(hexColor).getRGB())).setHoist(false)
               .setMentionable(false)
       ).block();
+    }
+
+    // if it still doesn't exist we need to try not to crash the bot
+    if (role == null) {
+      BotUtils.sendMessage(channel, author, "An error occurred while setting the color!",
+          "If you see any code monkeys tell them: The role was null.", Color.RED);
+      return;
     }
 
     member.addRole(role.getId()).block();

@@ -1,6 +1,8 @@
 package xyz.gupton.nickolas.beepsky.owner;
 
 import discord4j.common.util.Snowflake;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.channel.PrivateChannel;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 
 public class Owner {
@@ -14,14 +16,18 @@ public class Owner {
    * @param description String, description of the message to send.
    */
   public static void sendMessage(String title, String description) {
-    try {
-      BotUtils.GATEWAY.getUserById(OWNER_USER).block().getPrivateChannel().block()
-          .createMessage(messageSpec ->
-              messageSpec
-                  .setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description))
-          ).block();
-    } catch (NullPointerException e) {
-      e.printStackTrace();
+    User owner = BotUtils.GATEWAY.getUserById(OWNER_USER).block();
+    if (owner == null) {
+      return;
     }
+
+    PrivateChannel ownerPrivateChannel = owner.getPrivateChannel().block();
+    if (ownerPrivateChannel == null) {
+      return;
+    }
+
+    ownerPrivateChannel.createMessage(messageSpec ->
+        messageSpec.setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description))
+    ).block();
   }
 }

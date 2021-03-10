@@ -5,12 +5,15 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import discord4j.core.object.VoiceState;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.rest.util.Color;
 import java.util.regex.Pattern;
+import reactor.core.publisher.Mono;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -66,8 +69,6 @@ public class QueueCommand implements Command {
     // Setup variables
     String song = message.split(" ", 2)[1];
     GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
-    VoiceChannel botVoiceChannel = null;
-    VoiceChannel userVoiceChannel;
     final String track;
 
     // If the song matches a search string or a video URL its good to go,
@@ -83,18 +84,21 @@ public class QueueCommand implements Command {
       track = "ytsearch:" + song;
     }
 
-    try {
-      userVoiceChannel =
-          guild.getMemberById(author.getId()).block().getVoiceState().block().getChannel().block();
-    } catch (NullPointerException e) {
-      BotUtils
-          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
-              Color.RED);
-
+    Member guildMember = guild.getMemberById(author.getId()).block();
+    if (guildMember == null)  {
+      BotUtils.sendMessage(channel, author, "Error queueing track:",
+          "You do not exist.", Color.RED);
       return;
     }
 
-    // user is not in a voice channel
+    VoiceState guildMemberVoiceState = guildMember.getVoiceState().block();
+    if (guildMemberVoiceState == null)  {
+      BotUtils.sendMessage(channel, author, "Error queueing track:",
+          "You are not in a voice channel.", Color.RED);
+      return;
+    }
+
+    VoiceChannel userVoiceChannel = guildMemberVoiceState.getChannel().block();
     if (userVoiceChannel == null) {
       BotUtils
           .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
@@ -104,18 +108,23 @@ public class QueueCommand implements Command {
     }
 
     // If the bot is in a different voice channel than the user don't continue.
-    try {
-      botVoiceChannel = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block()
-          .getVoiceState().block().getChannel().block();
-      // if the bot is currently in a voice channel that isn't the one that the user in in
+    Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+    if (self == null) {
+      BotUtils.sendMessage(channel, author, "Error queueing track:",
+          "I do not exist.", Color.RED);
+      return;
+    }
+
+    VoiceState selfVoiceState = self.getVoiceState().block();
+    VoiceChannel botVoiceChannel = null;
+    if (selfVoiceState != null) {
+      botVoiceChannel = selfVoiceState.getChannel().block();
       if (botVoiceChannel != null && !botVoiceChannel.getId().equals(userVoiceChannel.getId())) {
         BotUtils.sendMessage(channel, author, "Error queueing track:",
             "Music player currently in use with another channel, "
                 + "either join that one or wait for them to finish.", Color.RED);
         return;
       }
-    } catch (NullPointerException e) {
-      // silently ignore the error, as it does happen occasionally
     }
 
     // Join the user if the bot is not already in there.

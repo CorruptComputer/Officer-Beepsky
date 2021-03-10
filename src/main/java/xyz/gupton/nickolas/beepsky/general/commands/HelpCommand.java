@@ -3,6 +3,7 @@ package xyz.gupton.nickolas.beepsky.general.commands;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.PrivateChannel;
 import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
@@ -35,6 +36,11 @@ public class HelpCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     StringBuilder commandStr = new StringBuilder();
 
+    PrivateChannel privateChannel = author.getPrivateChannel().block();
+    if (privateChannel == null) {
+      return;
+    }
+
     for (Command commands : BotUtils.commands) {
       String cmd = commands.getCommand(author);
       if (cmd.length() > 0) {
@@ -43,14 +49,14 @@ public class HelpCommand implements Command {
       }
 
       if (commandStr.length() > 1800) {
-        BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
+        BotUtils.sendMessage(privateChannel, author, "Available Commands:",
             commandStr.toString(), Color.ORANGE);
         commandStr.delete(0, commandStr.length());
       }
     }
     commandStr.append(
         "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
-    BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
+    BotUtils.sendMessage(privateChannel, author, "Available Commands:",
         commandStr.toString(), Color.ORANGE);
   }
 

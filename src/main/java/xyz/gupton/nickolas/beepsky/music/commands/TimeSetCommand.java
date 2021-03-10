@@ -1,8 +1,11 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
+import discord4j.core.object.VoiceState;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.rest.util.Color;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -33,14 +36,22 @@ public class TimeSetCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "timeset")
-        || message.startsWith(BotUtils.PREFIX + "ts")) {
+    if (msg[0].equalsIgnoreCase(BotUtils.PREFIX + "timeset")
+        || msg[0].equalsIgnoreCase(BotUtils.PREFIX + "ts")) {
 
       // if the bot is not in a voice channel ignore the commands
-      try {
-        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
-            .getChannel().block();
-      } catch (NullPointerException e) {
+      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      if (self == null) {
+        return false;
+      }
+
+      VoiceState selfVoiceState = self.getVoiceState().block();
+      if (selfVoiceState == null) {
+        return false;
+      }
+
+      VoiceChannel selfVoiceChannel = selfVoiceState.getChannel().block();
+      if (selfVoiceChannel == null) {
         return false;
       }
 

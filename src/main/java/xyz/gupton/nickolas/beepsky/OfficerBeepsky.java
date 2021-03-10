@@ -33,26 +33,28 @@ class OfficerBeepsky {
 
     // Register listeners via the EventSubscriber annotation which allows for organisation and
     // delegation of events
-    if (BotUtils.GATEWAY != null) {
-      BotUtils.GATEWAY.on(MessageCreateEvent.class)
-          .subscribe(CommandHandler::onMessageReceived);
-      BotUtils.GATEWAY.on(DisconnectEvent.class)
-          .subscribe(DisconnectHandler::onDisconnect);
-
-      BotUtils.GATEWAY.on(ReadyEvent.class)
-          .subscribe(event -> {
-            // the "Playing:" text
-            BotUtils.GATEWAY.updatePresence(
-                Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands"))).block();
-            Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
-
-            Owner.sendMessage("Startup complete!", "Current version: " + BotUtils.VERSION);
-
-            BotUtils.startTime = System.currentTimeMillis();
-          });
-
-      BotUtils.GATEWAY.onDisconnect().block();
+    if (BotUtils.GATEWAY == null) {
+      System.out.println("Gateway is null, aborting startup...");
+      System.exit(0);
     }
 
+    BotUtils.GATEWAY.on(MessageCreateEvent.class)
+        .subscribe(CommandHandler::onMessageReceived);
+    BotUtils.GATEWAY.on(DisconnectEvent.class)
+        .subscribe(DisconnectHandler::onDisconnect);
+
+    BotUtils.GATEWAY.on(ReadyEvent.class)
+        .subscribe(event -> {
+          // the "Playing:" text
+          BotUtils.GATEWAY.updatePresence(
+              Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands"))).block();
+          Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
+
+          Owner.sendMessage("Startup complete!", "Current version: " + BotUtils.VERSION);
+
+          BotUtils.startTime = System.currentTimeMillis();
+        });
+
+    BotUtils.GATEWAY.onDisconnect().block();
   }
 }

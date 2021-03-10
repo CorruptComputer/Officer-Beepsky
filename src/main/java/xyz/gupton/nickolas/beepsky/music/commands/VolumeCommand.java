@@ -3,9 +3,12 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import discord4j.core.object.VoiceState;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
@@ -30,14 +33,27 @@ public class VolumeCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "volume")
-        || message.toLowerCase().startsWith(BotUtils.PREFIX + "vol")) {
+    if (msg[0].equalsIgnoreCase(BotUtils.PREFIX + "volume")
+        || msg[0].equalsIgnoreCase(BotUtils.PREFIX + "vol")) {
 
       // if the bot is not in a voice channel ignore the commands
-      try {
-        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
-            .getChannel().block();
-      } catch (NullPointerException e) {
+      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      if (self == null) {
+        return false;
+      }
+
+      VoiceState selfVoiceState = self.getVoiceState().block();
+      if (selfVoiceState == null) {
+        return false;
+      }
+
+      VoiceChannel selfVoiceChannel = selfVoiceState.getChannel().block();
+      if (selfVoiceChannel == null) {
+        return false;
+      }
+
+      if (msg.length < 2) {
+        BotUtils.sendMessage(channel, author, "No time given!", "", Color.RED);
         return false;
       }
 

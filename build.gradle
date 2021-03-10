@@ -6,9 +6,10 @@ plugins {
 }
 
 group 'xyz.gupton.nickolas.beepsky'
-version '2.1.0'
+version '2.1.1'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 jar {
     classes.dependsOn(clean)

@@ -10,6 +10,8 @@ import xyz.gupton.nickolas.beepsky.Command;
 
 public class EightBallCommand implements Command {
 
+  private static Random rdm = new Random();
+
   /**
    * Checks the message for the correct command.
    *
@@ -35,7 +37,6 @@ public class EightBallCommand implements Command {
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     String question = "";
-    Random rdm = new Random();
     // gives them all a more even chance, with rdm.nextInt(3) 0 is almost never picked
     int certainty = rdm.nextInt(300) % 3;
     /*

@@ -3,9 +3,12 @@ package xyz.gupton.nickolas.beepsky.music.commands;
 import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import discord4j.core.object.VoiceState;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.rest.util.Color;
 import java.util.List;
 import xyz.gupton.nickolas.beepsky.BotUtils;
@@ -31,19 +34,24 @@ public class SkipCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().equals(BotUtils.PREFIX + "next")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "n")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "skip")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "s")) {
+    if (message.equalsIgnoreCase(BotUtils.PREFIX + "next")
+        || message.equalsIgnoreCase(BotUtils.PREFIX + "n")
+        || message.equalsIgnoreCase(BotUtils.PREFIX + "skip")
+        || message.equalsIgnoreCase(BotUtils.PREFIX + "s")) {
+
       // if the bot is not in a voice channel ignore the commands
-      try {
-        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
-            .getChannel().block();
-      } catch (NullPointerException e) {
+      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      if (self == null) {
         return false;
       }
 
-      return true;
+      VoiceState selfVoiceState = self.getVoiceState().block();
+      if (selfVoiceState == null) {
+        return false;
+      }
+
+      VoiceChannel selfVoiceChannel = selfVoiceState.getChannel().block();
+      return selfVoiceChannel != null;
     }
 
     return false;

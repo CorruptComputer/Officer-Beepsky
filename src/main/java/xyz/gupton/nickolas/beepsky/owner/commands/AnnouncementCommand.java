@@ -40,7 +40,6 @@ public class AnnouncementCommand implements Command {
    */
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     for (Guild g : BotUtils.GATEWAY.getGuilds().toIterable()) {
-      System.out.println(g.getName() + "\t\t" + g.getSystemChannel().block().getName());
       BotUtils.sendMessage(g.getSystemChannel().block(),
           BotUtils.GATEWAY.getUserById(Owner.OWNER_USER).block(), "New Announcement!",
           message.split(" ", 2)[1]);

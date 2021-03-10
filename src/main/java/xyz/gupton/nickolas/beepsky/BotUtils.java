@@ -8,11 +8,14 @@ import discord4j.core.object.entity.channel.GuildChannel;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.rest.util.Color;
 import discord4j.rest.util.Permission;
+import discord4j.rest.util.PermissionSet;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ServiceLoader;
 
 public class BotUtils {
@@ -49,8 +52,9 @@ public class BotUtils {
   public static void sendMessage(MessageChannel channel, User author, String title,
       String description, Color color) {
     if (channel.getType() == Type.GUILD_TEXT) {
-      if (!((GuildChannel)channel).getEffectivePermissions(BotUtils.GATEWAY.getSelfId())
-          .block().contains(Permission.SEND_MESSAGES)) {
+      PermissionSet ps = ((GuildChannel)channel)
+          .getEffectivePermissions(BotUtils.GATEWAY.getSelfId()).block();
+      if (ps != null && !ps.contains(Permission.SEND_MESSAGES)) {
         return;
       }
     }
@@ -86,9 +90,8 @@ public class BotUtils {
    * @return boolean, true if they are banned
    */
   public static boolean isBanned(String userId) {
-    try {
-      // feels Java man
-      BufferedReader banBuffer = new BufferedReader(new FileReader(new File("banned.txt")));
+    try (BufferedReader banBuffer =
+        Files.newBufferedReader(Path.of("banned.txt"), StandardCharsets.UTF_8)) {
       String line;
 
       while ((line = banBuffer.readLine()) != null) {
@@ -98,9 +101,8 @@ public class BotUtils {
         }
       }
 
-      banBuffer.close();
       return false;
-    } catch (FileNotFoundException e) {
+    } catch (NoSuchFileException e) {
       return false;
     } catch (IOException e) {
       e.printStackTrace();

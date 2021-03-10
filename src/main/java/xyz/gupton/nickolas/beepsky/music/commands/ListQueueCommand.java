@@ -30,8 +30,8 @@ public class ListQueueCommand implements Command {
       return false;
     }
 
-    return (message.toLowerCase().equals(BotUtils.PREFIX + "listqueue")
-        || message.toLowerCase().equals(BotUtils.PREFIX + "lq"));
+    return (message.equalsIgnoreCase(BotUtils.PREFIX + "listqueue")
+        || message.equalsIgnoreCase(BotUtils.PREFIX + "lq"));
   }
 
   /**

@@ -47,10 +47,11 @@ public class UnbanCommand implements Command {
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
+    User unbannedUser = BotUtils.GATEWAY.getUserById(userId).block();
+    String username = unbannedUser != null ? unbannedUser.getUsername() : "'Unknown User'";
 
     if (!BotUtils.isBanned(userId.asString())) {
-      Owner.sendMessage("Error Unbanning", BotUtils.GATEWAY.getUserById(userId).block()
-          .getUsername() + " is not banned.");
+      Owner.sendMessage("Error Unbanning", username + " is not banned.");
       return;
     }
 
@@ -62,9 +63,7 @@ public class UnbanCommand implements Command {
       Files.write(file.toPath(), out, StandardOpenOption.WRITE,
           StandardOpenOption.TRUNCATE_EXISTING);
 
-      Owner
-          .sendMessage("Unban Successful",
-              BotUtils.GATEWAY.getUserById(userId).block().getUsername() + " has been unbanned.");
+      Owner.sendMessage("Unban Successful", username + " has been unbanned.");
     } catch (Exception e) {
       e.printStackTrace();
       Owner.sendMessage("Error Unbanning", e.getMessage());

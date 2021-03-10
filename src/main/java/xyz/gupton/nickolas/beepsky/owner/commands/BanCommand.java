@@ -51,24 +51,18 @@ public class BanCommand implements Command {
       return;
     }
 
+    User bannedUser = BotUtils.GATEWAY.getUserById(userId).block();
+    String username = bannedUser != null ? bannedUser.getUsername() : "'Unknown User'";
+
     if (BotUtils.isBanned(userId.asString())) {
-      Owner.sendMessage("Error:", BotUtils.GATEWAY.getUserById(userId).block()
-          .getUsername() + " is already banned.");
+      Owner.sendMessage("Error:", username + " is already banned.");
       return;
     }
 
-    try {
-      Writer output;
-      output = new BufferedWriter(new FileWriter("banned.txt", true));
-
+    try (Writer output = new BufferedWriter(new FileWriter("banned.txt", true))) {
       output.append(userId.asString());
       output.append('\n');
-
-      output.close();
-
-      Owner.sendMessage("Ban Successful:", BotUtils.GATEWAY.getUserById(userId).block()
-          .getUsername() + " is now banned.");
-
+      Owner.sendMessage("Ban Successful:", username + " is now banned.");
     } catch (Exception e) {
       e.printStackTrace();
       Owner.sendMessage("Error Banning:", e.getMessage());
