@@ -4,9 +4,9 @@ import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import java.util.List;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
@@ -37,7 +37,7 @@ public class SkipCommand implements Command {
         || message.toLowerCase().equals(BotUtils.PREFIX + "s")) {
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -65,13 +65,13 @@ public class SkipCommand implements Command {
     if (queue.size() > 0) {
       BotUtils.sendMessage(channel, author, "Skipped to next track, now playing:",
           "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri
-              + ")" + " by " + queue.get(0).getInfo().author, Color.green);
+              + ")" + " by " + queue.get(0).getInfo().author, Color.GREEN);
 
       musicManager.getScheduler().nextTrack();
     } else {
       MusicHelper.clearQueue(musicManager.getScheduler());
       BotUtils.sendMessage(channel, author, "Skipped to next track, nothing left to play!", "",
-          Color.red);
+          Color.RED);
     }
   }
 

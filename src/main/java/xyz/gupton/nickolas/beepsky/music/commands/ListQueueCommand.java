@@ -4,9 +4,9 @@ import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -49,7 +49,7 @@ public class ListQueueCommand implements Command {
 
     BotUtils.sendMessage(channel, author, "Current queue:", "Now playing: " + "["
         + playingInfo.title + "](" + playingInfo.uri + ") by " + playingInfo.author + "\n\n"
-        + MusicHelper.queueToString(musicManager.getScheduler().getQueue()), Color.green);
+        + MusicHelper.queueToString(musicManager.getScheduler().getQueue()), Color.GREEN);
   }
 
   /**

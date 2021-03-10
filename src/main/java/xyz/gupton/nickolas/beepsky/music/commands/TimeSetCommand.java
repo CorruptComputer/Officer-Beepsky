@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
@@ -38,21 +38,21 @@ public class TimeSetCommand implements Command {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
       }
 
       if (msg.length < 2) {
-        BotUtils.sendMessage(channel, author, "No time given!", "", Color.red);
+        BotUtils.sendMessage(channel, author, "No time given!", "", Color.RED);
         return false;
       }
 
       if (!pattern.matcher(msg[1]).matches()) {
         BotUtils
             .sendMessage(channel, author, "Incorrect formatting for the time, try `[HH:][MM:]SS`. "
-                + "The `HH:` and `MM:` are optional.", "", Color.red);
+                + "The `HH:` and `MM:` are optional.", "", Color.RED);
         return false;
       }
 
@@ -94,14 +94,14 @@ public class TimeSetCommand implements Command {
 
     if (timeToSet > lengthOfCurrentTrack) {
       BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "",
-          Color.red);
+          Color.RED);
     }
 
     MusicHelper.getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong()
         .setPosition(timeToSet);
 
     BotUtils.sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "",
-        Color.green);
+        Color.GREEN);
   }
 
   /**

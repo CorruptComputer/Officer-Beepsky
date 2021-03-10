@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
+import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.util.Snowflake;
+import discord4j.core.object.entity.channel.MessageChannel;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -26,7 +26,7 @@ public class UnbanCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().equals(Owner.OWNER_USER)) {
       if (message.split(" ").length != 2) {
         return false;
       }
@@ -49,8 +49,8 @@ public class UnbanCommand implements Command {
     Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
 
     if (!BotUtils.isBanned(userId.asString())) {
-      Owner.sendMessage("Error Unbanning", BotUtils.CLIENT.getUserById(userId).block().getUsername()
-          + " is not banned.");
+      Owner.sendMessage("Error Unbanning", BotUtils.GATEWAY.getUserById(userId).block()
+          .getUsername() + " is not banned.");
       return;
     }
 
@@ -63,8 +63,8 @@ public class UnbanCommand implements Command {
           StandardOpenOption.TRUNCATE_EXISTING);
 
       Owner
-          .sendMessage("Unban Successful", BotUtils.CLIENT.getUserById(userId).block().getUsername()
-              + " has been unbanned.");
+          .sendMessage("Unban Successful",
+              BotUtils.GATEWAY.getUserById(userId).block().getUsername() + " has been unbanned.");
     } catch (Exception e) {
       e.printStackTrace();
       Owner.sendMessage("Error Unbanning", e.getMessage());
@@ -79,7 +79,7 @@ public class UnbanCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().equals(Owner.OWNER_USER)) {
       return "`unban <Discord ID>` - Unbans the user with that Discord ID from using this bot.";
     }
 

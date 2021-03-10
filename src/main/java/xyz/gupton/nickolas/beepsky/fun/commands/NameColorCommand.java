@@ -2,11 +2,11 @@ package xyz.gupton.nickolas.beepsky.fun.commands;
 
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.util.Permission;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
+import discord4j.rest.util.Permission;
 import java.util.List;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
@@ -36,7 +36,7 @@ public class NameColorCommand implements Command {
     if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
       // Check if the bot has permissions to manage roles
       try {
-        for (Role role : guild.getMemberById(BotUtils.CLIENT.getSelf().block().getId()).block()
+        for (Role role : guild.getMemberById(BotUtils.GATEWAY.getSelf().block().getId()).block()
             .getRoles().toIterable()) {
           if (role.getPermissions().contains(Permission.MANAGE_ROLES)) {
             permission = true;
@@ -54,14 +54,14 @@ public class NameColorCommand implements Command {
 
       if (hexColor.length != 2) {
         BotUtils.sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
-            Color.red);
+            Color.RED);
         return false;
       }
 
       // if the name color specified is a valid hex code
       if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor[1]).matches()) {
         BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
-            Color.red);
+            Color.RED);
         return false;
       }
 
@@ -121,15 +121,17 @@ public class NameColorCommand implements Command {
     }
 
     if (role == null) {
+      Color.of(java.awt.Color.decode(hexColor).getRGB());
       role = guild.createRole(roleCreateSpec ->
-          roleCreateSpec.setName(hexColor).setColor(Color.decode(hexColor)).setHoist(false)
+          roleCreateSpec.setName(hexColor)
+              .setColor(Color.of(java.awt.Color.decode(hexColor).getRGB())).setHoist(false)
               .setMentionable(false)
       ).block();
     }
 
     member.addRole(role.getId()).block();
 
-    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "", Color.green);
+    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "", Color.GREEN);
   }
 
   /**

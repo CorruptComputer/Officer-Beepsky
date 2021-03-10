@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'xyz.gupton.nickolas.beepsky'
-version '2.0.7'
+version '2.1.0'
 
 sourceCompatibility = 1.8
 
@@ -15,8 +15,8 @@ jar {
 
     manifest {
         attributes 'Implementation-Title': 'Officer Beepsky',
-                'Implementation-Version': project.version,
-                'Main-Class': 'xyz.gupton.nickolas.beepsky.Main'
+                   'Implementation-Version': project.version,
+                   'Main-Class': 'xyz.gupton.nickolas.beepsky.OfficerBeepsky'
     }
 
     from {
@@ -27,7 +27,7 @@ jar {
 }
 
 startScripts {
-    mainClassName 'xyz.gupton.nickolas.beepsky.Main'
+    mainClassName 'xyz.gupton.nickolas.beepsky.OfficerBeepsky'
 }
 
 repositories {
@@ -40,11 +40,11 @@ repositories {
 }
 
 dependencies {
-    checkstyle 'com.puppycrawl.tools:checkstyle:8.28'
+    checkstyle 'com.puppycrawl.tools:checkstyle:8.41'
 
-    compile 'com.discord4j:discord4j-core:3.0.12'
-    compile 'com.discord4j:discord4j-voice:3.0.12'
-    compile 'com.sedmelluq:lavaplayer:1.3.33'
+    compile 'com.discord4j:discord4j-core:3.1.3'
+    compile 'com.discord4j:discord4j-voice:3.1.3'
+    compile 'com.sedmelluq:lavaplayer:1.3.73'
     compile 'org.slf4j:slf4j-simple:2.0.0-alpha1'
 }
 

@@ -1,16 +1,16 @@
-package xyz.gupton.nickolas.beepsky.general.commands;
+package xyz.gupton.nickolas.beepsky.owner.commands;
 
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
-import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
+import xyz.gupton.nickolas.beepsky.owner.Owner;
 
-public class HelpCommand implements Command {
+public class ListServersCommand implements Command {
 
   /**
-   * Checks the message for the correct command.
+   * Checks the command and if it was sent in a PM to the bot.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -18,50 +18,45 @@ public class HelpCommand implements Command {
    * @param message String, the contents of the message received.
    * @return boolean, true if the commands should be executed.
    */
-  @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    return message.toLowerCase().equals(BotUtils.PREFIX + "help");
+    if (guild == null && author.getId().equals(Owner.OWNER_USER)) {
+      return message.equalsIgnoreCase("listservers");
+    }
+
+    return false;
   }
 
   /**
-   * PM's the user all available commands.
+   * Sends an announcement to all servers the bot is a member of.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
    * @param channel MessageChannel, channel the message was received in.
    * @param message String, the contents of the message received.
    */
-  @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    StringBuilder commandStr = new StringBuilder();
-
-    for (Command commands : BotUtils.commands) {
-      String cmd = commands.getCommand(author);
-      if (cmd.length() > 0) {
-        commandStr.append(cmd);
-        commandStr.append("\n\n");
-      }
-
-      if (commandStr.length() > 1800) {
-        BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
-            commandStr.toString(), Color.ORANGE);
-        commandStr.delete(0, commandStr.length());
-      }
+    StringBuilder sb = new StringBuilder();
+    for (Guild g : BotUtils.GATEWAY.getGuilds().toIterable()) {
+      sb.append(g.getName());
+      sb.append(" | ");
+      sb.append(g.getId().asString());
+      sb.append("\n");
     }
-    commandStr.append(
-        "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
-    BotUtils.sendMessage(author.getPrivateChannel().block(), author, "Available Commands:",
-        commandStr.toString(), Color.ORANGE);
+    Owner.sendMessage("Servers currently available", sb.toString());
   }
 
   /**
-   * Returns the usage string for the HelpCommand.
+   * Returns the usage string for the AnnouncementCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "help` - You should already know this one.";
+    if (recipient.getId().equals(Owner.OWNER_USER)) {
+      return "`listservers` - Lists all of the servers that the bot is joined to.";
+    }
+
+    return "";
   }
 }

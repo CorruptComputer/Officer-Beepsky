@@ -1,8 +1,8 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.channel.MessageChannel;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
@@ -20,10 +20,10 @@ public class ShutdownCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
-      return (message.toLowerCase().equals("shutdown")
-          || message.toLowerCase().equals("restart")
-          || message.toLowerCase().equals("reboot"));
+    if (guild == null && author.getId().equals(Owner.OWNER_USER)) {
+      return (message.equalsIgnoreCase("shutdown")
+          || message.equalsIgnoreCase("restart")
+          || message.equalsIgnoreCase("reboot"));
     }
 
     return false;
@@ -40,7 +40,7 @@ public class ShutdownCommand implements Command {
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
 
-    boolean restart = !message.toLowerCase().equals("shutdown");
+    boolean restart = !message.equalsIgnoreCase("shutdown");
 
     if (restart) {
       Owner.sendMessage("Restarting...",
@@ -49,7 +49,7 @@ public class ShutdownCommand implements Command {
       Owner.sendMessage("Shutting down...", "Goodbye world.");
     }
 
-    BotUtils.CLIENT.logout().block();
+    BotUtils.GATEWAY.logout().block();
     System.exit(restart ? 1 : 0);
   }
 
@@ -61,7 +61,7 @@ public class ShutdownCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().equals(Owner.OWNER_USER)) {
       return "__**The following commands must be used in a PM, else they are ignored.**__\n\n"
           + "`shutdown` - Shuts the bot down.\n\n"
           + "`restart` or `reboot` "

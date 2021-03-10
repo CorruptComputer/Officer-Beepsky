@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
+import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.util.Snowflake;
+import discord4j.core.object.entity.channel.MessageChannel;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
@@ -21,7 +21,7 @@ public class LeaveCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().equals(Owner.OWNER_USER)) {
       if (message.split(" ").length != 2) {
         return false;
       }
@@ -42,7 +42,7 @@ public class LeaveCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    BotUtils.CLIENT.getGuildById(Snowflake.of(message.split(" ", 2)[1])).block().leave().block();
+    BotUtils.GATEWAY.getGuildById(Snowflake.of(message.split(" ", 2)[1])).block().leave().block();
   }
 
   /**
@@ -53,7 +53,7 @@ public class LeaveCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().equals(Owner.OWNER_USER)) {
       return "`leave <Server ID>` - Leaves that server.";
     }
 

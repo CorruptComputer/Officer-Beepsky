@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.fun.commands;
 
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import java.util.Random;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
@@ -54,7 +54,7 @@ public class EightBallCommand implements Command {
         {"Don't count on it", "My reply is no", "My sources say no", "Outlook not so good",
             "Very doubtful", "Criminal detected", "Prepare for justice", "Freeze scumbag"}
     };
-    Color[] color = {Color.green, Color.orange, Color.red};
+    Color[] color = {Color.GREEN, Color.ORANGE, Color.RED};
 
     if (message.split(" ", 2).length > 1) {
       question = message.split(" ", 2)[1];

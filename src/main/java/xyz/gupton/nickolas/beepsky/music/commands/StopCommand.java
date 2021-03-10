@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.music.commands;
 
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
@@ -32,7 +32,7 @@ public class StopCommand implements Command {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -56,7 +56,7 @@ public class StopCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
     MusicHelper.clearQueue(musicManager.getScheduler());
-    BotUtils.sendMessage(channel, author, "The queue has been cleared!", "", Color.green);
+    BotUtils.sendMessage(channel, author, "The queue has been cleared!", "", Color.GREEN);
   }
 
   /**

@@ -1,11 +1,11 @@
 package xyz.gupton.nickolas.beepsky.owner;
 
-import discord4j.core.object.util.Snowflake;
+import discord4j.common.util.Snowflake;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 
 public class Owner {
 
-  public static Snowflake USER;
+  public static Snowflake OWNER_USER;
 
   /**
    * Sends a message to the Owner of the bot.
@@ -15,7 +15,7 @@ public class Owner {
    */
   public static void sendMessage(String title, String description) {
     try {
-      BotUtils.CLIENT.getUserById(USER).block().getPrivateChannel().block()
+      BotUtils.GATEWAY.getUserById(OWNER_USER).block().getPrivateChannel().block()
           .createMessage(messageSpec ->
               messageSpec
                   .setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description))

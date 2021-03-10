@@ -3,7 +3,7 @@ package xyz.gupton.nickolas.beepsky.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import discord4j.core.object.util.Snowflake;
+import discord4j.common.util.Snowflake;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -6,10 +6,10 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.entity.VoiceChannel;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.VoiceChannel;
+import discord4j.rest.util.Color;
 import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
@@ -42,7 +42,7 @@ public class QueueCommand implements Command {
       // If no track info is provided don't continue.
       if (split.length == 1) {
         BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.",
-            Color.red);
+            Color.RED);
         return false;
       }
 
@@ -89,7 +89,7 @@ public class QueueCommand implements Command {
     } catch (NullPointerException e) {
       BotUtils
           .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
-              Color.red);
+              Color.RED);
 
       return;
     }
@@ -98,20 +98,20 @@ public class QueueCommand implements Command {
     if (userVoiceChannel == null) {
       BotUtils
           .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
-              Color.red);
+              Color.RED);
 
       return;
     }
 
     // If the bot is in a different voice channel than the user don't continue.
     try {
-      botVoiceChannel = guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block()
+      botVoiceChannel = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block()
           .getVoiceState().block().getChannel().block();
       // if the bot is currently in a voice channel that isn't the one that the user in in
       if (botVoiceChannel != null && !botVoiceChannel.getId().equals(userVoiceChannel.getId())) {
         BotUtils.sendMessage(channel, author, "Error queueing track:",
             "Music player currently in use with another channel, "
-                + "either join that one or wait for them to finish.", Color.red);
+                + "either join that one or wait for them to finish.", Color.RED);
         return;
       }
     } catch (NullPointerException e) {
@@ -132,7 +132,7 @@ public class QueueCommand implements Command {
           public void trackLoaded(AudioTrack track) {
             BotUtils.sendMessage(channel, author, "Adding to queue:",
                 "[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
-                    + " by " + track.getInfo().author, Color.green);
+                    + " by " + track.getInfo().author, Color.GREEN);
 
             musicManager.getScheduler().queue(track);
           }
@@ -146,7 +146,7 @@ public class QueueCommand implements Command {
                   playlist.getName() + "\n\n" + "["
                       + playlist.getTracks().get(0).getInfo().title + "]("
                       + playlist.getTracks().get(0).getInfo().uri + ")" + " by "
-                      + playlist.getTracks().get(0).getInfo().author, Color.green);
+                      + playlist.getTracks().get(0).getInfo().author, Color.GREEN);
 
               musicManager.getScheduler().queue(playlist.getTracks().get(0));
             } else {
@@ -170,7 +170,7 @@ public class QueueCommand implements Command {
               BotUtils.sendMessage(channel, author, "Adding playlist to queue:",
                   playlist.getName() + "\n\n" + "**First track:** " + "["
                       + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n"
-                      + str, Color.green);
+                      + str, Color.GREEN);
             }
 
           }
@@ -178,13 +178,13 @@ public class QueueCommand implements Command {
           @Override
           public void noMatches() {
             BotUtils.sendMessage(channel, author, "Error queueing track:",
-                "Nothing found at: " + track, Color.red);
+                "Nothing found at: " + track, Color.RED);
           }
 
           @Override
           public void loadFailed(FriendlyException exception) {
             BotUtils.sendMessage(channel, author, "Error queueing track:",
-                "Could not play track: " + exception.getMessage(), Color.red);
+                "Could not play track: " + exception.getMessage(), Color.RED);
           }
         });
   }

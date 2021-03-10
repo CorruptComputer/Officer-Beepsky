@@ -1,9 +1,9 @@
 package xyz.gupton.nickolas.beepsky.owner.commands;
 
+import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.util.Snowflake;
+import discord4j.core.object.entity.channel.MessageChannel;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.Writer;
@@ -24,7 +24,7 @@ public class BanCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    if (guild == null && author.getId().equals(Owner.USER)) {
+    if (guild == null && author.getId().equals(Owner.OWNER_USER)) {
       if (message.split(" ").length != 2) {
         return false;
       }
@@ -46,13 +46,13 @@ public class BanCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
 
-    if (userId.equals(Owner.USER)) {
+    if (userId.equals(Owner.OWNER_USER)) {
       Owner.sendMessage("Error:", "You cannot ban yourself!");
       return;
     }
 
     if (BotUtils.isBanned(userId.asString())) {
-      Owner.sendMessage("Error:", BotUtils.CLIENT.getUserById(userId).block()
+      Owner.sendMessage("Error:", BotUtils.GATEWAY.getUserById(userId).block()
           .getUsername() + " is already banned.");
       return;
     }
@@ -66,7 +66,7 @@ public class BanCommand implements Command {
 
       output.close();
 
-      Owner.sendMessage("Ban Successful:", BotUtils.CLIENT.getUserById(userId).block()
+      Owner.sendMessage("Ban Successful:", BotUtils.GATEWAY.getUserById(userId).block()
           .getUsername() + " is now banned.");
 
     } catch (Exception e) {
@@ -82,7 +82,7 @@ public class BanCommand implements Command {
    * @return String, the correct usage for the command.
    */
   public String getCommand(User recipient) {
-    if (recipient.getId().equals(Owner.USER)) {
+    if (recipient.getId().equals(Owner.OWNER_USER)) {
       return "`ban <Discord ID>` - Bans the user with that Discord ID from using this bot.";
     }
 

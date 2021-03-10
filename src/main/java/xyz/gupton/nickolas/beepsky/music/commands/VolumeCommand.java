@@ -4,9 +4,9 @@ import static xyz.gupton.nickolas.beepsky.music.MusicHelper.getGuildMusicManager
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
@@ -35,7 +35,7 @@ public class VolumeCommand implements Command {
 
       // if the bot is not in a voice channel ignore the commands
       try {
-        guild.getMemberById(BotUtils.CLIENT.getSelfId().get()).block().getVoiceState().block()
+        guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block().getVoiceState().block()
             .getChannel().block();
       } catch (NullPointerException e) {
         return false;
@@ -43,7 +43,7 @@ public class VolumeCommand implements Command {
 
       if (msg.length > 2) {
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "This command only takes 1 argument, you provided: " + (msg.length - 1), Color.red);
+            "This command only takes 1 argument, you provided: " + (msg.length - 1), Color.RED);
 
         return false;
       }
@@ -52,14 +52,14 @@ public class VolumeCommand implements Command {
         vol = Integer.parseInt(msg[1]);
       } catch (NumberFormatException e) {
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "The volume must be a number between 0 and 100", Color.red);
+            "The volume must be a number between 0 and 100", Color.RED);
 
         return false;
       }
 
       if (vol < 0 || vol > 100) {
         BotUtils.sendMessage(channel, author, "Error changing volume:",
-            "The volume must be a number between 0 and 100", Color.red);
+            "The volume must be a number between 0 and 100", Color.RED);
 
         return false;
       }
@@ -85,7 +85,7 @@ public class VolumeCommand implements Command {
 
     musicManager.setVolume(volume);
 
-    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "", Color.green);
+    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "", Color.GREEN);
   }
 
   /**

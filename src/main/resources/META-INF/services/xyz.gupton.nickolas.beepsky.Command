@@ -12,3 +12,4 @@ xyz.gupton.nickolas.beepsky.owner.commands.BanCommand
 xyz.gupton.nickolas.beepsky.owner.commands.UnbanCommand
 xyz.gupton.nickolas.beepsky.owner.commands.LeaveCommand
 xyz.gupton.nickolas.beepsky.owner.commands.AnnouncementCommand
+xyz.gupton.nickolas.beepsky.owner.commands.ListServersCommand

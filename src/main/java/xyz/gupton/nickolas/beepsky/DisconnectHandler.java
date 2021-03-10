@@ -25,7 +25,7 @@ class DisconnectHandler {
         e.printStackTrace();
       }
 
-      BotUtils.CLIENT
+      BotUtils.GATEWAY
           .updatePresence(Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands")))
           .block();
     } else { // else, lets just take the chance to update and restart.

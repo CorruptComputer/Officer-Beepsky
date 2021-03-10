@@ -1,12 +1,13 @@
 package xyz.gupton.nickolas.beepsky;
 
 import discord4j.core.DiscordClient;
-import discord4j.core.object.entity.Channel.Type;
-import discord4j.core.object.entity.GuildChannel;
-import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.User;
-import discord4j.core.object.util.Permission;
-import java.awt.Color;
+import discord4j.core.object.entity.channel.Channel.Type;
+import discord4j.core.object.entity.channel.GuildChannel;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.rest.util.Color;
+import discord4j.rest.util.Permission;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,10 +19,10 @@ public class BotUtils {
 
   static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
   public static DiscordClient CLIENT;
+  public static GatewayDiscordClient GATEWAY;
   public static final String PREFIX = ";";
   public static final ServiceLoader<Command> commands = ServiceLoader.load(Command.class);
   static long startTime;
-
 
   /**
    * Sends a message with default color (dark gray).
@@ -33,7 +34,7 @@ public class BotUtils {
    */
   public static void sendMessage(MessageChannel channel, User author, String title,
       String description) {
-    sendMessage(channel, author, title, description, new Color(44, 47, 51));
+    sendMessage(channel, author, title, description, Color.of(44, 47, 51));
   }
 
   /**
@@ -48,7 +49,7 @@ public class BotUtils {
   public static void sendMessage(MessageChannel channel, User author, String title,
       String description, Color color) {
     if (channel.getType() == Type.GUILD_TEXT) {
-      if (!((GuildChannel)channel).getEffectivePermissions(BotUtils.CLIENT.getSelfId().get())
+      if (!((GuildChannel)channel).getEffectivePermissions(BotUtils.GATEWAY.getSelfId())
           .block().contains(Permission.SEND_MESSAGES)) {
         return;
       }
