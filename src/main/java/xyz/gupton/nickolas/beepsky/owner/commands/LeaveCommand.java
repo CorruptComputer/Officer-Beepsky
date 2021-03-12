@@ -42,7 +42,10 @@ public class LeaveCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    Guild guildToLeave = BotUtils.GATEWAY.getGuildById(Snowflake.of(message.split(" ", 2)[1])).block();
+    Guild guildToLeave = BotUtils.GATEWAY.getGuildById(
+        Snowflake.of(message.split(" ", 2)[1])
+    ).block();
+
     if (guildToLeave == null) {
       Owner.sendMessage("Error leaving server!", "Server ID does not exist.");
       return;

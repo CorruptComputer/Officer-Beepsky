@@ -7,14 +7,15 @@ import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.rest.util.Color;
 import discord4j.rest.util.Permission;
+import discord4j.rest.util.PermissionSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
-import reactor.core.publisher.Flux;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
 public class NameColorCommand implements Command {
+
+  private static final Pattern hexPattern = Pattern.compile("^#[0-9a-fA-F]{6}$");
 
   /**
    * Checks if the command was sent in a Guild, if the command matches,
@@ -28,52 +29,46 @@ public class NameColorCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    boolean permission = false;
-    String[] hexColor = message.split(" ", 2);
-
     if (guild == null) {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "namecolor")) {
-      // Check if the bot has permissions to manage roles
-      try {
-        Flux<Role> selfRoles = Objects.requireNonNull(
-            guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block()
-        ).getRoles();
+    // Verify the command is correct
+    String[] command = message.split(" ", 2);
+    if (!command[0].equalsIgnoreCase(BotUtils.PREFIX + "namecolor")) {
+      return false;
+    }
 
-        for (Role role : selfRoles.toIterable()) {
+    // Verify that they gave a hex code
+    if (command.length != 2) {
+      BotUtils.sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
+          Color.RED);
+      return false;
+    }
+
+    // Verify the hex pattern is correct
+    if (!hexPattern.matcher(command[1]).matches()) {
+      BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
+          Color.RED);
+      return false;
+    }
+
+    // Check if the bot has permissions to manage roles
+    boolean permission = false;
+    Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+    if (self != null) {
+      List<Role> selfRoles = self.getRoles().collectList().block();
+      if (selfRoles != null) {
+        for (Role role : selfRoles) {
           if (role.getPermissions().contains(Permission.MANAGE_ROLES)) {
             permission = true;
             break;
           }
         }
-      } catch (NullPointerException e) {
-        return false;
       }
-
-      // if no permissions silently ignore the message
-      if (!permission) {
-        return false;
-      }
-
-      if (hexColor.length != 2) {
-        BotUtils.sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
-            Color.RED);
-        return false;
-      }
-
-      // if the name color specified is a valid hex code
-      if (!Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$").matcher(hexColor[1]).matches()) {
-        BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
-            Color.RED);
-        return false;
-      }
-
-      return true;
     }
 
-    return false;
+    return permission;
   }
 
   /**
@@ -86,36 +81,42 @@ public class NameColorCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    String hexColor = message.split(" ", 2)[1];
+    String hexColor = message.split(" ", 2)[1].toUpperCase();
     Member member = guild.getMemberById(author.getId()).block();
+    if (member == null) {
+      return;
+    }
 
-    try {
-      List<Role> currentRoles = member.getRoles().collectList()
-          .block();
-      // remove the current color role
-      for (Role role : currentRoles) {
-        if (role.getName().startsWith("#")) {
-          member.removeRole(role.getId());
+    // remove the current color role if they have one
+    List<Role> currentRoles = member.getRoles().collectList().block();
+    if (currentRoles != null) {
+      for (Role currentRole : currentRoles) {
+        if (hexPattern.matcher(currentRole.getName()).matches()) {
+          member.removeRole(currentRole.getId()).block();
 
           boolean empty = true;
-          outer:
+
           for (Member m : guild.getMembers().toIterable()) {
+            if (!empty) {
+              break;
+            }
+
             for (Role r : m.getRoles().toIterable()) {
-              if (role == r) {
+              if (currentRole == r) {
                 empty = false;
-                break outer;
+                break;
               }
             }
           }
+
           // if that was the last user with the role, delete it
           if (empty) {
-            role.delete().block();
+            currentRole.delete().block();
           }
         }
       }
-    } catch (NullPointerException e) {
-      // do nothing
     }
+
 
     Role role = null;
     for (Role r : guild.getRoles().toIterable()) {
@@ -129,15 +130,17 @@ public class NameColorCommand implements Command {
     if (role == null) {
       role = guild.createRole(roleCreateSpec ->
           roleCreateSpec.setName(hexColor)
-              .setColor(Color.of(java.awt.Color.decode(hexColor).getRGB())).setHoist(false)
+              .setColor(Color.of(java.awt.Color.decode(hexColor).getRGB()))
+              .setHoist(false)
               .setMentionable(false)
+              .setPermissions(PermissionSet.none())
       ).block();
     }
 
-    // if it still doesn't exist we need to try not to crash the bot
+    // if it still doesn't exist something went wrong.
     if (role == null) {
       BotUtils.sendMessage(channel, author, "An error occurred while setting the color!",
-          "If you see any code monkeys tell them: The role was null.", Color.RED);
+          "Could not create the role required.", Color.RED);
       return;
     }
 
