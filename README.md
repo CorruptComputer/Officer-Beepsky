@@ -7,8 +7,8 @@
 * [CheckStyle](https://checkstyle.sourceforge.io/)
 
 ### Building
-To build you need JDK 11, RedHat's OpenJDK or Oracle's JDK should both work fine, 
-however OpenJDK is what I will be using and what is used for CI Builds. 
+To build you need the JDK, AdoptOpenJDK or Oracle's JDK should both work fine, 
+however AdoptOpenJDK 17 is what I will be using and what is used for CI Builds. 
 Optionally you may also want to install Intellij IDEA Community.
 
 The easiest way to build is using `./gradlew jar` in either PowerShell (Windows), or in the
