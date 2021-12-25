@@ -5,6 +5,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.RoleCreateSpec;
 import discord4j.rest.util.Color;
 import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
@@ -13,6 +14,9 @@ import java.util.regex.Pattern;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
+/**
+ * Command to allow a user to set the color of their name in a server.
+ */
 public class NameColorCommand implements Command {
 
   private static final Pattern hexPattern = Pattern.compile("^#[0-9a-fA-F]{6}$");
@@ -128,12 +132,11 @@ public class NameColorCommand implements Command {
 
     // if it doesn't already exist we need to create a new one
     if (role == null) {
-      role = guild.createRole(roleCreateSpec ->
-          roleCreateSpec.setName(hexColor)
-              .setColor(Color.of(java.awt.Color.decode(hexColor).getRGB()))
-              .setHoist(false)
-              .setMentionable(false)
-              .setPermissions(PermissionSet.none())
+      role = guild.createRole(RoleCreateSpec.builder().name(hexColor)
+              .color(Color.of(java.awt.Color.decode(hexColor).getRGB()))
+              .hoist(false)
+              .mentionable(false)
+              .permissions(PermissionSet.none()).build()
       ).block();
     }
 

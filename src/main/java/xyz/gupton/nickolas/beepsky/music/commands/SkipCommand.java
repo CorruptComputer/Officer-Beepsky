@@ -16,6 +16,9 @@ import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
+/**
+ * Command to skip the currently playing song.
+ */
 public class SkipCommand implements Command {
 
   /**

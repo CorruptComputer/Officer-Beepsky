@@ -7,6 +7,9 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
+/**
+ *  Command to list the servers the bot is joined to.
+ */
 public class ListServersCommand implements Command {
 
   /**
@@ -27,7 +30,7 @@ public class ListServersCommand implements Command {
   }
 
   /**
-   * Sends an announcement to all servers the bot is a member of.
+   * Lists all servers the bot is a member of.
    *
    * @param guild Guild, guild the message was received from, can be null for PM's.
    * @param author User, the author of the message.
@@ -46,7 +49,7 @@ public class ListServersCommand implements Command {
   }
 
   /**
-   * Returns the usage string for the AnnouncementCommand.
+   * Returns the usage string for the ListServersCommand.
    *
    * @param recipient User, who command is going to, used for permissions checking.
    * @return String, the correct usage for the command.

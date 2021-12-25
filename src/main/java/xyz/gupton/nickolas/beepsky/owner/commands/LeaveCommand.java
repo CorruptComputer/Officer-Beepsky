@@ -8,6 +8,9 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
+/**
+ * Command to tell the bot to leave a server.
+ */
 public class LeaveCommand implements Command {
 
   /**

@@ -11,14 +11,17 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.object.entity.channel.VoiceChannel;
+import discord4j.core.spec.VoiceChannelJoinSpec;
 import discord4j.rest.util.Color;
 import java.util.regex.Pattern;
-import reactor.core.publisher.Mono;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
+/**
+ * Command to queue a song for the current guild.
+ */
 public class QueueCommand implements Command {
 
   /**
@@ -129,8 +132,13 @@ public class QueueCommand implements Command {
 
     // Join the user if the bot is not already in there.
     if (botVoiceChannel == null) {
-      musicManager.setBotVoiceConnection(userVoiceChannel.join(spec ->
-          spec.setProvider(musicManager.getAudioProvider())).block());
+      musicManager.setBotVoiceConnection(
+          userVoiceChannel.join(
+            VoiceChannelJoinSpec.builder().provider(
+              musicManager.getAudioProvider()
+            ).build()
+          ).block()
+      );
     }
 
     AudioSourceManagers.registerRemoteSources(MusicHelper.playerManager);

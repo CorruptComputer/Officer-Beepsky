@@ -11,6 +11,9 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
+/**
+ * Command for banning people from using the bot.
+ */
 public class BanCommand implements Command {
 
   /**

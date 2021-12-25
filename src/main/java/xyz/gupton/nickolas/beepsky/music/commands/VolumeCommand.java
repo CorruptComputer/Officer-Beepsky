@@ -13,6 +13,9 @@ import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
+/**
+ * Command for changing the volume of the music being played.
+ */
 public class VolumeCommand implements Command {
 
   /**

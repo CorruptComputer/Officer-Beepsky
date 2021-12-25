@@ -8,6 +8,9 @@ import java.util.Random;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
+/**
+ * Command to shake the 8 ball.
+ */
 public class EightBallCommand implements Command {
 
   private static Random rdm = new Random();

@@ -4,7 +4,9 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
 
-// Interface to determine if a commands should be executed, and then handles its execution
+/**
+ * Interface to determine if a commands should be executed, and then handles its execution.
+ */
 public interface Command {
 
   /**

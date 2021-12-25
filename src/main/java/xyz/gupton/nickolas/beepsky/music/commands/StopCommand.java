@@ -12,6 +12,9 @@ import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.GuildMusicManager;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
+/**
+ * Command to stop the currently playing queue.
+ */
 public class StopCommand implements Command {
 
   /**

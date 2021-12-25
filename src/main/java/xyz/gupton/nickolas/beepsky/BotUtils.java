@@ -6,11 +6,12 @@ import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.Channel.Type;
 import discord4j.core.object.entity.channel.GuildChannel;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
 import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,6 +19,9 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ServiceLoader;
 
+/**
+ *  General utilities required by the bot.
+ */
 public class BotUtils {
 
   static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
@@ -52,17 +56,24 @@ public class BotUtils {
   public static void sendMessage(MessageChannel channel, User author, String title,
       String description, Color color) {
     if (channel.getType() == Type.GUILD_TEXT) {
-      PermissionSet ps = ((GuildChannel)channel)
+      PermissionSet ps = ((GuildChannel) channel)
           .getEffectivePermissions(BotUtils.GATEWAY.getSelfId()).block();
       if (ps != null && !ps.contains(Permission.SEND_MESSAGES)) {
         return;
       }
     }
 
-    channel.createMessage(messageSpec ->
-      messageSpec.setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description)
-          .setFooter("Requested by: " + author.getUsername() + '#' + author.getDiscriminator()
-              + " | Version: " + VERSION, null).setColor(color))
+    channel.createMessage(
+      MessageCreateSpec.builder()
+      .addEmbed(
+        EmbedCreateSpec.builder()
+          .title(title)
+          .description(description)
+          .footer("Requested by: " + author.getUsername() + '#' + author.getDiscriminator()
+              + " | Version: " + VERSION, null)
+          .color(color)
+          .build()
+      ).build()
     ).block();
 
     //TODO: replace this with ScheduledExecutorService

@@ -5,8 +5,8 @@ import discord4j.core.DiscordClient;
 import discord4j.core.event.domain.lifecycle.DisconnectEvent;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.presence.Activity;
-import discord4j.core.object.presence.Presence;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
 import discord4j.rest.http.client.ClientException;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
@@ -47,7 +47,11 @@ class OfficerBeepsky {
         .subscribe(event -> {
           // the "Playing:" text
           BotUtils.GATEWAY.updatePresence(
-              Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands"))).block();
+              ClientPresence.online(
+                ClientActivity.listening(BotUtils.PREFIX + "help for commands")
+              )
+          );
+
           Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
 
           Owner.sendMessage("Startup complete!", "Current version: " + BotUtils.VERSION);

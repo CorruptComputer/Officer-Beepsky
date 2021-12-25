@@ -13,6 +13,9 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.music.MusicHelper;
 
+/**
+ * Command to set the time in the currently playing song.
+ */
 public class TimeSetCommand implements Command {
 
   /**

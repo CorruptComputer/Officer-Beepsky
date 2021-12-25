@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Helper class for the music commands.
+ */
 public class MusicHelper {
 
   public static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();

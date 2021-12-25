@@ -7,6 +7,9 @@ import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
+/**
+ * Sends an announcement to all servers the bot is a member of.
+ */
 public class AnnouncementCommand implements Command {
 
   /**

@@ -1,8 +1,8 @@
 package xyz.gupton.nickolas.beepsky;
 
 import discord4j.core.event.domain.lifecycle.DisconnectEvent;
-import discord4j.core.object.presence.Activity;
-import discord4j.core.object.presence.Presence;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
 import java.util.concurrent.TimeUnit;
 
 class DisconnectHandler {
@@ -26,8 +26,11 @@ class DisconnectHandler {
       }
 
       BotUtils.GATEWAY
-          .updatePresence(Presence.online(Activity.playing(BotUtils.PREFIX + "help for commands")))
-          .block();
+          .updatePresence(
+            ClientPresence.online(
+              ClientActivity.listening(BotUtils.PREFIX + "help for commands")
+            )
+          ).block();
     } else { // else, lets just take the chance to update and restart.
       System.out.println("\n\nDisconnect reason: \n" + event.toString() + "\n\nRestarting...");
       System.exit(1);

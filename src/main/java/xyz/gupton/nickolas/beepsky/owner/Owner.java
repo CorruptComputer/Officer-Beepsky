@@ -3,8 +3,13 @@ package xyz.gupton.nickolas.beepsky.owner;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.PrivateChannel;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateSpec;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 
+/**
+ * Utility class for owner related tasks.
+ */
 public class Owner {
 
   public static Snowflake OWNER_USER;
@@ -26,8 +31,14 @@ public class Owner {
       return;
     }
 
-    ownerPrivateChannel.createMessage(messageSpec ->
-        messageSpec.setEmbed(embedSpec -> embedSpec.setTitle(title).setDescription(description))
+    ownerPrivateChannel.createMessage(
+      MessageCreateSpec.builder()
+      .addEmbed(
+        EmbedCreateSpec.builder()
+          .title(title)
+          .description(description)
+          .build()
+      ).build()
     ).block();
   }
 }

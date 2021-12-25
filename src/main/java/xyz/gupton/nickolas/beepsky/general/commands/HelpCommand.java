@@ -8,6 +8,9 @@ import discord4j.rest.util.Color;
 import xyz.gupton.nickolas.beepsky.BotUtils;
 import xyz.gupton.nickolas.beepsky.Command;
 
+/**
+ * Command to list the available commands.
+ */
 public class HelpCommand implements Command {
 
   /**
