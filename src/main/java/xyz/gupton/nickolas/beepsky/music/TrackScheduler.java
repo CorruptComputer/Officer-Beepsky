@@ -48,7 +48,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
           nextTrack();
 
-          musicManager.getBotVoiceConnection().disconnect();
+          musicManager.getBotVoiceConnection().disconnect().block();
           musicManager.setBotVoiceConnection(null);
         }
       }

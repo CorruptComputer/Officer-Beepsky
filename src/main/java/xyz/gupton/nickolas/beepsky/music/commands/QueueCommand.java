@@ -77,11 +77,9 @@ public class QueueCommand implements Command {
     // If the song matches a search string or a video URL its good to go,
     // otherwise prepend the ytsearch: string to it.
     if ((song.startsWith("ytsearch:") || song.startsWith("scsearch:"))
-        // RegEx shamelessly copied from:
-        // https://stackoverflow.com/questions/163360/regular-expression-to-match-urls-in-java
-        && Pattern
-        .compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
-        .matcher(song).matches()) {
+        || Pattern
+          .compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
+          .matcher(song).matches()) {
       track = song;
     } else {
       track = "ytsearch:" + song;

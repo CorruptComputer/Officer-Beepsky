@@ -5,12 +5,15 @@ import discord4j.core.DiscordClient;
 import discord4j.core.event.domain.lifecycle.DisconnectEvent;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.presence.ClientActivity;
-import discord4j.core.object.presence.ClientPresence;
+import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.http.client.ClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.gupton.nickolas.beepsky.owner.Owner;
 
+
 class OfficerBeepsky {
+  private static Logger _logger = LoggerFactory.getLogger(OfficerBeepsky.class);
 
   /**
    * The main method for the bot, handles login, registering listeners, and alerting the owner.
@@ -19,45 +22,37 @@ class OfficerBeepsky {
    */
   public static void main(String[] args) {
     if (args.length != 2) {
-      System.out.println("Usage: java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>");
+      _logger.error("Usage: java -jar Officer-Beepsky-x.x.x.jar <Discord token> <Owner ID>");
       System.exit(0);
     }
 
     try {
-      BotUtils.CLIENT = DiscordClient.create(args[0]);
-      BotUtils.GATEWAY = BotUtils.CLIENT.login().block();
+      BotUtils.GATEWAY =
+          DiscordClient.create(args[0]).gateway()
+              .setEnabledIntents(IntentSet.all())
+              .login().block();
     } catch (ClientException e) {
-      System.out.println("Invalid token, aborting...");
+      _logger.error("Invalid token, aborting...");
       System.exit(0);
     }
 
     // Register listeners via the EventSubscriber annotation which allows for organisation and
     // delegation of events
     if (BotUtils.GATEWAY == null) {
-      System.out.println("Gateway is null, aborting startup...");
+      _logger.error("Gateway is null, aborting startup...");
       System.exit(0);
     }
 
+    _logger.info("Registering event handlers");
     BotUtils.GATEWAY.on(MessageCreateEvent.class)
-        .subscribe(CommandHandler::onMessageReceived);
+            .subscribe(EventHandlers::messageCreateEventHandler);
     BotUtils.GATEWAY.on(DisconnectEvent.class)
-        .subscribe(DisconnectHandler::onDisconnect);
-
+            .subscribe(EventHandlers::disconnectEventHandler);
     BotUtils.GATEWAY.on(ReadyEvent.class)
-        .subscribe(event -> {
-          // the "Playing:" text
-          BotUtils.GATEWAY.updatePresence(
-              ClientPresence.online(
-                ClientActivity.listening(BotUtils.PREFIX + "help for commands")
-              )
-          );
+            .subscribe(EventHandlers::readyEventHandler);
 
-          Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
-
-          Owner.sendMessage("Startup complete!", "Current version: " + BotUtils.VERSION);
-
-          BotUtils.startTime = System.currentTimeMillis();
-        });
+    _logger.info("Setting owner");
+    Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
 
     BotUtils.GATEWAY.onDisconnect().block();
   }

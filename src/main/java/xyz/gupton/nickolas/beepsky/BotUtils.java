@@ -25,7 +25,7 @@ import java.util.ServiceLoader;
 public class BotUtils {
 
   static final String VERSION = BotUtils.class.getPackage().getImplementationVersion();
-  public static DiscordClient CLIENT;
+
   public static GatewayDiscordClient GATEWAY;
   public static final String PREFIX = ";";
   public static final ServiceLoader<Command> commands = ServiceLoader.load(Command.class);
