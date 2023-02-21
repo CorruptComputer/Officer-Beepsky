@@ -39,7 +39,7 @@ public class ListServersCommand implements Command {
    */
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     StringBuilder sb = new StringBuilder();
-    for (Guild g : BotUtils.GATEWAY.getGuilds().toIterable()) {
+    for (Guild g : BotUtils.getInstance().GATEWAY.getGuilds().toIterable()) {
       sb.append(g.getName());
       sb.append(" | ");
       sb.append(g.getId().asString());

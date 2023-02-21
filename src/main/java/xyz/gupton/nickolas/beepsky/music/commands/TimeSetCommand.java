@@ -39,11 +39,11 @@ public class TimeSetCommand implements Command {
       return false;
     }
 
-    if (msg[0].equalsIgnoreCase(BotUtils.PREFIX + "timeset")
-        || msg[0].equalsIgnoreCase(BotUtils.PREFIX + "ts")) {
+    if (msg[0].equalsIgnoreCase(BotUtils.getInstance().PREFIX + "timeset")
+        || msg[0].equalsIgnoreCase(BotUtils.getInstance().PREFIX + "ts")) {
 
       // if the bot is not in a voice channel ignore the commands
-      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
       if (self == null) {
         return false;
       }
@@ -59,12 +59,12 @@ public class TimeSetCommand implements Command {
       }
 
       if (msg.length < 2) {
-        BotUtils.sendMessage(channel, author, "No time given!", "", Color.RED);
+        BotUtils.getInstance().sendMessage(channel, author, "No time given!", "", Color.RED);
         return false;
       }
 
       if (!pattern.matcher(msg[1]).matches()) {
-        BotUtils
+        BotUtils.getInstance()
             .sendMessage(channel, author, "Incorrect formatting for the time, try `[HH:][MM:]SS`. "
                 + "The `HH:` and `MM:` are optional.", "", Color.RED);
         return false;
@@ -107,14 +107,14 @@ public class TimeSetCommand implements Command {
     }
 
     if (timeToSet > lengthOfCurrentTrack) {
-      BotUtils.sendMessage(channel, author, "The time specified is after the track ends!", "",
+      BotUtils.getInstance().sendMessage(channel, author, "The time specified is after the track ends!", "",
           Color.RED);
     }
 
     MusicHelper.getGuildMusicManager(guild.getId()).getScheduler().getPlayingSong()
         .setPosition(timeToSet);
 
-    BotUtils.sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "",
+    BotUtils.getInstance().sendMessage(channel, author, "The time has been set to " + message.split(" ")[1], "",
         Color.GREEN);
   }
 
@@ -126,8 +126,8 @@ public class TimeSetCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "time <time>` or `"
-        + BotUtils.PREFIX + "t <time>` - Sets the time to the time specified, usage: \n"
+    return "`" + BotUtils.getInstance().PREFIX + "time <time>` or `"
+        + BotUtils.getInstance().PREFIX + "t <time>` - Sets the time to the time specified, usage: \n"
         + "`[HH:][MM:]SS`. The `HH:` and `MM:` are optional.";
   }
 }

@@ -26,7 +26,7 @@ public class EightBallCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    return message.toLowerCase().startsWith(BotUtils.PREFIX + "8ball");
+    return message.toLowerCase().startsWith(BotUtils.getInstance().PREFIX + "8ball");
   }
 
   /**
@@ -68,7 +68,7 @@ public class EightBallCommand implements Command {
       question += "?";
     }
 
-    BotUtils.sendMessage(channel, author, question + " | 8Ball says:",
+    BotUtils.getInstance().sendMessage(channel, author, question + " | 8Ball says:",
         answers[certainty][rdm.nextInt(answers[certainty].length)], color[certainty]);
   }
 
@@ -80,7 +80,7 @@ public class EightBallCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "8ball` or `" + BotUtils.PREFIX
+    return "`" + BotUtils.getInstance().PREFIX + "8ball` or `" + BotUtils.getInstance().PREFIX
         + "8ball <question>` - Gives the answer you may not be looking for.";
   }
 }

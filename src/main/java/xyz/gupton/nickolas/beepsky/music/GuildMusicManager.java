@@ -5,15 +5,21 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventListener;
 import discord4j.common.util.Snowflake;
 import discord4j.voice.VoiceConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import xyz.gupton.nickolas.beepsky.BotUtils;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
+ * Per guild.
  */
 public class GuildMusicManager {
+  private final static Logger _logger = LoggerFactory.getLogger(TrackScheduler.class);
 
   private final AudioPlayer player;
   private final D4jAudioProvider provider;
   private final TrackScheduler scheduler;
+  private final Snowflake _guild;
   private VoiceConnection botVoiceConnection = null;
 
   /**
@@ -26,6 +32,7 @@ public class GuildMusicManager {
     this.player = manager.createPlayer();
     this.provider = new D4jAudioProvider(player);
     this.scheduler = new TrackScheduler(player, guild);
+    this._guild = guild;
   }
 
   /**
@@ -79,6 +86,15 @@ public class GuildMusicManager {
 
   public void setBotVoiceConnection(VoiceConnection connection) {
     this.botVoiceConnection = connection;
+  }
+
+  public void disconnect() {
+    _logger.info("Guild: " + _guild.asLong() + " Disconnecting from voice connection.");
+    try {
+      getBotVoiceConnection().disconnect().block();
+    } catch (IllegalStateException ignored) { }
+
+    setBotVoiceConnection(null);
   }
 }
 

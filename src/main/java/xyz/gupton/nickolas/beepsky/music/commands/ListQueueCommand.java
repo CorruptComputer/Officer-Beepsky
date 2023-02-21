@@ -32,8 +32,8 @@ public class ListQueueCommand implements Command {
       return false;
     }
 
-    return (message.equalsIgnoreCase(BotUtils.PREFIX + "listqueue")
-        || message.equalsIgnoreCase(BotUtils.PREFIX + "lq"));
+    return (message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "listqueue")
+        || message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "lq"));
   }
 
   /**
@@ -49,7 +49,7 @@ public class ListQueueCommand implements Command {
     GuildMusicManager musicManager = getGuildMusicManager(guild.getId());
     AudioTrackInfo playingInfo = musicManager.getScheduler().getPlayingSong().getInfo();
 
-    BotUtils.sendMessage(channel, author, "Current queue:", "Now playing: " + "["
+    BotUtils.getInstance().sendMessage(channel, author, "Current queue:", "Now playing: " + "["
         + playingInfo.title + "](" + playingInfo.uri + ") by " + playingInfo.author + "\n\n"
         + MusicHelper.queueToString(musicManager.getScheduler().getQueue()), Color.GREEN);
   }
@@ -62,7 +62,7 @@ public class ListQueueCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "listqueue` or `"
-        + BotUtils.PREFIX + "lq` - Messages back a list of the current queue.";
+    return "`" + BotUtils.getInstance().PREFIX + "listqueue` or `"
+        + BotUtils.getInstance().PREFIX + "lq` - Messages back a list of the current queue.";
   }
 }

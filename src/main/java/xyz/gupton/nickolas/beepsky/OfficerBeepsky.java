@@ -13,7 +13,7 @@ import xyz.gupton.nickolas.beepsky.owner.Owner;
 
 
 class OfficerBeepsky {
-  private static Logger _logger = LoggerFactory.getLogger(OfficerBeepsky.class);
+  private final static Logger _logger = LoggerFactory.getLogger(OfficerBeepsky.class);
 
   /**
    * The main method for the bot, handles login, registering listeners, and alerting the owner.
@@ -27,7 +27,7 @@ class OfficerBeepsky {
     }
 
     try {
-      BotUtils.GATEWAY =
+      BotUtils.getInstance().GATEWAY =
           DiscordClient.create(args[0]).gateway()
               .setEnabledIntents(IntentSet.all())
               .login().block();
@@ -38,22 +38,22 @@ class OfficerBeepsky {
 
     // Register listeners via the EventSubscriber annotation which allows for organisation and
     // delegation of events
-    if (BotUtils.GATEWAY == null) {
+    if (BotUtils.getInstance().GATEWAY == null) {
       _logger.error("Gateway is null, aborting startup...");
       System.exit(0);
     }
 
     _logger.info("Registering event handlers");
-    BotUtils.GATEWAY.on(MessageCreateEvent.class)
+    BotUtils.getInstance().GATEWAY.on(MessageCreateEvent.class)
             .subscribe(EventHandlers::messageCreateEventHandler);
-    BotUtils.GATEWAY.on(DisconnectEvent.class)
+    BotUtils.getInstance().GATEWAY.on(DisconnectEvent.class)
             .subscribe(EventHandlers::disconnectEventHandler);
-    BotUtils.GATEWAY.on(ReadyEvent.class)
+    BotUtils.getInstance().GATEWAY.on(ReadyEvent.class)
             .subscribe(EventHandlers::readyEventHandler);
 
     _logger.info("Setting owner");
     Owner.OWNER_USER = Snowflake.of(Long.parseUnsignedLong(args[1]));
 
-    BotUtils.GATEWAY.onDisconnect().block();
+    BotUtils.getInstance().GATEWAY.onDisconnect().block();
   }
 }

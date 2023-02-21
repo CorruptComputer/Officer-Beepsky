@@ -42,12 +42,12 @@ public class QueueCommand implements Command {
       return false;
     }
 
-    if (message.toLowerCase().startsWith(BotUtils.PREFIX + "queue")
-        || message.toLowerCase().startsWith(BotUtils.PREFIX + "q")) {
+    if (message.toLowerCase().startsWith(BotUtils.getInstance().PREFIX + "queue")
+        || message.toLowerCase().startsWith(BotUtils.getInstance().PREFIX + "q")) {
 
       // If no track info is provided don't continue.
       if (split.length == 1) {
-        BotUtils.sendMessage(channel, author, "Error queueing track:", "No track specified.",
+        BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:", "No track specified.",
             Color.RED);
         return false;
       }
@@ -87,31 +87,31 @@ public class QueueCommand implements Command {
 
     Member guildMember = guild.getMemberById(author.getId()).block();
     if (guildMember == null)  {
-      BotUtils.sendMessage(channel, author, "Error queueing track:",
+      BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
           "You do not exist.", Color.RED);
       return;
     }
 
     VoiceState guildMemberVoiceState = guildMember.getVoiceState().block();
     if (guildMemberVoiceState == null)  {
-      BotUtils.sendMessage(channel, author, "Error queueing track:",
+      BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
           "You are not in a voice channel.", Color.RED);
       return;
     }
 
     VoiceChannel userVoiceChannel = guildMemberVoiceState.getChannel().block();
     if (userVoiceChannel == null) {
-      BotUtils
-          .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
+      BotUtils.getInstance()
+              .sendMessage(channel, author, "Error queueing track:", "You are not in a voice channel.",
               Color.RED);
 
       return;
     }
 
     // If the bot is in a different voice channel than the user don't continue.
-    Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+    Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
     if (self == null) {
-      BotUtils.sendMessage(channel, author, "Error queueing track:",
+      BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
           "I do not exist.", Color.RED);
       return;
     }
@@ -121,7 +121,7 @@ public class QueueCommand implements Command {
     if (selfVoiceState != null) {
       botVoiceChannel = selfVoiceState.getChannel().block();
       if (botVoiceChannel != null && !botVoiceChannel.getId().equals(userVoiceChannel.getId())) {
-        BotUtils.sendMessage(channel, author, "Error queueing track:",
+        BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
             "Music player currently in use with another channel, "
                 + "either join that one or wait for them to finish.", Color.RED);
         return;
@@ -145,7 +145,7 @@ public class QueueCommand implements Command {
         .loadItemOrdered(musicManager, track, new AudioLoadResultHandler() {
           @Override
           public void trackLoaded(AudioTrack track) {
-            BotUtils.sendMessage(channel, author, "Adding to queue:",
+            BotUtils.getInstance().sendMessage(channel, author, "Adding to queue:",
                 "[" + track.getInfo().title + "](" + track.getInfo().uri + ")"
                     + " by " + track.getInfo().author, Color.GREEN);
 
@@ -157,7 +157,7 @@ public class QueueCommand implements Command {
             // if it is a search vs an actual playlist
             if (track.startsWith("ytsearch:") || track.startsWith("scsearch:")) {
 
-              BotUtils.sendMessage(channel, author, "Adding to queue:",
+              BotUtils.getInstance().sendMessage(channel, author, "Adding to queue:",
                   playlist.getName() + "\n\n" + "["
                       + playlist.getTracks().get(0).getInfo().title + "]("
                       + playlist.getTracks().get(0).getInfo().uri + ")" + " by "
@@ -182,7 +182,7 @@ public class QueueCommand implements Command {
               String str = MusicHelper.queueToString(musicManager.getScheduler().getQueue());
 
               // message with the first song
-              BotUtils.sendMessage(channel, author, "Adding playlist to queue:",
+              BotUtils.getInstance().sendMessage(channel, author, "Adding playlist to queue:",
                   playlist.getName() + "\n\n" + "**First track:** " + "["
                       + firstTrack.getInfo().title + "](" + firstTrack.getInfo().uri + ")\n\n"
                       + str, Color.GREEN);
@@ -192,13 +192,13 @@ public class QueueCommand implements Command {
 
           @Override
           public void noMatches() {
-            BotUtils.sendMessage(channel, author, "Error queueing track:",
+            BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
                 "Nothing found at: " + track, Color.RED);
           }
 
           @Override
           public void loadFailed(FriendlyException exception) {
-            BotUtils.sendMessage(channel, author, "Error queueing track:",
+            BotUtils.getInstance().sendMessage(channel, author, "Error queueing track:",
                 "Could not play track: " + exception.getMessage(), Color.RED);
           }
         });
@@ -212,8 +212,8 @@ public class QueueCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "queue <song>` or `"
-        + BotUtils.PREFIX + "q <song>` - Song can be in the form of either a YouTube URL, "
+    return "`" + BotUtils.getInstance().PREFIX + "queue <song>` or `"
+        + BotUtils.getInstance().PREFIX + "q <song>` - Song can be in the form of either a YouTube URL, "
         + "SoundCloud URL, or if it is not a URL it will search from YouTube.";
   }
 }

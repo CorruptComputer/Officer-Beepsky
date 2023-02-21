@@ -21,7 +21,7 @@ public class Owner {
    * @param description String, description of the message to send.
    */
   public static void sendMessage(String title, String description) {
-    User owner = BotUtils.GATEWAY.getUserById(OWNER_USER).block();
+    User owner = BotUtils.getInstance().GATEWAY.getUserById(OWNER_USER).block();
     if (owner == null) {
       return;
     }

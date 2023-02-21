@@ -37,13 +37,13 @@ public class SkipCommand implements Command {
       return false;
     }
 
-    if (message.equalsIgnoreCase(BotUtils.PREFIX + "next")
-        || message.equalsIgnoreCase(BotUtils.PREFIX + "n")
-        || message.equalsIgnoreCase(BotUtils.PREFIX + "skip")
-        || message.equalsIgnoreCase(BotUtils.PREFIX + "s")) {
+    if (message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "next")
+        || message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "n")
+        || message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "skip")
+        || message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "s")) {
 
       // if the bot is not in a voice channel ignore the commands
-      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
       if (self == null) {
         return false;
       }
@@ -74,14 +74,14 @@ public class SkipCommand implements Command {
     List<AudioTrack> queue = musicManager.getScheduler().getQueue();
 
     if (queue.size() > 0) {
-      BotUtils.sendMessage(channel, author, "Skipped to next track, now playing:",
+      BotUtils.getInstance().sendMessage(channel, author, "Skipped to next track, now playing:",
           "[" + queue.get(0).getInfo().title + "](" + queue.get(0).getInfo().uri
               + ")" + " by " + queue.get(0).getInfo().author, Color.GREEN);
 
       musicManager.getScheduler().nextTrack();
     } else {
       MusicHelper.clearQueue(musicManager.getScheduler());
-      BotUtils.sendMessage(channel, author, "Skipped to next track, nothing left to play!", "",
+      BotUtils.getInstance().sendMessage(channel, author, "Skipped to next track, nothing left to play!", "",
           Color.RED);
     }
   }
@@ -94,7 +94,7 @@ public class SkipCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "skip`, `" + BotUtils.PREFIX + "s`, `"
-        + BotUtils.PREFIX + "next`, or `" + BotUtils.PREFIX + "n` - Skips the current song.";
+    return "`" + BotUtils.getInstance().PREFIX + "skip`, `" + BotUtils.getInstance().PREFIX + "s`, `"
+        + BotUtils.getInstance().PREFIX + "next`, or `" + BotUtils.getInstance().PREFIX + "n` - Skips the current song.";
   }
 }

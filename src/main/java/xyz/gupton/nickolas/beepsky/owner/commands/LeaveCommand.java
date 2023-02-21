@@ -45,7 +45,7 @@ public class LeaveCommand implements Command {
    */
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
-    Guild guildToLeave = BotUtils.GATEWAY.getGuildById(
+    Guild guildToLeave = BotUtils.getInstance().GATEWAY.getGuildById(
         Snowflake.of(message.split(" ", 2)[1])
     ).block();
 

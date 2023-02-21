@@ -24,7 +24,7 @@ public class HelpCommand implements Command {
    */
   @Override
   public boolean shouldExecute(Guild guild, User author, MessageChannel channel, String message) {
-    return message.toLowerCase().equals(BotUtils.PREFIX + "help");
+    return message.toLowerCase().equals(BotUtils.getInstance().PREFIX + "help");
   }
 
   /**
@@ -44,7 +44,7 @@ public class HelpCommand implements Command {
       return;
     }
 
-    for (Command commands : BotUtils.commands) {
+    for (Command commands : BotUtils.getInstance().COMMANDS) {
       String cmd = commands.getCommand(author);
       if (cmd.length() > 0) {
         commandStr.append(cmd);
@@ -52,14 +52,14 @@ public class HelpCommand implements Command {
       }
 
       if (commandStr.length() > 1800) {
-        BotUtils.sendMessage(privateChannel, author, "Available Commands:",
+        BotUtils.getInstance().sendMessage(privateChannel, author, "Available Commands:",
             commandStr.toString(), Color.ORANGE);
         commandStr.delete(0, commandStr.length());
       }
     }
     commandStr.append(
         "Officer-Beepsky is an open source Discord bot, you can view the source here on [GitHub](https://github.com/CorruptComputer/Officer-Beepsky).");
-    BotUtils.sendMessage(privateChannel, author, "Available Commands:",
+    BotUtils.getInstance().sendMessage(privateChannel, author, "Available Commands:",
         commandStr.toString(), Color.ORANGE);
   }
 
@@ -71,6 +71,6 @@ public class HelpCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "help` - You should already know this one.";
+    return "`" + BotUtils.getInstance().PREFIX + "help` - You should already know this one.";
   }
 }

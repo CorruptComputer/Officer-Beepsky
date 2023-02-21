@@ -33,11 +33,11 @@ public class StopCommand implements Command {
       return false;
     }
 
-    if (message.equalsIgnoreCase(BotUtils.PREFIX + "stop")
-        || message.equalsIgnoreCase(BotUtils.PREFIX + "clear")) {
+    if (message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "stop")
+        || message.equalsIgnoreCase(BotUtils.getInstance().PREFIX + "clear")) {
 
       // if the bot is not in a voice channel ignore the commands
-      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
       if (self == null) {
         return false;
       }
@@ -66,7 +66,7 @@ public class StopCommand implements Command {
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     GuildMusicManager musicManager = MusicHelper.getGuildMusicManager(guild.getId());
     MusicHelper.clearQueue(musicManager.getScheduler());
-    BotUtils.sendMessage(channel, author, "The queue has been cleared!", "", Color.GREEN);
+    BotUtils.getInstance().sendMessage(channel, author, "The queue has been cleared!", "", Color.GREEN);
   }
 
   /**
@@ -77,7 +77,7 @@ public class StopCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "stop` or `"
-        + BotUtils.PREFIX + "clear` - Clears the current queue and leaves the voice channel.";
+    return "`" + BotUtils.getInstance().PREFIX + "stop` or `"
+        + BotUtils.getInstance().PREFIX + "clear` - Clears the current queue and leaves the voice channel.";
   }
 }

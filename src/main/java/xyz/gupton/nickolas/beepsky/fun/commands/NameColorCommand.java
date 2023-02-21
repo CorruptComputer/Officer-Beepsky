@@ -39,27 +39,27 @@ public class NameColorCommand implements Command {
 
     // Verify the command is correct
     String[] command = message.split(" ", 2);
-    if (!command[0].equalsIgnoreCase(BotUtils.PREFIX + "namecolor")) {
+    if (!command[0].equalsIgnoreCase(BotUtils.getInstance().PREFIX + "namecolor")) {
       return false;
     }
 
     // Verify that they gave a hex code
     if (command.length != 2) {
-      BotUtils.sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
+      BotUtils.getInstance().sendMessage(channel, author, "No color specified!", "Example: #FFFFFF",
           Color.RED);
       return false;
     }
 
     // Verify the hex pattern is correct
     if (!hexPattern.matcher(command[1]).matches()) {
-      BotUtils.sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
+      BotUtils.getInstance().sendMessage(channel, author, "Color must be in hex format!", "Example: #FFFFFF",
           Color.RED);
       return false;
     }
 
     // Check if the bot has permissions to manage roles
     boolean permission = false;
-    Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+    Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
     if (self != null) {
       List<Role> selfRoles = self.getRoles().collectList().block();
       if (selfRoles != null) {
@@ -142,14 +142,14 @@ public class NameColorCommand implements Command {
 
     // if it still doesn't exist something went wrong.
     if (role == null) {
-      BotUtils.sendMessage(channel, author, "An error occurred while setting the color!",
+      BotUtils.getInstance().sendMessage(channel, author, "An error occurred while setting the color!",
           "Could not create the role required.", Color.RED);
       return;
     }
 
     member.addRole(role.getId()).block();
 
-    BotUtils.sendMessage(channel, author, "Color sucessfully changed!", "", Color.GREEN);
+    BotUtils.getInstance().sendMessage(channel, author, "Color sucessfully changed!", "", Color.GREEN);
   }
 
   /**
@@ -160,7 +160,7 @@ public class NameColorCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX
+    return "`" + BotUtils.getInstance().PREFIX
         + "namecolor <hex code>` - Changes your name's color to the one provided,"
         + " ignores the commands if not allowed by the server.";
   }

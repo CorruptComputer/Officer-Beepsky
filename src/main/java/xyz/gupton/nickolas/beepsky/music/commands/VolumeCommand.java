@@ -36,11 +36,11 @@ public class VolumeCommand implements Command {
       return false;
     }
 
-    if (msg[0].equalsIgnoreCase(BotUtils.PREFIX + "volume")
-        || msg[0].equalsIgnoreCase(BotUtils.PREFIX + "vol")) {
+    if (msg[0].equalsIgnoreCase(BotUtils.getInstance().PREFIX + "volume")
+        || msg[0].equalsIgnoreCase(BotUtils.getInstance().PREFIX + "vol")) {
 
       // if the bot is not in a voice channel ignore the commands
-      Member self = guild.getMemberById(BotUtils.GATEWAY.getSelfId()).block();
+      Member self = guild.getMemberById(BotUtils.getInstance().GATEWAY.getSelfId()).block();
       if (self == null) {
         return false;
       }
@@ -56,12 +56,12 @@ public class VolumeCommand implements Command {
       }
 
       if (msg.length < 2) {
-        BotUtils.sendMessage(channel, author, "No time given!", "", Color.RED);
+        BotUtils.getInstance().sendMessage(channel, author, "No time given!", "", Color.RED);
         return false;
       }
 
       if (msg.length > 2) {
-        BotUtils.sendMessage(channel, author, "Error changing volume:",
+        BotUtils.getInstance().sendMessage(channel, author, "Error changing volume:",
             "This command only takes 1 argument, you provided: " + (msg.length - 1), Color.RED);
 
         return false;
@@ -70,14 +70,14 @@ public class VolumeCommand implements Command {
       try {
         vol = Integer.parseInt(msg[1]);
       } catch (NumberFormatException e) {
-        BotUtils.sendMessage(channel, author, "Error changing volume:",
+        BotUtils.getInstance().sendMessage(channel, author, "Error changing volume:",
             "The volume must be a number between 0 and 100", Color.RED);
 
         return false;
       }
 
       if (vol < 0 || vol > 100) {
-        BotUtils.sendMessage(channel, author, "Error changing volume:",
+        BotUtils.getInstance().sendMessage(channel, author, "Error changing volume:",
             "The volume must be a number between 0 and 100", Color.RED);
 
         return false;
@@ -104,7 +104,7 @@ public class VolumeCommand implements Command {
 
     musicManager.setVolume(volume);
 
-    BotUtils.sendMessage(channel, author, "The volume has been set to " + volume, "", Color.GREEN);
+    BotUtils.getInstance().sendMessage(channel, author, "The volume has been set to " + volume, "", Color.GREEN);
   }
 
   /**
@@ -115,8 +115,8 @@ public class VolumeCommand implements Command {
    */
   @Override
   public String getCommand(User recipient) {
-    return "`" + BotUtils.PREFIX + "volume <volume>` or `"
-        + BotUtils.PREFIX
+    return "`" + BotUtils.getInstance().PREFIX + "volume <volume>` or `"
+        + BotUtils.getInstance().PREFIX
         + "vol <volume>` - Sets the volume for the audio streamed, number between 0 and 100.";
   }
 }

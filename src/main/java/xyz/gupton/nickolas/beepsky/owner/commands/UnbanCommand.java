@@ -50,7 +50,7 @@ public class UnbanCommand implements Command {
   @Override
   public void execute(Guild guild, User author, MessageChannel channel, String message) {
     Snowflake userId = Snowflake.of(message.split(" ", 2)[1]);
-    User unbannedUser = BotUtils.GATEWAY.getUserById(userId).block();
+    User unbannedUser = BotUtils.getInstance().GATEWAY.getUserById(userId).block();
     String username = unbannedUser != null ? unbannedUser.getUsername() : "'Unknown User'";
 
     if (!BotUtils.isBanned(userId.asString())) {

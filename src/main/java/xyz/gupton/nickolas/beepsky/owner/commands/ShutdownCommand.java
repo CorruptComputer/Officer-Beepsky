@@ -52,7 +52,7 @@ public class ShutdownCommand implements Command {
       Owner.sendMessage("Shutting down...", "Goodbye world.");
     }
 
-    BotUtils.GATEWAY.logout().block();
+    BotUtils.getInstance().GATEWAY.logout().block();
     System.exit(restart ? 1 : 0);
   }
 

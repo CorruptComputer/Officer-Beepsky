@@ -19,7 +19,7 @@ import xyz.gupton.nickolas.beepsky.owner.Owner;
  * Class handles the events fired by Discord4j.
  */
 public class EventHandlers {
-  private static Logger _logger = LoggerFactory.getLogger(EventHandlers.class);
+  private final static Logger _logger = LoggerFactory.getLogger(EventHandlers.class);
 
   /**
    * Fired when disconnected from Discord for any reason.
@@ -29,7 +29,7 @@ public class EventHandlers {
   static void disconnectEventHandler(DisconnectEvent event) {
     // When disconnected the 'now playing' text will get reset, and if we've been up for less than
     // 24 hours there is no need to restart.
-    if (System.currentTimeMillis() - BotUtils.startTime < TimeUnit.HOURS.toMillis(24)) {
+    if (System.currentTimeMillis() - BotUtils.getInstance().startTime < TimeUnit.HOURS.toMillis(24)) {
       _logger.warn("\n\nDisconnect reason: \n" + event.toString() + '\n');
 
       try {
@@ -39,10 +39,10 @@ public class EventHandlers {
         e.printStackTrace();
       }
 
-      BotUtils.GATEWAY
+      BotUtils.getInstance().GATEWAY
               .updatePresence(
                       ClientPresence.online(
-                              ClientActivity.listening(BotUtils.PREFIX + "help for commands")
+                              ClientActivity.listening(BotUtils.getInstance().PREFIX + "help for commands")
                       )
               ).block();
     } else { // else, lets just take the chance to update and restart.
@@ -53,17 +53,16 @@ public class EventHandlers {
 
   static void readyEventHandler(ReadyEvent event) {
     // the "Playing:" text
-    BotUtils.GATEWAY.updatePresence(
+    BotUtils.getInstance().GATEWAY.updatePresence(
             ClientPresence.online(
-                    ClientActivity.listening(BotUtils.PREFIX + "help for commands")
+                    ClientActivity.listening(BotUtils.getInstance().PREFIX + "help for commands")
             )
     ).block();
 
     _logger.warn("Ready");
 
-    Owner.sendMessage("Startup complete!", "Current version: " + BotUtils.VERSION);
-
-    BotUtils.startTime = System.currentTimeMillis();
+    Owner.sendMessage("Startup complete!", "Current version: "
+            + BotUtils.getInstance().VERSION);
   }
 
   static void messageCreateEventHandler(MessageCreateEvent event) {
@@ -79,7 +78,7 @@ public class EventHandlers {
     }
 
     // Search all available commands types
-    for (Command command : BotUtils.commands) {
+    for (Command command : BotUtils.getInstance().COMMANDS) {
 
       // Check if the provided message should be executed
       if (command.shouldExecute(guild, author, channel, message)) {

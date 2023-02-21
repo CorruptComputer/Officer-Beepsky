@@ -54,7 +54,7 @@ public class BanCommand implements Command {
       return;
     }
 
-    User bannedUser = BotUtils.GATEWAY.getUserById(userId).block();
+    User bannedUser = BotUtils.getInstance().GATEWAY.getUserById(userId).block();
     String username = bannedUser != null ? bannedUser.getUsername() : "'Unknown User'";
 
     if (BotUtils.isBanned(userId.asString())) {

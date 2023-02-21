@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'xyz.gupton.nickolas.beepsky'
-version '2.1.4'
+version '2.1.5'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
